@@ -25,14 +25,14 @@ jobs:
       run: zip -r DAO-GOGS-KIT.zip .
 
     - name: 📤 Завантажити PDF як артефакт
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: DAO-GOGS-README
         path: DAO-GOGS-README.pdf
 
-    - name: 📤 Завантажити ZIP як артефакт
-      uses: actions/upload-artifact@v3
+    - name: Upload PDF artifact
+      uses: actions/upload-artifact@v2
       with:
-        name: DAO-GOGS-KIT
-        path: DAO-GOGS-KIT.zip
+        name: gogs-doc-pdf
+        path: GOGS_DOC_v1-*.pdf
 

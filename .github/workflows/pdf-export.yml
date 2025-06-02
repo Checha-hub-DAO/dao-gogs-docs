@@ -37,7 +37,7 @@ jobs:
             --output "$OUTPUT"
 
       - name: Upload PDF artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: gogs-doc-pdf
           path: GOGS_DOC_v1-*.pdf

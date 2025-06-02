@@ -13,8 +13,10 @@ jobs:
       - name: 📟 Checkout репозиторію
         uses: actions/checkout@v3
 
-      - name: 📅 Встановити Pandoc (для PDF)
-        run: sudo apt-get install -y pandoc
+      - name: 📥 Встановити Pandoc та LaTeX (повний)
+        run: |
+         sudo apt-get update
+         sudo apt-get install -y pandoc texlive-full
 
       - name: 📦 Встановити LaTeX (для PDF)
         run: sudo apt-get install -y texlive-latex-base

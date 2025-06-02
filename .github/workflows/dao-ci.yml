@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: DAO-CI
 
 on:
@@ -12,27 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 🧾 Checkout репозиторію
-      uses: actions/checkout@v3
+      - name: 📟 Checkout репозиторію
+        uses: actions/checkout@v3
 
-    - name: 📥 Встановити Pandoc (для PDF)
-      run: sudo apt-get install -y pandoc
+      - name: 📅 Встановити Pandoc (для PDF)
+        run: sudo apt-get install -y pandoc
 
-    - name: 📄 Створити PDF з README.md
-      run: pandoc README.md -o DAO-GOGS-README.pdf
+      - name: 📦 Встановити LaTeX (для PDF)
+        run: sudo apt-get install -y texlive-latex-base
 
-    - name: 🗂 Архівувати проєкт у ZIP
-      run: zip -r DAO-GOGS-KIT.zip .
+      - name: 📄 Створити PDF з README.md
+        run: pandoc README.md -o DAO-GOGS-README.pdf
 
-    - name: 📤 Завантажити PDF як артефакт
-      uses: actions/upload-artifact@v4
-      with:
-        name: DAO-GOGS-README
-        path: DAO-GOGS-README.pdf
+      - name: 🗂 Архівувати проєкт в ZIP
+        run: zip -r DAO-GOGS-KIT.zip .
 
-    - name: Upload PDF artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: gogs-doc-pdf
-        path: GOGS_DOC_v1-*.pdf
-
+      - name: 📄 Завантажити PDF як артефакт
+        uses: actions/upload-artifact@v4
+        with:
+          name: DAO-GOGS-README
+          path: DAO-GOGS-README.pdf

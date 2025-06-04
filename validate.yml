@@ -1,0 +1,21 @@
+name: Validate DAO Modules
+
+on:
+  push:
+    paths:
+      - 'DAO-G*/**.md'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: pip install -r dao-validator/requirements.txt
+      - name: Run DAO Validator
+        run: python dao-validator/scripts/validate_structure.py

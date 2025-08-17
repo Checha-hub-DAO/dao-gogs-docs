@@ -1,0 +1,39 @@
+name: publish-bundle
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Bundle version (e.g., 0.3.0)"
+        required: true
+        type: string
+      artifact_name:
+        description: "Artifact name"
+        required: false
+        default: "release_bundle"
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.x' }
+      - name: Check required files
+        run: |
+          test -f pack_release.py || (echo "::error::pack_release.py missing at repo root" && exit 1)
+          test -f install_manifest.yaml || (echo "::error::install_manifest.yaml missing at repo root" && exit 1)
+      - name: Build bundle
+        id: build
+        run: |
+          set -e
+          OUT=$(python pack_release.py --version "${{ inputs.version }}" --out dist --name "${{ inputs.artifact_name }}")
+          echo "zip_path=$OUT" >> $GITHUB_OUTPUT
+      - name: Upload bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ steps.build.outputs.zip_path }}

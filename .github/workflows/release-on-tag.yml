@@ -1,0 +1,32 @@
+name: Release on tag
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Make repo safe for git
+        shell: pwsh
+        run: git config --global --add safe.directory "$env:GITHUB_WORKSPACE"
+
+      - name: Validate (strict)
+        shell: pwsh
+        run: pwsh -NoProfile -File C11/tools/Validate-Releases.ps1 -All -Strict
+
+      - name: Publish release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ver = "${{ github.ref_name }}"
+          pwsh -NoProfile -File C11/tools/Publish-Release.ps1 -Version $ver -Notes (Get-Content RELEASE_NOTES.md -Raw)

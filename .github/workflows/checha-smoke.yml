@@ -3,7 +3,7 @@ on:
   push: { branches: [ main ] }
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *"  # 09:00 Europe/Kyiv
+    - cron: "0 6 * * *"   # 09:00 Europe/Kyiv
 jobs:
   smoke:
     runs-on: windows-latest

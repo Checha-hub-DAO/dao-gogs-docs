@@ -1,0 +1,30 @@
+name: CHECHA Smoke
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    # 06:00 UTC ≈ 09:00 Київ (Europe/Kyiv)
+    - cron: "0 6 * * *"
+
+jobs:
+  smoke:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Run smoke script
+        shell: pwsh
+        run: pwsh -NoProfile -File C11/tools/Smoke-All.ps1
+
+      - name: Upload smoke logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-logs
+          path: C03/LOG/*.log
+          if-no-files-found: ignore

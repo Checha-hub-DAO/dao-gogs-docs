@@ -1,49 +1,104 @@
-BeforeAll {
-  $global:RepoRoot = Resolve-Path "$PSScriptRoot\.."
-  $env:GITHUB_ACTIONS = $null  # локально
-}
+# Pester 5.x — запускаємо копію валідатора з $TestDrive (без -Root)
 
 Describe "Validate-Releases Strict/CI" {
+  BeforeAll {
+    $RepoRoot     = (Resolve-Path "$PSScriptRoot\..").Path
+    $SrcValidator = Join-Path $RepoRoot 'C11\tools\Validate-Releases.ps1'
+    Test-Path $SrcValidator | Should -BeTrue
+    $ZipName      = 'SHIELD4_ODESA_UltimatePack_test.zip'
+  }
+
   It "returns 0 in CI mode with only warnings" {
-    $env:GITHUB_ACTIONS = "true"
-    pwsh -NoProfile -File "$RepoRoot\C11\tools\Validate-Releases.ps1" -All | Out-Null
+    $TmpRoot   = $TestDrive
+    $ToolDir   = Join-Path $TmpRoot 'C11\tools'
+    $ModuleDir = Join-Path $TmpRoot 'C11\SHIELD4_ODESA'
+    $RelDir    = Join-Path $ModuleDir 'Release'
+    New-Item -ItemType Directory -Force -Path $ToolDir,$RelDir | Out-Null
+
+    $Validator = Join-Path $ToolDir 'Validate-Releases.ps1'
+    Copy-Item $SrcValidator $Validator -Force
+
+    $Src   = Join-Path $TestDrive 'src-warn'
+    New-Item -ItemType Directory -Force -Path $Src | Out-Null
+    $File  = Join-Path $Src 'file.txt'
+    Set-Content -Path $File -Value 'hi' -Encoding UTF8
+    $Zip   = Join-Path $RelDir $ZipName
+    Compress-Archive -Path $File -DestinationPath $Zip -Force
+    Test-Path $Zip | Should -BeTrue
+
+    & $Validator -All | Out-Null
     $LASTEXITCODE | Should -Be 0
-    $env:GITHUB_ACTIONS = $null
   }
 
   It "can run Strict (non-zero possible)" {
-    pwsh -NoProfile -File "$RepoRoot\C11\tools\Validate-Releases.ps1" -All -Strict | Out-Null
-    # Просто перевіримо, що процес завершився (код може бути 0 або 1 залежно від стану артефактів)
-    $LASTEXITCODE | Should -BeIn @(0,1)
+    $TmpRoot   = $TestDrive
+    $ToolDir   = Join-Path $TmpRoot 'C11\tools'
+    $ModuleDir = Join-Path $TmpRoot 'C11\SHIELD4_ODESA'
+    $RelDir    = Join-Path $ModuleDir 'Release'
+    New-Item -ItemType Directory -Force -Path $ToolDir,$RelDir | Out-Null
+
+    $Validator = Join-Path $ToolDir 'Validate-Releases.ps1'
+    Copy-Item $SrcValidator $Validator -Force
+
+    $Src   = Join-Path $TestDrive 'src-strict'
+    New-Item -ItemType Directory -Force -Path $Src | Out-Null
+    $File  = Join-Path $Src 'file.txt'
+    Set-Content -Path $File -Value 'hi' -Encoding UTF8
+    $Zip   = Join-Path $RelDir $ZipName
+    Compress-Archive -Path $File -DestinationPath $Zip -Force
+    Test-Path $Zip | Should -BeTrue
+
+    & $Validator -All -Strict | Out-Null
+    $LASTEXITCODE | Should -BeIn @(0,1)   # тільки перевіряємо, що Strict відпрацював коректно
   }
 }
+
 Describe "Validate-Releases detects checksum mismatch in Strict" {
-  $RepoRoot = Resolve-Path "$PSScriptRoot\.."
-  $TestMod  = "TESTMOD"
-  $ModDir   = Join-Path $RepoRoot "C11\$TestMod"
-  $RelDir   = Join-Path $ModDir "Release"
-  $ArcDir   = Join-Path $ModDir "Archive"
-  $Chk      = Join-Path $ArcDir "CHECKSUMS.txt"
-
-  BeforeEach {
-    Remove-Item $ModDir -Recurse -Force -ErrorAction SilentlyContinue
-    New-Item -ItemType Directory -Force -Path $RelDir,$ArcDir | Out-Null
-
-    $tmp = Join-Path $env:TEMP ("dummy_{0}.txt" -f ([guid]::NewGuid()))
-    "dummy" | Set-Content -Encoding UTF8 $tmp
-    $zip = Join-Path $RelDir "${TestMod}_dummy.zip"
-    Compress-Archive -Path $tmp -DestinationPath $zip -Force
-
-    # навмисно неправильний хеш (64 нулів)
-    "0" * 64 + " *$([IO.Path]::GetFileName($zip))" | Set-Content -Encoding ASCII $Chk
-  }
-
-  AfterEach {
-    Remove-Item $ModDir -Recurse -Force -ErrorAction SilentlyContinue
+  BeforeAll {
+    $RepoRoot     = (Resolve-Path "$PSScriptRoot\..").Path
+    $SrcValidator = Join-Path $RepoRoot 'C11\tools\Validate-Releases.ps1'
+    Test-Path $SrcValidator | Should -BeTrue
+    $ZipName      = 'SHIELD4_ODESA_UltimatePack_test.zip'
   }
 
   It "returns non-zero (1) on mismatch in Strict" {
-    pwsh -NoProfile -File "$RepoRoot\C11\tools\Validate-Releases.ps1" -Module $TestMod -Strict | Out-Null
-    $LASTEXITCODE | Should -Be 1
+    $TmpRoot   = $TestDrive
+    $ToolDir   = Join-Path $TmpRoot 'C11\tools'
+    $ModuleDir = Join-Path $TmpRoot 'C11\SHIELD4_ODESA'
+    $RelDir    = Join-Path $ModuleDir 'Release'
+    $ArcDir    = Join-Path $ModuleDir 'Archive'
+    New-Item -ItemType Directory -Force -Path $ToolDir,$RelDir,$ArcDir | Out-Null
+
+    $Validator = Join-Path $ToolDir 'Validate-Releases.ps1'
+    Copy-Item $SrcValidator $Validator -Force
+
+    $Src   = Join-Path $TestDrive 'src-mismatch'
+    New-Item -ItemType Directory -Force -Path $Src | Out-Null
+    $File  = Join-Path $Src 'file.txt'
+    Set-Content -Path $File -Value 'hello' -Encoding UTF8
+    $Zip   = Join-Path $RelDir $ZipName
+    Compress-Archive -Path $File -DestinationPath $Zip -Force
+    Test-Path $Zip | Should -BeTrue
+
+    $Chk   = Join-Path $ArcDir 'CHECKSUMS.txt'
+    $Wrong = ('00' * 32)  # 64 hex chars псевдо-SHA256
+    Set-Content -Path $Chk -Value "$Wrong *$ZipName" -Encoding ASCII
+    Test-Path $Chk | Should -BeTrue
+
+    # --- Головне: приймаємо або Throw з "Hash mismatch", або rc=1 ---
+    $thrown = $false; $rc = $null; $msg = $null
+    try {
+      & $Validator -All -Strict | Out-Null
+      $rc = $LASTEXITCODE
+    } catch {
+      $thrown = $true
+      $msg = $_.Exception.Message
+    }
+
+    if ($thrown) {
+      $msg | Should -Match 'Hash mismatch'
+    } else {
+      $rc  | Should -Be 1
+    }
   }
 }

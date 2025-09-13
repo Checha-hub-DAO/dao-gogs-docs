@@ -20,7 +20,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
-          fetch-depth: 0   # потрібно, щоб git бачив теги
+          fetch-depth: 0
+          fetch-tags: true   # <— ВАЖЛИВО: тягнемо теги
 
       - name: Make repo safe for git
         shell: pwsh
@@ -30,9 +31,9 @@ jobs:
         id: ver
         shell: pwsh
         run: |
-          $event = "${{ github.event_name }}"
-          $refType = "${{ github.ref_type }}"
-          $refName = "${{ github.ref_name }}"
+          $event    = "${{ github.event_name }}"
+          $refType  = "${{ github.ref_type }}"
+          $refName  = "${{ github.ref_name }}"
           $inputTag = "${{ github.event.inputs.tag }}"
 
           if ($event -eq 'push' -and $refType -eq 'tag' -and $refName) {
@@ -40,7 +41,11 @@ jobs:
           } elseif ($inputTag) {
             $ver = $inputTag
           } else {
-            $ver = (git describe --tags --abbrev=0)
+            # Надійний fallback: беремо останній тег v* за семвер-сортуванням
+            $tags = git tag --list "v*" | ForEach-Object { $_ } 
+            if ($tags.Count -gt 0) {
+              $ver = ($tags | Sort-Object {[version]($_ -replace '^v','0.')} )[-1]
+            }
           }
 
           if (-not $ver) { throw "Could not determine tag version" }

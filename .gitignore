@@ -21,3 +21,7 @@ C11/SHIELD4_ODESA/dist/**
 # Python/Node/npm (про всяк)
 __pycache__/
 node_modules/
+# Release artifacts
+C11/SHIELD4_ODESA/Release/*.zip
+C11/SHIELD4_ODESA/Modules/*.zip
+C11/**/work_*/

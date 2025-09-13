@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-            - name: Cache PS modules
+      - name: Cache PS modules
         uses: actions/cache@v4
         with:
           path: |
@@ -18,12 +18,11 @@ jobs:
           key: ${{ runner.os }}-psmodules-${{ hashFiles('**/ps-tests.yml') }}
           restore-keys: |
             ${{ runner.os }}-psmodules-
+
       - name: Install Pester
         shell: pwsh
         run: Install-Module Pester -Scope CurrentUser -Force
 
       - name: Run Pester
         shell: pwsh
-        run: |
-          Invoke-Pester -Path Tests -CI -Output Detailed
-
+        run: Invoke-Pester -Path Tests -CI -Output Detailed

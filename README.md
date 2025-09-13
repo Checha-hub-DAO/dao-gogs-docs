@@ -6,4 +6,3 @@
 - \C11/SHIELD4_ODESA/INDEX.md\ — журнал релізів
 
 ![Smoke CI](https://github.com/Checha-hub-DAO/checha-core/actions/workflows/checha-smoke.yml/badge.svg)
-

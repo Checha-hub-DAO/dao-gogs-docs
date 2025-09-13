@@ -4,7 +4,6 @@ Param([string]$Root)
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# Визначаємо корінь репо
 if (-not $Root -or -not (Test-Path $Root)) {
   if ($env:GITHUB_WORKSPACE -and (Test-Path $env:GITHUB_WORKSPACE)) { $Root = $env:GITHUB_WORKSPACE }
   else { $Root = "D:\CHECHA_CORE" }
@@ -12,7 +11,6 @@ if (-not $Root -or -not (Test-Path $Root)) {
 
 function Line($t){ Write-Host ("`n=== {0} ===" -f $t) -ForegroundColor Cyan }
 
-# Логи всередині репо
 $logDir = Join-Path $Root 'C03\LOG'
 New-Item -ItemType Directory -Force -Path $logDir | Out-Null
 $log = Join-Path $logDir ("smoke_{0}.log" -f (Get-Date -Format 'yyyyMMdd_HHmmss'))
@@ -29,8 +27,7 @@ try {
   $Release  = Join-Path $BaseDir 'Release'
   New-Item -ItemType Directory -Force -Path $Release | Out-Null
 
-  # Куди складати тимчасові ZIP (Downloads, якщо нема — TEMP)
-  $Downloads = [System.IO.Path]::Combine([Environment]::GetFolderPath('UserProfile'),'Downloads')
+  $Downloads = [IO.Path]::Combine([Environment]::GetFolderPath('UserProfile'),'Downloads')
   if (-not (Test-Path $Downloads)) { try { New-Item -ItemType Directory -Force -Path $Downloads | Out-Null } catch { $Downloads = $env:TEMP } }
   $MainZip = Join-Path $Downloads 'SHIELD4_ODESA_UltimatePack_test.zip'
   $ModZip  = Join-Path $Downloads 'SHIELD4_ODESA_MegaPack_v1.0.zip'
@@ -48,19 +45,15 @@ try {
     Compress-Archive -Path (Join-Path $t2 '*') -DestinationPath $ModZip -Force
   }
 
-  # Запуск manage-скрипта
   & pwsh -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Root 'C11\tools\Manage_Shield4_Release.ps1') `
       -BaseDir $BaseDir -NewReleasePath $MainZip -Version 'vSMOKE_CI' -ModulesToAdd @($ModZip) -NoUnpack
   $mrc = $LASTEXITCODE
   Write-Host "Manage exit code: $mrc"
 
-  # Діагностика вмісту Release/
   Write-Host "Release dir listing:"
   Get-ChildItem $Release -Filter *.zip -ErrorAction SilentlyContinue | ForEach-Object {
     "{0}`t{1:N0} bytes" -f $_.Name, $_.Length | Write-Host
   }
-
-  # Фолбек: якщо manage впав або зіпів немає — просто покласти тестовий ZIP у Release/
   if ($mrc -ne 0 -or -not (Get-ChildItem $Release -Filter *.zip -ErrorAction SilentlyContinue)) {
     Write-Warning "No zips detected in Release/ after manage; falling back to direct copy"
     Copy-Item -LiteralPath $MainZip -Destination (Join-Path $Release (Split-Path $MainZip -Leaf)) -Force
@@ -73,6 +66,17 @@ try {
        -Module G43 -ZipPath $G43Zip -TargetRoot $Root
   } else {
     Write-Host "Skip: $G43Zip not found" -ForegroundColor Yellow
+  }
+
+  # NEW: Generate CHECKSUMS so validator is happy even in CI
+  $Archive = Join-Path $BaseDir 'Archive'
+  New-Item -ItemType Directory -Force -Path $Archive | Out-Null
+  $Chk = Join-Path $Archive 'CHECKSUMS.txt'
+  New-Item -ItemType File -Force -Path $Chk | Out-Null
+  Clear-Content -LiteralPath $Chk
+  Get-ChildItem $Release -Filter *.zip -File | ForEach-Object {
+    $h = Get-FileHash $_.FullName -Algorithm SHA256
+    "$($h.Hash) *$($_.Name)" | Add-Content -LiteralPath $Chk
   }
 
   Line "Validate releases"

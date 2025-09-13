@@ -59,7 +59,7 @@ try {
   }
 
   Line "Validate releases"
-  & pwsh -NoProfile -File (Join-Path $Root 'C11\tools\Validate-Releases.ps1') -All -Root $Root
+  & pwsh -NoProfile -File (Join-Path $Root 'C11\tools\Validate-Releases.ps1') -All
   $rc = $LASTEXITCODE
   Write-Host "Validate exit code: $rc"
 

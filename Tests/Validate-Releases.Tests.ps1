@@ -17,3 +17,33 @@ Describe "Validate-Releases Strict/CI" {
     $LASTEXITCODE | Should -BeIn @(0,1)
   }
 }
+Describe "Validate-Releases detects checksum mismatch in Strict" {
+  $RepoRoot = Resolve-Path "$PSScriptRoot\.."
+  $TestMod  = "TESTMOD"
+  $ModDir   = Join-Path $RepoRoot "C11\$TestMod"
+  $RelDir   = Join-Path $ModDir "Release"
+  $ArcDir   = Join-Path $ModDir "Archive"
+  $Chk      = Join-Path $ArcDir "CHECKSUMS.txt"
+
+  BeforeEach {
+    Remove-Item $ModDir -Recurse -Force -ErrorAction SilentlyContinue
+    New-Item -ItemType Directory -Force -Path $RelDir,$ArcDir | Out-Null
+
+    $tmp = Join-Path $env:TEMP ("dummy_{0}.txt" -f ([guid]::NewGuid()))
+    "dummy" | Set-Content -Encoding UTF8 $tmp
+    $zip = Join-Path $RelDir "${TestMod}_dummy.zip"
+    Compress-Archive -Path $tmp -DestinationPath $zip -Force
+
+    # навмисно неправильний хеш (64 нулів)
+    "0" * 64 + " *$([IO.Path]::GetFileName($zip))" | Set-Content -Encoding ASCII $Chk
+  }
+
+  AfterEach {
+    Remove-Item $ModDir -Recurse -Force -ErrorAction SilentlyContinue
+  }
+
+  It "returns non-zero (1) on mismatch in Strict" {
+    pwsh -NoProfile -File "$RepoRoot\C11\tools\Validate-Releases.ps1" -Module $TestMod -Strict | Out-Null
+    $LASTEXITCODE | Should -Be 1
+  }
+}

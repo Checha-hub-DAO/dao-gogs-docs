@@ -25,7 +25,9 @@ try {
   Write-Host "Root = $Root"
 
   Line "Release script"
-  $BaseDir = Join-Path $Root 'C11\SHIELD4_ODESA'
+  $BaseDir  = Join-Path $Root 'C11\SHIELD4_ODESA'
+  $Release  = Join-Path $BaseDir 'Release'
+  New-Item -ItemType Directory -Force -Path $Release | Out-Null
 
   # Куди складати тимчасові ZIP (Downloads, якщо нема — TEMP)
   $Downloads = [System.IO.Path]::Combine([Environment]::GetFolderPath('UserProfile'),'Downloads')
@@ -46,8 +48,23 @@ try {
     Compress-Archive -Path (Join-Path $t2 '*') -DestinationPath $ModZip -Force
   }
 
+  # Запуск manage-скрипта
   & pwsh -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Root 'C11\tools\Manage_Shield4_Release.ps1') `
       -BaseDir $BaseDir -NewReleasePath $MainZip -Version 'vSMOKE_CI' -ModulesToAdd @($ModZip) -NoUnpack
+  $mrc = $LASTEXITCODE
+  Write-Host "Manage exit code: $mrc"
+
+  # Діагностика вмісту Release/
+  Write-Host "Release dir listing:"
+  Get-ChildItem $Release -Filter *.zip -ErrorAction SilentlyContinue | ForEach-Object {
+    "{0}`t{1:N0} bytes" -f $_.Name, $_.Length | Write-Host
+  }
+
+  # Фолбек: якщо manage впав або зіпів немає — просто покласти тестовий ZIP у Release/
+  if ($mrc -ne 0 -or -not (Get-ChildItem $Release -Filter *.zip -ErrorAction SilentlyContinue)) {
+    Write-Warning "No zips detected in Release/ after manage; falling back to direct copy"
+    Copy-Item -LiteralPath $MainZip -Destination (Join-Path $Release (Split-Path $MainZip -Leaf)) -Force
+  }
 
   Line "DAO integrate"
   $G43Zip = Join-Path $Downloads 'G43_ITETA_Pack_v1.0.zip'

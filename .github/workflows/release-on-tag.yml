@@ -3,6 +3,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -19,6 +20,40 @@ jobs:
         shell: pwsh
         run: git config --global --add safe.directory "$env:GITHUB_WORKSPACE"
 
+      # NEW: Build tiny release artifacts into C11/.../Release + CHECKSUMS.txt
+      - name: Prepare release artifacts
+        shell: pwsh
+        run: |
+          $Root    = "$env:GITHUB_WORKSPACE"
+          $BaseDir = Join-Path $Root 'C11\SHIELD4_ODESA'
+          $Release = Join-Path $BaseDir 'Release'
+          $Archive = Join-Path $BaseDir 'Archive'
+          New-Item -ItemType Directory -Force -Path $Release,$Archive | Out-Null
+
+          $Downloads = Join-Path $env:USERPROFILE 'Downloads'
+          New-Item -ItemType Directory -Force -Path $Downloads | Out-Null
+          $MainZip   = Join-Path $Downloads 'SHIELD4_ODESA_UltimatePack_build.zip'
+
+          $tmp = Join-Path $env:TEMP ('rel_build_' + (Get-Date -Format yyyyMMdd_HHmmss))
+          New-Item -ItemType Directory -Force -Path $tmp | Out-Null
+          'Release $(Get-Date)' | Set-Content (Join-Path $tmp 'README.txt') -Encoding UTF8
+          Compress-Archive -Path (Join-Path $tmp '*') -DestinationPath $MainZip -Force
+
+          pwsh -NoProfile -ExecutionPolicy Bypass -File C11/tools/Manage_Shield4_Release.ps1 `
+            -BaseDir $BaseDir -NewReleasePath $MainZip -Version '${{ github.ref_name }}' -NoUnpack
+
+          # CHECKSUMS
+          $Chk = Join-Path $Archive 'CHECKSUMS.txt'
+          New-Item -ItemType File -Force -Path $Chk | Out-Null
+          Clear-Content -LiteralPath $Chk
+          Get-ChildItem $Release -Filter *.zip -File | ForEach-Object {
+            $h = Get-FileHash $_.FullName -Algorithm SHA256
+            "$($h.Hash) *$($_.Name)" | Add-Content -LiteralPath $Chk
+          }
+
+          Write-Host "Release content:"
+          Get-ChildItem $Release -File | Format-Table Name,Length
+
       - name: Validate (strict)
         shell: pwsh
         run: pwsh -NoProfile -File C11/tools/Validate-Releases.ps1 -All -Strict
@@ -30,3 +65,14 @@ jobs:
         run: |
           $ver = "${{ github.ref_name }}"
           pwsh -NoProfile -File C11/tools/Publish-Release.ps1 -Version $ver -Notes (Get-Content RELEASE_NOTES.md -Raw)
+
+      - name: Upload release artifacts (evidence)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence
+          path: |
+            C11/SHIELD4_ODESA/Release/*.zip
+            C11/SHIELD4_ODESA/Archive/CHECKSUMS.txt
+          if-no-files-found: warn
+          retention-days: 7

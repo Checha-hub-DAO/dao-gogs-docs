@@ -20,3 +20,13 @@ jobs:
           name: smoke-logs
           path: C03/LOG/*.log
           if-no-files-found: ignore
+      - name: Upload release artifacts (tiny)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-release
+          path: |
+            C11/SHIELD4_ODESA/Release/*.zip
+            C11/SHIELD4_ODESA/Archive/CHECKSUMS.txt
+          if-no-files-found: warn
+          retention-days: 3

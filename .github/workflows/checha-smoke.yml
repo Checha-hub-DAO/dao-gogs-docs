@@ -1,18 +1,15 @@
 name: CHECHA Smoke
 on:
-  push:
-    branches: [ main ]
+  push: { branches: [ main ] }
   workflow_dispatch:
   schedule:
-    # 06:00 UTC ≈ 09:00 Europe/Kyiv
-    - cron: "0 6 * * *"
+    - cron: "0 6 * * *"  # 09:00 Europe/Kyiv
 jobs:
   smoke:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          lfs: true
+        with: { lfs: true }
       - name: Run smoke
         shell: pwsh
         run: pwsh -NoProfile -File C11/tools/Smoke-All.ps1

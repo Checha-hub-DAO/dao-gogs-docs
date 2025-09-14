@@ -9,3 +9,5 @@
 
 
 - **Release:** [G43 ITETA v1.0](https://github.com/Checha-hub-DAO/checha-core/releases/tag/g43-iteta-v1.0)
+
+- **Release:** https://github.com/Checha-hub-DAO/checha-core/releases/tag/g43-iteta-v1.0

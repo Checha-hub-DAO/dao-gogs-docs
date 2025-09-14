@@ -3,45 +3,45 @@ param(
   [DateTime]$Start,
   [DateTime]$End,
   [switch]$Auto,
-  [switch]$NoPush
+  [switch]$NoPush,
+  [switch]$NoCommit
 )
 Set-StrictMode -Version Latest
-$ErrorActionPreference='Stop'
+$ErrorActionPreference = "Stop"
 
-# Дати: попередній тиждень, якщо -Auto або Start не задано
+# 1) Дати (минулий тиждень, якщо не задано вручну)
 if ($Auto -or -not $PSBoundParameters.ContainsKey("Start")) {
   $today=(Get-Date).Date
   $mondayThis=$today.AddDays(- (([int]$today.DayOfWeek + 6) % 7))
   $Start=$mondayThis.AddDays(-7); $End=$Start.AddDays(6)
 }
-$startS=$Start.Date.ToString('yyyy-MM-dd')
-$endS  =$End.Date.ToString('yyyy-MM-dd')
-$f="C03/LOG/G35_Weekly_Digest_${startS}_${endS}.md"
+$startS = $Start.Date.ToString('yyyy-MM-dd')
+$endS   = $End.Date.ToString('yyyy-MM-dd')
+$f      = "C03/LOG/G35_Weekly_Digest_${startS}_${endS}.md"
 
-# Безпечні звернення до GH (може бути відсутній або без токена)
-function Try-GH { param([scriptblock]$Expr)
-  try { & $Expr } catch { $null }
+# 2) Гарантуємо наявність директорії
+$dir = Split-Path -Parent $f
+if (-not (Test-Path -LiteralPath $dir)) {
+  New-Item -ItemType Directory -Path $dir -Force | Out-Null
 }
 
-# repo/owner
-$repoFull = $null
-$owner = Try-GH { gh api user -q .login }
-if ($env:GITHUB_REPOSITORY) { $repoFull = $env:GITHUB_REPOSITORY }
-elseif ($owner)            { $repoFull = "$owner/checha-core" }
-else                       { $repoFull = "Checha-hub-DAO/checha-core" }
-
-# release info (опц., не критично)
+# 3) Безпечні звернення до gh
+function Try-GH { param([scriptblock]$Expr) try { & $Expr } catch { $null } }
+$repoFull = if ($env:GITHUB_REPOSITORY) { $env:GITHUB_REPOSITORY } else {
+  $o = Try-GH { gh api user -q .login }; if ($o) { "$o/checha-core" } else { "Checha-hub-DAO/checha-core" }
+}
 $tag       = 'g43-iteta-v1.0'
 $relUrl    = Try-GH { gh release view $tag --repo $repoFull --json url -q .url }
 $relDigest = Try-GH { gh release view $tag --repo $repoFull --json assets -q '.assets[] | select(.name=="G43_ITETA_v1.0.zip").digest' }
 
-# Планувальник (локально є; у раннері буде н/д)
-$task=Get-ScheduledTaskInfo -TaskName 'Checha-Coord-Weekly' -ErrorAction SilentlyContinue
-$taskLine= if ($task) { "LastRun=$($task.LastRunTime), Result=0x{0:X}" -f $task.LastTaskResult } else { "н/д" }
+# 4) Планувальник (локально є; у раннері буде н/д)
+$task = Get-ScheduledTaskInfo -TaskName 'Checha-Coord-Weekly' -ErrorAction SilentlyContinue
+$taskLine = if ($task) { "LastRun=$($task.LastRunTime), Result=0x{0:X}" -f $task.LastTaskResult } else { "н/д" }
 
-# Коміти
-$commits=git log --since=$startS --until="$endS 23:59" --pretty="- %h %ad %s" --date=format:'%Y-%m-%d %H:%M' 2>$null
+# 5) Коміти за період (якщо немає — порожньо, це ок)
+$commits = git log --since=$startS --until="$endS 23:59" --pretty="- %h %ad %s" --date=format:'%Y-%m-%d %H:%M' 2>$null
 
+# 6) Контент
 @"
 # G35 Weekly Digest ($startS → $endS)
 
@@ -61,12 +61,15 @@ $([string]::IsNullOrWhiteSpace($commits) ? "_без комітів за пері
 ## Ризики / next steps
 - Замінити stub-валідатор на повний + підʼєднати в CI.
 - Оновити README/Docs за потреби.
-"@ | Set-Content -Encoding UTF8 $f
+"@ | Set-Content -Encoding UTF8 -LiteralPath $f
 
-if (-not $NoCommit -and $PSCmdlet.ShouldProcess($f, "git add/commit")) { git add -f $f; git commit -m ("docs(G35): weekly digest {0}..{1}" -f $startS,$endS) 2>$null }..{1}" -f $startS,$endS) 2>$null
+# 7) Коміт/пуш (у CI передаємо -NoCommit -NoPush → тут не виконається)
+if (-not $NoCommit -and $PSCmdlet.ShouldProcess($f, "git add/commit")) {
+  git add -f -- $f
+  git commit -m ("docs(G35): weekly digest {0}..{1}" -f $startS,$endS) 2>$null
 }
 if (-not $NoPush -and $PSCmdlet.ShouldProcess('origin/main','git push')) {
   git push
 }
-Write-Information ("OK: {0}" -f $f) -InformationAction Continue
 
+Write-Information ("OK: {0}" -f $f) -InformationAction Continue

@@ -33,3 +33,5 @@ C03/LOG/*
 *.zip
 *.zip.sha256
 C03/LOG/*
+
+!C03/LOG/CHECKLIST_GIT_AND_RELEASES.md

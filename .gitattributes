@@ -6,3 +6,5 @@
 *.zip  binary
 *.png  binary
 *.jpg  binary
+
+*.yml text eol=lf

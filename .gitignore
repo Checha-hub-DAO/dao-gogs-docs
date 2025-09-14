@@ -51,3 +51,6 @@ C03/LOG/*
 
 C03/LOG/*
 !C03/LOG/*.md
+
+*.zip
+*.zip.sha256

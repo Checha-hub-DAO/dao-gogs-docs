@@ -16,3 +16,5 @@
 *.yml  text eol=lf
 *.yaml text eol=lf
 *.zip  binary
+
+*.yml text eol=lf

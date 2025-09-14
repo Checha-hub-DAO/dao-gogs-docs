@@ -29,3 +29,7 @@ C11/**/work_*/
 *.zip
 *.zip.sha256
 C03/LOG/*
+# build artifacts / logs
+*.zip
+*.zip.sha256
+C03/LOG/*

@@ -13,3 +13,7 @@
 - **Release:** https://github.com/Checha-hub-DAO/checha-core/releases/tag/g43-iteta-v1.0
 
 ![PS Validate](https://github.com/Checha-hub-DAO/checha-core/actions/workflows/ps-validate.yml/badge.svg)
+
+- **Release:** https://github.com/Checha-hub-DAO/checha-core/releases/tag/g43-iteta-v1.0
+
+![PS Validate](https://github.com/Checha-hub-DAO/checha-core/actions/workflows/ps-validate.yml/badge.svg)

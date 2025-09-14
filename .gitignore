@@ -25,3 +25,7 @@ node_modules/
 C11/SHIELD4_ODESA/Release/*.zip
 C11/SHIELD4_ODESA/Modules/*.zip
 C11/**/work_*/
+# build artifacts / logs
+*.zip
+*.zip.sha256
+C03/LOG/*

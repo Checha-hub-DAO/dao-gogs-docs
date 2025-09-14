@@ -18,6 +18,7 @@ jobs:
         shell: pwsh
         run: |
           $paths = @("C11/tools","C11/SHIELD4_ODESA","C03")
-          Invoke-ScriptAnalyzer -Path C11 -Recurse -Severity Error -Settings .config/PSScriptAnalyzerSettings.psd1 |
+          Invoke-ScriptAnalyzer -Path C11 -Recurse -Severity Error -Settings .config/PSScriptAnalyzerSettings.psd1 | Tee-Object -Variable LintRes; if ($LintRes) { $LintRes | Format-Table -Auto; exit 1 }
  Tee-Object -Variable LintRes;
  if ($LintRes) { $LintRes | Format-Table -Auto; exit 1 }
+

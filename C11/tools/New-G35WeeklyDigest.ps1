@@ -8,8 +8,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 
-$root = (Get-Location).Path
-
+# Дати: попередній тиждень, якщо -Auto або Start не задано
 if ($Auto -or -not $PSBoundParameters.ContainsKey("Start")) {
   $today=(Get-Date).Date
   $mondayThis=$today.AddDays(- (([int]$today.DayOfWeek + 6) % 7))
@@ -19,13 +18,28 @@ $startS=$Start.Date.ToString('yyyy-MM-dd')
 $endS  =$End.Date.ToString('yyyy-MM-dd')
 $f="C03/LOG/G35_Weekly_Digest_${startS}_${endS}.md"
 
-$owner=(gh api user -q .login 2>$null)
-$repoFull= if ($owner) { "$owner/checha-core" } else { "Checha-hub-DAO/checha-core" }
-$tag='g43-iteta-v1.0'
-$relUrl    =(gh release view $tag --repo $repoFull --json url -q .url 2>$null)
-$relDigest =(gh release view $tag --repo $repoFull --json assets -q '.assets[] | select(.name=="G43_ITETA_v1.0.zip").digest' 2>$null)
+# Безпечні звернення до GH (може бути відсутній або без токена)
+function Try-GH { param([scriptblock]$Expr)
+  try { & $Expr } catch { $null }
+}
+
+# repo/owner
+$repoFull = $null
+$owner = Try-GH { gh api user -q .login }
+if ($env:GITHUB_REPOSITORY) { $repoFull = $env:GITHUB_REPOSITORY }
+elseif ($owner)            { $repoFull = "$owner/checha-core" }
+else                       { $repoFull = "Checha-hub-DAO/checha-core" }
+
+# release info (опц., не критично)
+$tag       = 'g43-iteta-v1.0'
+$relUrl    = Try-GH { gh release view $tag --repo $repoFull --json url -q .url }
+$relDigest = Try-GH { gh release view $tag --repo $repoFull --json assets -q '.assets[] | select(.name=="G43_ITETA_v1.0.zip").digest' }
+
+# Планувальник (локально є; у раннері буде н/д)
 $task=Get-ScheduledTaskInfo -TaskName 'Checha-Coord-Weekly' -ErrorAction SilentlyContinue
 $taskLine= if ($task) { "LastRun=$($task.LastRunTime), Result=0x{0:X}" -f $task.LastTaskResult } else { "н/д" }
+
+# Коміти
 $commits=git log --since=$startS --until="$endS 23:59" --pretty="- %h %ad %s" --date=format:'%Y-%m-%d %H:%M' 2>$null
 
 @"

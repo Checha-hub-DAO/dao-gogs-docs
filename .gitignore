@@ -44,3 +44,7 @@ C03/*
 
 C03/LOG/*
 !C03/LOG/*.md
+
+C03/LOG/*
+!C03/LOG/
+!C03/LOG/*.md

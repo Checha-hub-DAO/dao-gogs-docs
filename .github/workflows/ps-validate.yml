@@ -8,5 +8,5 @@ jobs:
       - name: Validate SHIELD4_ODESA
         shell: pwsh
         run: |
-          Set-Location \D:\CHECHA_CORE
-          ./C11/tools/Validate-Releases.ps1 -Module SHIELD4_ODESA -Root \D:\CHECHA_CORE -Strict
+          Set-Location $PWD
+          ./C11/tools/Validate-Releases.ps1 -Module SHIELD4_ODESA -Root $PWD -Strict

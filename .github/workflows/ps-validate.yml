@@ -1,18 +1,3 @@
-# CHECKLIST — Git & Releases (Checha)
-1. Set-Location D:\CHECHA_CORE
-2. Перевірити origin: git remote -v (SSH URL owner/checha-core)
-3. Commit & push: git add -A && git commit -m "<msg>" && git push
-4. Зібрати CHECKSUMS: C11\SHIELD4_ODESA\Release\CHECKSUMS.txt з фактичних *.zip
-5. Валідація: & C11\tools\Validate-Releases.ps1 -Module SHIELD4_ODESA -Root D:\CHECHA_CORE -Strict
-6. (План Б) Пряма перевірка хешів, якщо треба.
-7. Реліз G43: gh release create g43-iteta-v1.0 <ZIP>
-8. Контроль: git ls-remote origin main і Get-ScheduledTaskInfo Checha-Coord-Weekly
-"@ | Set-Content -Encoding UTF8 C03\LOG\CHECKLIST_GIT_AND_RELEASES.md
-git add C03\LOG\CHECKLIST_GIT_AND_RELEASES.md
-git commit -m "docs: add checklist for git & releases"
-git push
-New-Item -ItemType Directory -Path '.github\workflows' -Force | Out-Null
-@"
 name: PS Validate
 on: [push, pull_request]
 jobs:
@@ -20,10 +5,8 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup PowerShell
-        uses: PowerShell/PowerShell@v1
       - name: Validate SHIELD4_ODESA
         shell: pwsh
         run: |
-          Set-Location D:\a\checha-core\checha-core
-          ./C11/tools/Validate-Releases.ps1 -Module SHIELD4_ODESA -Root "\D:\CHECHA_CORE" -Strict
+          Set-Location \D:\CHECHA_CORE
+          ./C11/tools/Validate-Releases.ps1 -Module SHIELD4_ODESA -Root \D:\CHECHA_CORE -Strict

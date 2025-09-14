@@ -63,11 +63,10 @@ $([string]::IsNullOrWhiteSpace($commits) ? "_без комітів за пері
 - Оновити README/Docs за потреби.
 "@ | Set-Content -Encoding UTF8 $f
 
-if ($PSCmdlet.ShouldProcess($f, "git add/commit")) {
-  git add -f $f
-  git commit -m ("docs(G35): weekly digest {0}..{1}" -f $startS,$endS) 2>$null
+if (-not $NoCommit -and $PSCmdlet.ShouldProcess($f, "git add/commit")) { git add -f $f; git commit -m ("docs(G35): weekly digest {0}..{1}" -f $startS,$endS) 2>$null }..{1}" -f $startS,$endS) 2>$null
 }
 if (-not $NoPush -and $PSCmdlet.ShouldProcess('origin/main','git push')) {
   git push
 }
 Write-Information ("OK: {0}" -f $f) -InformationAction Continue
+

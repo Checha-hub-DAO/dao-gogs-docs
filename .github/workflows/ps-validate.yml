@@ -1,12 +1,17 @@
-name: PS Validate
-on: [push, pull_request]
+name: PS Validate (Releases)
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 jobs:
-  validate:
+  validate-shield4:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - name: Validate SHIELD4_ODESA
         shell: pwsh
         run: |
-          Set-Location $PWD
-          ./C11/tools/Validate-Releases.ps1 -Module SHIELD4_ODESA -Root $PWD -Strict
+          Set-StrictMode -Version Latest
+          Set-Location 
+          ./C11/tools/Validate-Releases.ps1 -Module SHIELD4_ODESA -Root  -Strict

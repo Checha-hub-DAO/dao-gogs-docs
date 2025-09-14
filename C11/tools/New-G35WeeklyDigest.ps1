@@ -1,3 +1,4 @@
+[CmdletBinding(SupportsShouldProcess)]
 param(
   [DateTime]$Start,
   [DateTime]$End,
@@ -8,8 +9,8 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference='Stop'
 
 $root = (Get-Location).Path
-# Дати: минулий тиждень (пн–нд), якщо -Auto або не задано вручну
-if ($Auto -or -not $PSBoundParameters.ContainsKey('Start')) {
+
+if ($Auto -or -not $PSBoundParameters.ContainsKey("Start")) {
   $today=(Get-Date).Date
   $mondayThis=$today.AddDays(- (([int]$today.DayOfWeek + 6) % 7))
   $Start=$mondayThis.AddDays(-7); $End=$Start.AddDays(6)
@@ -18,7 +19,6 @@ $startS=$Start.Date.ToString('yyyy-MM-dd')
 $endS  =$End.Date.ToString('yyyy-MM-dd')
 $f="C03/LOG/G35_Weekly_Digest_${startS}_${endS}.md"
 
-# Дані
 $owner=(gh api user -q .login 2>$null)
 $repoFull= if ($owner) { "$owner/checha-core" } else { "Checha-hub-DAO/checha-core" }
 $tag='g43-iteta-v1.0'
@@ -49,7 +49,11 @@ $([string]::IsNullOrWhiteSpace($commits) ? "_без комітів за пері
 - Оновити README/Docs за потреби.
 "@ | Set-Content -Encoding UTF8 $f
 
-if (-not $NoPush) {
+if ($PSCmdlet.ShouldProcess($f, "git add/commit")) {
   git add -f $f
   git commit -m ("docs(G35): weekly digest {0}..{1}" -f $startS,$endS) 2>$null
 }
+if (-not $NoPush -and $PSCmdlet.ShouldProcess('origin/main','git push')) {
+  git push
+}
+Write-Information ("OK: {0}" -f $f) -InformationAction Continue

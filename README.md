@@ -1,10 +1,9 @@
-# CHECHA_CORE
+# CHECHA Core
 
-Стабільний реліз-флоу:
-- \C11/tools/Smoke-All.ps1\ — щоденний smoke
-- \C11/tools/Validate-Releases.ps1\ — валідація релізів (SHA256)
-- \C11/SHIELD4_ODESA/INDEX.md\ — журнал релізів
+- **Чекліст Git & Releases:** [docs/CHECKLIST_GIT_AND_RELEASES.md](docs/CHECKLIST_GIT_AND_RELEASES.md)
 
-![Smoke CI](https://github.com/Checha-hub-DAO/checha-core/actions/workflows/checha-smoke.yml/badge.svg)
+## Структура
+- C11/ — інструменти та релізи (SHIELD4_ODESA)
+- C12/ — Vault/DAO (зокрема G43)
+- docs/ — документація та чеклісти
 
-![Smoke CI](https://github.com/Checha-hub-DAO/checha-core/actions/workflows/checha-smoke.yml/badge.svg)

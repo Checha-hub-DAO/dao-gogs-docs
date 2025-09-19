@@ -44,6 +44,3 @@
 
 2025-09-20 — v1.0 — release package (G46_Podilsk.InfoHub_v1.0_2025-09-20_02-04-00.zip)
 
-
-2025-09-20 — v1.0 — release package (G46_Podilsk.InfoHub_v1.0_2025-09-20_02-06-57.zip)
-

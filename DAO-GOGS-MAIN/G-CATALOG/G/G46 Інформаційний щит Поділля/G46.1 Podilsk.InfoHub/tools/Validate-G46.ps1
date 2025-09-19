@@ -1,53 +1,55 @@
-<# 
-.SYNOPSIS
-  Валідація структури G46 (README, MediaKit, контент ≥5, CSV контактів, мінімальні поля).
-
-.EXAMPLE
-  .\Validate-G46.ps1 -Root "D:\CHECHA_CORE\G46-Podilsk.InfoHub"
-#>
-param(
+﻿param(
   [Parameter(Mandatory)][string]$Root
 )
 
 $ErrorActionPreference = "Stop"
-function OK($m){ Write-Host "✅ $m" -ForegroundColor Green }
-function WARN($m){ Write-Host "⚠️  $m" -ForegroundColor Yellow }
-function FAIL($m){ Write-Host "❌ $m" -ForegroundColor Red }
 
-$Root = (Resolve-Path $Root).Path
+function OK   ($m){ Write-Host "OK    $m" -ForegroundColor Green }
+function WARN ($m){ Write-Host "WARN  $m" -ForegroundColor Yellow }
+function FAIL ($m){ Write-Host "FAIL  $m" -ForegroundColor Red }
+
+$Root = (Resolve-Path -LiteralPath $Root).Path
 
 $requiredFiles = @("README.md","CHANGELOG.md")
 $requiredDirs  = @("media-kit","content","contacts","archive")
 
-$ok = $true
+$allOk = $true
 foreach($f in $requiredFiles){
-  if(-not (Test-Path (Join-Path $Root $f))){ FAIL "Немає $f"; $ok=$false } else { OK "$f" }
+  if(-not (Test-Path (Join-Path $Root $f))){ FAIL "Missing file: $f"; $allOk = $false } else { OK "Found: $f" }
 }
 foreach($d in $requiredDirs){
-  if(-not (Test-Path (Join-Path $Root $d))){ FAIL "Немає теки $d"; $ok=$false } else { OK "$d" }
+  if(-not (Test-Path (Join-Path $Root $d))){ FAIL "Missing directory: $d"; $allOk = $false } else { OK "Found dir: $d" }
 }
 
-# MediaKit files
+# MediaKit minimal
 $mk = Join-Path $Root "media-kit"
 $need = @("logo.svg","banner-1200x400.png")
 foreach($n in $need){
-  if(-not (Test-Path (Join-Path $mk $n))){ WARN "MediaKit: відсутній $n" } else { OK "MediaKit: $n" }
+  if(-not (Test-Path (Join-Path $mk $n))){ WARN "MediaKit missing: $n" } else { OK "MediaKit: $n" }
 }
 
-# Content count
-$contentCount = (Get-ChildItem (Join-Path $Root "content") -File -Include *.md | Measure-Object).Count
-if($contentCount -lt 5){ WARN "content: лише $contentCount (рекомендовано ≥5)" } else { OK "content: $contentCount" }
+# Content count (use -Filter, not -Include)
+$contentDir = Join-Path $Root "content"
+$contentCount = if(Test-Path $contentDir){ (Get-ChildItem -LiteralPath $contentDir -Filter *.md -File | Measure-Object).Count } else { 0 }
+if($contentCount -lt 5){ WARN "content has $contentCount files (>=5 recommended)" } else { OK "content files: $contentCount" }
 
 # Contacts CSV schema
 $csvPath = Join-Path $Root "contacts\podillia_contacts.csv"
-if(Test-Path $csvPath){
-  $csv = Import-Csv $csvPath
-  $cols = "Name","Org","Role","City","Phone","Email","Channel","Notes","Source","Verified","UpdatedUtc"
-  $miss = @()
-  foreach($c in $cols){ if(-not ($csv | Get-Member -Name $c -MemberType NoteProperty)){ $miss += $c } }
-  if($miss.Count -gt 0){ WARN "contacts CSV: бракує колонок: $($miss -join ', ')" } else { OK "contacts CSV: схема OK" }
+$reqCols = "Name","Org","Role","City","Phone","Email","Channel","Notes","Source","Verified","UpdatedUtc"
+
+if(Test-Path -LiteralPath $csvPath){
+  # Read header safely even if file has zero data rows
+  $firstLine = (Get-Content -LiteralPath $csvPath -TotalCount 1)
+  if([string]::IsNullOrWhiteSpace($firstLine)){
+    WARN "contacts CSV is empty (no header): $csvPath"
+  } else {
+    $hdr = $firstLine.Split(',') | ForEach-Object { $_.Trim() }
+    $missing = @()
+    foreach($c in $reqCols){ if(-not ($hdr -contains $c)) { $missing += $c } }
+    if($missing.Count -gt 0){ WARN ("contacts CSV: missing columns -> {0}" -f ($missing -join ", ")) } else { OK "contacts CSV: header schema OK" }
+  }
 } else {
-  WARN "contacts CSV не знайдено ($csvPath)"
+  WARN "contacts CSV not found: $csvPath"
 }
 
-if($ok){ OK "Валідація завершена з OK/попередженнями" } else { FAIL "Є критичні помилки" }
+if($allOk){ OK "Validation finished with OK/WARN" } else { FAIL "Validation found critical errors" }

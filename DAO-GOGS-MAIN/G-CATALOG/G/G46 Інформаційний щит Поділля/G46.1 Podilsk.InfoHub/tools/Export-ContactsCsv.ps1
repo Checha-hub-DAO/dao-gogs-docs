@@ -1,27 +1,4 @@
-<# 
-.SYNOPSIS
-  Зведення/оновлення бази контактів для G46 зі стандартною схемою + дедуплікація.
-
-.EXAMPLE
-  .\Export-ContactsCsv.ps1 -Root "D:\CHECHA_CORE\G46-Podilsk.InfoHub" -InputCsv @("locals.csv","media.csv")
-
-.PARAMETER Root
-  Корінь модуля (де папка /contacts).
-
-.PARAMETER InputCsv
-  Список локальних CSV, які треба злити у єдину базу.
-
-.PARAMETER UrlCsv
-  Список URL (CSV), які треба підтягнути (наприклад, експорт Google Sheets як CSV).
-
-.PARAMETER OutFile
-  Вихідний файл. За замовчуванням: <Root>\contacts\podillia_contacts.csv
-
-.NOTES
-  Схема колонок:
-  Name, Org, Role, City, Phone, Email, Channel, Notes, Source, Verified, UpdatedUtc
-#>
-param(
+﻿param(
   [Parameter(Mandatory)][string]$Root,
   [string[]]$InputCsv,
   [string[]]$UrlCsv,
@@ -29,11 +6,11 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-function Info($m){ Write-Host "ℹ️  $m" -ForegroundColor Cyan }
-function Ok($m){ Write-Host "✅ $m" -ForegroundColor Green }
-function Warn($m){ Write-Host "⚠️  $m" -ForegroundColor Yellow }
+function Info($m){ Write-Host "[INFO] $m" -ForegroundColor Cyan }
+function Ok  ($m){ Write-Host "[ OK ] $m" -ForegroundColor Green }
+function Warn($m){ Write-Host "[WARN] $m" -ForegroundColor Yellow }
 
-$Root = (Resolve-Path $Root).Path
+$Root = (Resolve-Path -LiteralPath $Root).Path
 $contactsDir = Join-Path $Root "contacts"
 New-Item -ItemType Directory -Force -Path $contactsDir | Out-Null
 $OutFile = if($OutFile){ $OutFile } else { Join-Path $contactsDir "podillia_contacts.csv" }
@@ -42,68 +19,63 @@ $cols = "Name","Org","Role","City","Phone","Email","Channel","Notes","Source","V
 $bag  = New-Object System.Collections.Generic.List[object]
 
 function Normalize-Row($r){
-  $obj = [ordered]@{}
-  foreach($c in $cols){ $obj[$c] = $null }
+  $o = [ordered]@{}
+  foreach($c in $cols){ $o[$c] = $null }
 
-  $obj["Name"]   = ($r.Name, $r.FullName, $r.Contact, $r["Ім'я"]) -ne $null | Select-Object -First 1
-  $obj["Org"]    = ($r.Org, $r.Organization, $r.Company, $r["Організація"]) -ne $null | Select-Object -First 1
-  $obj["Role"]   = ($r.Role, $r.Position, $r["Посада"]) -ne $null | Select-Object -First 1
-  $obj["City"]   = ($r.City, $r.Location, $r["Місто"]) -ne $null | Select-Object -First 1
-  $obj["Phone"]  = ($r.Phone, $r.Tel, $r["Телефон"]) -ne $null | Select-Object -First 1
-  $obj["Email"]  = ($r.Email, $r.Mail, $r["Ел.пошта"]) -ne $null | Select-Object -First 1
-  $obj["Channel"]= ($r.Channel, $r.Platform, $r["Канал"]) -ne $null | Select-Object -First 1
-  $obj["Notes"]  = ($r.Notes, $r.Note, $r["Нотатки"]) -ne $null | Select-Object -First 1
-  $obj["Source"] = ($r.Source, $r.Origin, $r["Джерело"]) -ne $null | Select-Object -First 1
-  $obj["Verified"]   = ($r.Verified, $r["Перевірено"]) -ne $null | Select-Object -First 1
-  $obj["UpdatedUtc"] = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+  $o["Name"]   = ($r.Name, $r.FullName, $r.Contact) -ne $null | Select-Object -First 1
+  $o["Org"]    = ($r.Org, $r.Organization, $r.Company) -ne $null | Select-Object -First 1
+  $o["Role"]   = ($r.Role, $r.Position) -ne $null | Select-Object -First 1
+  $o["City"]   = ($r.City, $r.Location) -ne $null | Select-Object -First 1
+  $o["Phone"]  = ($r.Phone, $r.Tel) -ne $null | Select-Object -First 1
+  $o["Email"]  = ($r.Email, $r.Mail) -ne $null | Select-Object -First 1
+  $o["Channel"]= ($r.Channel, $r.Platform) -ne $null | Select-Object -First 1
+  $o["Notes"]  = ($r.Notes, $r.Note) -ne $null | Select-Object -First 1
+  $o["Source"] = ($r.Source, $r.Origin) -ne $null | Select-Object -First 1
+  $o["Verified"]   = ($r.Verified) -ne $null | Select-Object -First 1
+  $o["UpdatedUtc"] = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
 
-  # Прості нормалізації
-  if($obj["Email"]){ $obj["Email"] = $obj["Email"].ToString().Trim().ToLower() }
-  if($obj["Phone"]){ $obj["Phone"] = ($obj["Phone"] -replace '[^\d\+]','').Trim() }
+  if($o["Email"]){ $o["Email"] = $o["Email"].ToString().Trim().ToLower() }
+  if($o["Phone"]){ $o["Phone"] = ($o["Phone"] -replace '[^\d\+]','').Trim() }
 
-  return [PSCustomObject]$obj
+  return [PSCustomObject]$o
 }
 
-# 1) Pull URL CSVs (за потреби)
-$tmp = New-Item -ItemType Directory -Force -Path (Join-Path $contactsDir "_tmp") | Select-Object -ExpandProperty FullName
+# Pull URL CSVs (optional)
+$tmp = Join-Path $contactsDir "_tmp"
+New-Item -ItemType Directory -Force -Path $tmp | Out-Null
 if($UrlCsv){
   foreach($u in $UrlCsv){
     try{
-      Info "Завантажую: $u"
-      $fn = Join-Path $tmp ("url_" + [System.Guid]::NewGuid().ToString("N") + ".csv")
+      Info "Downloading: $u"
+      $fn = Join-Path $tmp ("url_" + [guid]::NewGuid().ToString("N") + ".csv")
       Invoke-WebRequest -Uri $u -OutFile $fn -UseBasicParsing
       $InputCsv += $fn
     } catch {
-      Warn "Не вдалося завантажити $u: $($_.Exception.Message)"
+      Warn "Failed to download ${u}: $($_.Exception.Message)"
     }
   }
 }
 
-# 2) Merge + normalize
+# Merge
 foreach($f in $InputCsv){
-  if(-not (Test-Path $f)){ Warn "Пропускаю, немає файлу: $f"; continue }
-  Info "Імпортую: $f"
-  $rows = Import-Csv $f
+  if(-not $f){ continue }
+  if(-not (Test-Path -LiteralPath $f)){ Warn "Skip, missing file: $f"; continue }
+  Info "Import: $f"
+  $rows = Import-Csv -LiteralPath $f
   foreach($r in $rows){ $bag.Add( (Normalize-Row $r) ) }
 }
 
-# 3) Dedup (Email|Phone)
-$dedup = $bag | Group-Object { 
-  $key = ""
-  if($_.Email){ $key += "E:" + $_.Email }
-  if($_.Phone){ $key += "|P:" + $_.Phone }
-  if([string]::IsNullOrWhiteSpace($key)){ $key = "NO_KEY:" + [guid]::NewGuid().ToString("N") }
-  $key
-} | ForEach-Object {
-  # Залишаємо перший елемент у групі
-  $_.Group | Select-Object -First 1
-}
+# Dedup by Email|Phone
+$dedup = $bag | Group-Object {
+  $k = ""
+  if($_.Email){ $k += "E:" + $_.Email }
+  if($_.Phone){ $k += "|P:" + $_.Phone }
+  if([string]::IsNullOrWhiteSpace($k)){ $k = "NO_KEY:" + [guid]::NewGuid().ToString("N") }
+  $k
+} | ForEach-Object { $_.Group | Select-Object -First 1 }
 
-# 4) Ensure header & export
-if(Test-Path $OutFile){ Remove-Item $OutFile -Force }
+if(Test-Path -LiteralPath $OutFile){ Remove-Item -LiteralPath $OutFile -Force }
 $dedup | Select-Object $cols | Export-Csv -NoTypeInformation -Encoding UTF8 -Path $OutFile
 
-# 5) Cleanup
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
-
-Ok "Готово: $OutFile (записів: $($dedup.Count))"
+Ok "Done: $OutFile (rows: $($dedup.Count))"

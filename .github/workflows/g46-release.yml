@@ -24,10 +24,21 @@ jobs:
         shell: pwsh
         run: |
           $repoRoot = "${{ github.workspace }}"
-          $relative = "DAO-GOGS-MAIN/G-CATALOG/G/G46 Інформаційний щит Поділля/G46.1 Podilsk.InfoHub"
+          $relative = "DAO-GOGS-MAIN/G-CATALOG/G/G/G46 Інформаційний щит Поділля/G46.1 Podilsk.InfoHub"
+          # ^^^ якщо структура інша — заміни $relative на актуальний відносний шлях
           $path = Join-Path $repoRoot $relative
           if(-not (Test-Path -LiteralPath $path)){ throw "ROOT not found: $path" }
           "ROOT=$path" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Validate structure (fail on errors)
+        shell: pwsh
+        run: |
+          $root = $env:ROOT
+          $lines = & "$root\tools\Validate-G46.ps1" -Root $root 2>&1 | Tee-Object -Variable out
+          # якщо є "FAIL  " у виводі — фейлимо job
+          if(($out | Select-String -SimpleMatch "FAIL  ").Count -gt 0){
+            Write-Error "Validation failed"; exit 1
+          }
 
       - name: Build ZIP + SHA256 (no tagging)
         shell: pwsh

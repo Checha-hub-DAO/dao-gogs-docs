@@ -1,0 +1,61 @@
+﻿name: G46.1 Auto Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set ROOT path
+        shell: pwsh
+        run: |
+          $repoRoot = "${{ github.workspace }}"
+          $relative = "DAO-GOGS-MAIN/G-CATALOG/G/G46 Інформаційний щит Поділля/G46.1 Podilsk.InfoHub"
+          $path = Join-Path $repoRoot $relative
+          if(-not (Test-Path -LiteralPath $path)){ throw "ROOT not found: $path" }
+          "ROOT=$path" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Build ZIP + SHA256 (no tagging)
+        shell: pwsh
+        run: |
+          & "$env:ROOT\tools\Release-Finalize_PodilskInfoHub.ps1" -Root $env:ROOT -Version "${{ github.ref_name }}" -NoGitTag
+
+      - name: Locate artifacts
+        id: locate
+        shell: pwsh
+        run: |
+          $rel = Join-Path $env:ROOT "Release"
+          $zip = Get-ChildItem -LiteralPath $rel -Filter "G46_Podilsk.InfoHub_*${{ github.ref_name }}_*.zip" | Sort-Object LastWriteTime -Desc | Select-Object -First 1
+          if(-not $zip){ $zip = Get-ChildItem -LiteralPath $rel -Filter "G46_Podilsk.InfoHub_*.zip" | Sort-Object LastWriteTime -Desc | Select-Object -First 1 }
+          if(-not $zip){ throw "ZIP not found in $rel" }
+          echo "zip_path=$($zip.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          $sha = "$($zip.FullName).sha256"
+          if(-not (Test-Path -LiteralPath $sha)){ throw "SHA256 file not found: $sha" }
+          echo "sha_path=$sha" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Create GitHub Release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "G46.1 Podilsk.InfoHub ${{ github.ref_name }}"
+          body: |
+            Automated package for ${{ github.ref_name }}.
+            - Built from ${{ github.sha }}
+            - Includes ZIP + SHA256
+          files: |
+            ${{ steps.locate.outputs.zip_path }}
+            ${{ steps.locate.outputs.sha_path }}

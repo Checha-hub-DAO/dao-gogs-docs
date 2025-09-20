@@ -1,0 +1,35 @@
+﻿[
+    {
+        "Id":  "AirThreat",
+        "Severity":  "high",
+        "WindowH":  48,
+        "Count":  2,
+        "SinceUtc":  "2025-09-18T01:31:24Z",
+        "TopExamples":  [
+                            {
+                                "Title":  "Вінниця: ймовірні дрони — робота ППО над містом",
+                                "Url":  "https://local.test/podilsk/1",
+                                "Score":  3
+                            },
+                            {
+                                "Title":  "Могилів-Подільський: відновлення інфраструктури після обстрілу",
+                                "Url":  "https://local.test/podilsk/2",
+                                "Score":  2
+                            }
+                        ]
+    },
+    {
+        "Id":  "Disinfo",
+        "Severity":  "medium",
+        "WindowH":  48,
+        "Count":  1,
+        "SinceUtc":  "2025-09-18T01:31:24Z",
+        "TopExamples":  [
+                            {
+                                "Title":  "Фейк: «евакуація з Поділля сьогодні» — спростовано",
+                                "Url":  "https://local.test/podilsk/3",
+                                "Score":  3
+                            }
+                        ]
+    }
+]

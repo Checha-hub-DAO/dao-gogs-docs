@@ -1,0 +1,28 @@
+﻿name: Analyzer (scheduled)
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # щогодини
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Run Agent
+        shell: pwsh
+        run: |
+          $root = "${{ github.workspace }}"
+          & "$root\agents\analyzer\Agent-Run.ps1" -Root $root
+      - name: Commit brief (if changed)
+        shell: pwsh
+        run: |
+          git config user.name  "gh-bot"
+          git config user.email "gh-bot@users.noreply.github.com"
+          git add content\brief-*.md data\normalized\beacons_*.csv data\incidents\incidents_*.csv
+          if (git diff --cached --quiet) { Write-Host "No changes" } else { git commit -m "chore(agent): daily brief and metrics"; git push }

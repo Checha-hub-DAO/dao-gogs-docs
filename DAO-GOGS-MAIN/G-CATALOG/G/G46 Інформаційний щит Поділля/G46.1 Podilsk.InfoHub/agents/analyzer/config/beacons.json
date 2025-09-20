@@ -1,0 +1,9 @@
+﻿{
+  "windowDays": 7,
+  "metrics": [
+    { "id":"growth_positive_mentions", "name":"Позитивні згадки (волонтерство)",
+      "category":"growth", "ruleIds":["positive-volunteer"], "thresholdDelta":0.3 },
+    { "id":"disinfo_alerts", "name":"Сигнали дезінформації",
+      "category":"disinfo", "ruleIds":["disinfo-old-media","panic-evac"], "thresholdCount":3 }
+  ]
+}

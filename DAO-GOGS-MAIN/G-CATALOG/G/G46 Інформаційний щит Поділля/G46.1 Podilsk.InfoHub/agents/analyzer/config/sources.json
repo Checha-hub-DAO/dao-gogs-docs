@@ -1,0 +1,8 @@
+﻿{
+  "rss": [
+    { "name": "VinnytsiaNews",   "url": "https://example.com/vinnytsia/rss" },
+    { "name": "CityCouncil",     "url": "https://example.gov.ua/rss" },
+    { "name": "EmergencyService","url": "https://dsns.gov.ua/rss" }
+  ],
+  "maxItemsPerFeed": 50
+}

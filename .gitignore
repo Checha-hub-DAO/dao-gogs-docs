@@ -5,3 +5,5 @@
 !.gitignore
 !/REPORTS/
 !/REPORTS/**
+!C11/
+!C11/BTD_Integration_Map.md

@@ -1,0 +1,52 @@
+param([string]$C12Root="D:\CHECHA_CORE\C12")
+
+function Get-FM([string]$p){
+  $t = Get-Content -Raw -LiteralPath $p; $h=@{}
+  if($t -match '(?s)^\s*---\s*(.*?)\s*---'){
+    foreach($l in(($Matches[1]) -split "\r?\n")){
+      if($l -match '^\s*([A-Za-z_]+)\s*:\s*(.+?)\s*$'){ $h[$Matches[1]]=$Matches[2].Trim('"'' ') }
+    }
+  }
+  $h
+}
+function Norm([string]$p){ if(-not $p){return ""}; $n=($p -replace '\\','/').Trim(); if(-not $n.EndsWith('/')){$n+='/'}; $n }
+
+$IndexPath = Join-Path $C12Root "INDEX.md"
+
+# шукаємо картки без -Filter, далі фільтруємо по імені
+$cards = Get-ChildItem -Path $C12Root -Recurse -File -ErrorAction SilentlyContinue |
+  Where-Object { $_.Name -ieq 'KNOWLEDGE_CARD.md' }
+
+$rows = foreach($c in $cards){
+  $dir = Split-Path $c.FullName -Parent
+  $rel = Norm (($dir.Substring($C12Root.Length)).TrimStart('\'))
+  $q   = Join-Path $dir "QUOTES.md"
+  $fm  = Get-FM $c.FullName
+
+  $id=$fm.id; $title=$fm.title; $type=$fm.type; $ver=$fm.version
+  $date=$fm.last_updated; if(-not $date){ $date=$fm.date_created }
+  if(-not $date -or ($date -notmatch '^\d{4}-\d{2}-\d{2}$')){ $date=(Get-Date).ToString('yyyy-MM-dd') }
+
+  [pscustomobject]@{
+    ID=$id; Title=$title; Type=$type
+    Tags=($fm.tags); Folder=$rel; Version=$ver; Date=$date
+    Quotes= (if(Test-Path $q){ "$rel`QUOTES.md" } else { "" })
+  }
+}
+
+$rows = $rows | Sort-Object ID,Title
+
+$sb = New-Object System.Text.StringBuilder
+[void]$sb.AppendLine("# C12 Knowledge Vault — Index`r`n")
+[void]$sb.AppendLine("| ID | Назва | Тип | Теги | Папка | Версія | Дата | Quotes |")
+[void]$sb.AppendLine("|---|---|---|---|---|---|---|---|")
+
+foreach($r in $rows){
+  $tags = if($r.Tags){ "$($r.Tags)" } else { "" }
+  [void]$sb.AppendLine( ("| {0} | {1} | {2} | {3} | {4} | {5} | {6} | {7} |" -f `
+    $r.ID,$r.Title,$r.Type,$tags,$r.Folder,$r.Version,$r.Date,$r.Quotes) )
+}
+
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[IO.File]::WriteAllText($IndexPath, $sb.ToString(), $utf8NoBom)
+Write-Host "✅ INDEX оновлено: $IndexPath"

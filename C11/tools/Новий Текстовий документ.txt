@@ -1,0 +1,150 @@
+<# 
+.SYNOPSIS
+  Release finalize for G46.1 — Podilsk.InfoHub (v1.2 plan)
+
+.DESCRIPTION
+  - Ensures repo state, optional ZIP import, CHANGELOG date bump,
+    git add/commit, and optional tag creation.
+
+.EXAMPLE
+  pwsh -NoProfile -ExecutionPolicy Bypass -File `
+    .\Release-Finalize_PodilskInfoHub_v1.2.ps1 `
+    -RepoRoot 'D:\CHECHA_CORE\DAO-GOGS-MAIN' `
+    -ModuleRel 'modules\g46-1-podilsk-infohub' `
+    -ZipPath 'C:\Users\serge\Downloads\Podilsk_InfoHub_v1.2.zip' `
+    -Version 'v1.2' -DoTag -Verbose
+
+#>
+
+[CmdletBinding()]
+param(
+  # Корінь git-репозиторію (монорепо)
+  [Parameter(Mandatory=$true)]
+  [string]$RepoRoot,
+
+  # Відносний шлях до модуля у репозиторії (наприклад, 'modules\g46-1-podilsk-infohub')
+  [Parameter(Mandatory=$true)]
+  [string]$ModuleRel,
+
+  # Версія релізу (наприклад, 'v1.2')
+  [Parameter(Mandatory=$true)]
+  [ValidatePattern('^v\d+(\.\d+)*$')]
+  [string]$Version,
+
+  # Опціонально: ZIP з готовими README.md + CHANGELOG.md
+  [Parameter(Mandatory=$false)]
+  [string]$ZipPath,
+
+  # Створити git-тег (наприклад, 'G46.1-v1.2-plan')
+  [switch]$DoTag,
+
+  # Сухий прогін без змін
+  [switch]$DryRun
+)
+
+function Write-Step($msg){ Write-Host "🔧 $msg" -ForegroundColor Cyan }
+function Write-Ok($msg){ Write-Host "✅ $msg" -ForegroundColor Green }
+function Write-Warn($msg){ Write-Host "⚠️  $msg" -ForegroundColor Yellow }
+function Write-Err($msg){ Write-Host "❌ $msg" -ForegroundColor Red }
+
+# 0) Normalize & checks
+$ErrorActionPreference = 'Stop'
+$repo = (Resolve-Path $RepoRoot).Path
+$modulePath = Join-Path $repo $ModuleRel
+$today = (Get-Date).ToString('yyyy-MM-dd')
+$tagName = "G46.1-$Version-plan"
+
+Write-Step "RepoRoot: $repo"
+Write-Step "Module : $modulePath"
+Write-Step "Version: $Version"
+
+if (-not (Test-Path $repo)) { throw "RepoRoot не існує: $repo" }
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) { throw "Git не знайдено у PATH" }
+
+# 1) Git sanity
+Write-Step "Перевірка git-стану…"
+git -C $repo rev-parse --is-inside-work-tree | Out-Null
+$branch = (git -C $repo rev-parse --abbrev-ref HEAD).Trim()
+Write-Step "Гілка: $branch"
+
+# 2) Ensure module dir
+if (-not (Test-Path $modulePath)) {
+  Write-Warn "Каталог модуля відсутній — створюю: $modulePath"
+  if (-not $DryRun) { New-Item -ItemType Directory -Force -Path $modulePath | Out-Null }
+}
+
+# 3) Optional ZIP import
+if ($ZipPath) {
+  if (-not (Test-Path $ZipPath)) { throw "ZIP не знайдено: $ZipPath" }
+  Write-Step "Розпаковую ZIP → $modulePath"
+  if (-not $DryRun) {
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($ZipPath, $modulePath, $true)
+  }
+  Write-Ok "ZIP імпортовано"
+} else {
+  Write-Warn "ZipPath не заданий — пропускаю імпорт файлів."
+}
+
+# 4) Ensure baseline files exist
+$readme = Join-Path $modulePath 'README.md'
+$changelog = Join-Path $modulePath 'CHANGELOG.md'
+
+if (-not (Test-Path $readme)) {
+  Write-Warn "README.md відсутній — створюю заглушку."
+  if (-not $DryRun) { Set-Content -Path $readme -Encoding UTF8 -Value "# G46.1 — Podilsk.InfoHub`n**Інформаційний щит Поділля**`n" }
+}
+if (-not (Test-Path $changelog)) {
+  Write-Warn "CHANGELOG.md відсутній — створюю заглушку."
+  if (-not $DryRun) { Set-Content -Path $changelog -Encoding UTF8 -Value "# CHANGELOG — G46.1 Podilsk.InfoHub`n" }
+}
+
+# 5) Bump planned date in CHANGELOG (replace 'заплановано' → $today for v1.2)
+Write-Step "Оновлення дати в CHANGELOG (якщо містить 'заплановано')…"
+if (Test-Path $changelog) {
+  $content = Get-Content $changelog -Raw -Encoding UTF8
+  $pattern = '(?im)^(##\s*\[v1\.2\]\s*—\s*)(план|заплановано)\s*$'
+  if ($content -match $pattern) {
+    $new = [System.Text.RegularExpressions.Regex]::Replace($content, $pattern, "`$1$today")
+    if (-not $DryRun) { Set-Content -Path $changelog -Encoding UTF8 -Value $new }
+    Write-Ok "Заміна виконана: 'заплановано' → $today"
+  } else {
+    Write-Warn "Не знайдено секції 'v1.2 — заплановано' — пропускаю."
+  }
+}
+
+# 6) Git add/commit
+Write-Step "Git add…"
+if (-not $DryRun) {
+  git -C $repo add -- "$ModuleRel/README.md" "$ModuleRel/CHANGELOG.md"
+}
+
+$commitMsg = @"
+G46.1 Podilsk.InfoHub $Version plan — finalize README + CHANGELOG
+
+- Ensure module structure and assets
+- Update CHANGELOG ($Version) planned date → $today
+- Ready for GitBook page and MediaKit bootstrap
+"@
+
+Write-Step "Git commit…"
+if (-not $DryRun) {
+  git -C $repo commit -m $commitMsg
+  Write-Ok "Коміт створено."
+} else {
+  Write-Warn "DryRun: коміт пропущено."
+}
+
+# 7) Optional tag
+if ($DoTag) {
+  Write-Step "Створення тега: $tagName"
+  if (-not $DryRun) {
+    git -C $repo tag -a $tagName -m "$tagName — $today"
+    Write-Ok "Тег створено."
+  } else {
+    Write-Warn "DryRun: тег пропущено."
+  }
+}
+
+Write-Ok "Release finalize завершено."
+Write-Host "👉 Далі (за бажання): git -C `"$repo`" push && git -C `"$repo`" push --tags" -ForegroundColor Magenta

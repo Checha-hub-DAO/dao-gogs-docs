@@ -1,0 +1,183 @@
+<#
+.SYNOPSIS
+  Універсальний інтегратор DAO‑модулів у CHECHA_CORE.
+.DESCRIPTION
+  Інтегрує або верифікує пакет DAO‑<Module> у структуру CHECHA_CORE:
+    - Пошук ZIP (або використання заданого -ZipPath)
+    - Розпаковка до C12\Vault\DAO\<Module> (idempotent)
+    - Оновлення C12\INDEX.md (один раз)
+    - Лог події у C03\LOG\LOG.md
+    - SHA256 у C05\ARCHIVE\CHECKSUMS.txt (без дублів)
+
+.PARAMETER Module
+  Код модуля (наприклад: G35, G37, G43). Обов’язковий.
+
+.PARAMETER Root
+  Корінь CHECHA_CORE. За замовчуванням: D:\CHECHA_CORE.
+
+.PARAMETER ZipPath
+  Повний шлях до ZIP. Якщо не задано — шукає останній ZIP у <Root>\C12\Vault\DAO, який містить "<Module>" у назві.
+
+.PARAMETER VerifyOnly
+  Лише перевірка наявності ZIP, SHA256 і запису в CHECKSUMS, без розпаковки та змін.
+
+.PARAMETER NoIndexUpdate
+  Не змінювати C12\INDEX.md.
+
+.PARAMETER NoUnpack
+  Пропустити розпаковку (корисно, якщо вже розпаковано).
+
+.EXAMPLE
+  pwsh -NoProfile -File .\Integrate-DAOModule_v1.ps1 -Module G35
+
+.EXAMPLE
+  pwsh -NoProfile -File .\Integrate-DAOModule_v1.ps1 -Module G37 -VerifyOnly
+#>
+
+[CmdletBinding(SupportsShouldProcess)]
+Param(
+  [Parameter(Mandatory)][ValidatePattern('^G\d{2}$')][string]$Module,
+  [Parameter()][string]$Root = "D:\CHECHA_CORE",
+  [Parameter()][string]$ZipPath,
+  [switch]$VerifyOnly,
+  [switch]$NoIndexUpdate,
+  [switch]$NoUnpack
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+function New-DirIfMissing([string]$Path){
+  if (-not (Test-Path -LiteralPath $Path)){
+    New-Item -ItemType Directory -Path $Path | Out-Null
+  }
+}
+
+function Add-LineOnce {
+  param(
+    [Parameter(Mandatory)][string]$File,
+    [Parameter(Mandatory)][string]$Line
+  )
+  if (-not (Test-Path -LiteralPath $File)){
+    New-Item -ItemType File -Path $File -Force | Out-Null
+    Set-Content -LiteralPath $File -Value "" -Encoding UTF8
+  }
+  $content = Get-Content -LiteralPath $File -ErrorAction Stop
+  if ($content -notcontains $Line){
+    Add-Content -LiteralPath $File -Value $Line
+  }
+}
+
+function Write-CoreLog {
+  param(
+    [Parameter(Mandatory)][string]$Root,
+    [Parameter(Mandatory)][string]$Message
+  )
+  $logDir = Join-Path $Root "C03\LOG"
+  $log    = Join-Path $logDir "LOG.md"
+  New-DirIfMissing $logDir
+  $stamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+  if (-not (Test-Path -LiteralPath $log)){
+    Set-Content -LiteralPath $log -Value "# CORE LOG`r`n" -Encoding UTF8
+  }
+  Add-Content -LiteralPath $log -Value "$stamp [INFO] $Message"
+}
+
+function Get-LatestZipForModule {
+  param(
+    [Parameter(Mandatory)][string]$Dir,
+    [Parameter(Mandatory)][string]$Module
+  )
+  if (-not (Test-Path -LiteralPath $Dir)){ return $null }
+  Get-ChildItem -LiteralPath $Dir -File -Filter *.zip |
+    Where-Object { $_.Name -match $Module } |
+    Sort-Object LastWriteTime -Descending |
+    Select-Object -First 1
+}
+
+# --- Paths
+$daoDir    = Join-Path $Root "C12\Vault\DAO"
+$destDir   = Join-Path $daoDir $Module
+$indexFile = Join-Path $Root "C12\INDEX.md"
+$archDir   = Join-Path $Root "C05\ARCHIVE"
+$checks    = Join-Path $archDir "CHECKSUMS.txt"
+
+Write-Host "🔧 Integrate-DAOModule | Module = $Module"
+Write-Host "📁 Root               | $Root"
+
+# --- Resolve ZIP
+if (-not $ZipPath){
+  $latest = Get-LatestZipForModule -Dir $daoDir -Module $Module
+  if (-not $latest){
+    throw "ZIP для модуля $Module не знайдено у $daoDir. Вкажи -ZipPath або поклади файл у цю папку."
+  }
+  $ZipPath = $latest.FullName
+}
+if (-not (Test-Path -LiteralPath $ZipPath)){
+  throw "ZIP не знайдено: $ZipPath"
+}
+Write-Host "📦 ZIP                | $ZipPath"
+Write-Host "📍 Dest               | $destDir"
+
+# --- Ensure archive dir
+New-DirIfMissing $archDir
+
+# --- Compute hash
+$hash = Get-FileHash -LiteralPath $ZipPath -Algorithm SHA256
+$hashLine = ("{0}  {1}" -f $hash.Hash, (Split-Path -Leaf $ZipPath))
+Write-Host "🔑 SHA256             | $($hash.Hash)"
+
+if ($VerifyOnly){
+  $existsChecks = (Test-Path -LiteralPath $checks) -and (Select-String -LiteralPath $checks -Pattern [Regex]::Escape($hashLine) -Quiet)
+  Write-Host ("ℹ️  VERIFY: У CHECKSUMS.txt {0}" -f ($(if($existsChecks){"ЗНАЙДЕНО"} else {"НЕ ЗНАЙДЕНО"})))
+  Write-Host "✅ Перевірка завершена (без змін)."
+  return
+}
+
+# --- Unpack
+if (-not $NoUnpack){
+  if ($PSCmdlet.ShouldProcess($destDir, "Expand-Archive (force overwrite)")){
+    if (Test-Path -LiteralPath $destDir){
+      Remove-Item -LiteralPath $destDir -Recurse -Force
+    }
+    Expand-Archive -Path $ZipPath -DestinationPath $destDir -Force
+    Write-Host "✅ Розпаковано до: $destDir"
+  }
+} else {
+  Write-Host "⏭️  Пропущено розпаковку (-NoUnpack)."
+}
+
+# --- INDEX update (generic line; якщо є README.md — використовуємо)
+if (-not $NoIndexUpdate){
+  $indexLine = "- [$Module](./DAO/$Module/README.md) — DAO‑модуль, інтегрований у CHECHA_CORE."
+  $readme = Join-Path $destDir "README.md"
+  if (Test-Path -LiteralPath $readme){
+    try {
+      $hdr = (Select-String -LiteralPath $readme -Pattern '^\s*#\s+(.+)$' -SimpleMatch:$false -AllMatches | Select-Object -First 1)
+      if ($hdr){
+        $title = ($hdr.Matches[0].Groups[1].Value).Trim()
+        $indexLine = "- [$title](./DAO/$Module/README.md) — DAO‑модуль $Module."
+      }
+    } catch { }
+  }
+  Add-LineOnce -File $indexFile -Line $indexLine
+  Write-Host "🧭 INDEX оновлено: $indexFile"
+} else {
+  Write-Host "⏭️  Пропущено оновлення INDEX (-NoIndexUpdate)."
+}
+
+# --- LOG
+Write-CoreLog -Root $Root -Message "Інтегровано DAO‑модуль $Module → C12\Vault\DAO\$Module (ZIP: $(Split-Path -Leaf $ZipPath))"
+Write-Host "📝 Запис у лог додано: C03\LOG\LOG.md"
+
+# --- CHECKSUMS
+if (-not (Test-Path -LiteralPath $checks)){
+  New-Item -ItemType File -Path $checks -Force | Out-Null
+  Set-Content -LiteralPath $checks -Value "" -Encoding UTF8
+}
+$exists = Select-String -LiteralPath $checks -Pattern [Regex]::Escape($hashLine) -Quiet
+if (-not $exists){
+  Add-Content -LiteralPath $checks -Value $hashLine
+}
+Write-Host "🔐 CHECKSUMS оновлено: $checks"
+Write-Host "🎉 Готово."

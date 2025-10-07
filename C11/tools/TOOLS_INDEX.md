@@ -1,0 +1,11 @@
+# C11/tools — індекс робочих скриптів (20250911_202147) 
+- `Check-C11-ToolsHealth.ps1`: (опис відсутній)
+- `cleanup_c_11_tools_v_2.ps1`: if($_.Context.PostContext){ $_.Context.PostContext[0].Trim() } else { $null }
+- `Cleanup-c11-tools.ps1`: if(-not $syn){ $syn = '(опис відсутній)' }
+- `Manage_Shield4_Release_v2_fixed2.ps1`: (опис відсутній)
+- `PostInstall-C11Suite.ps1`: (опис відсутній)
+- `register_cleanup_suite.ps1`: (опис відсутній)
+- `register_cleanup_tools_task_v_2_fixed.ps1`: (опис відсутній)
+- `Register-CleanupToolsTask_API.ps1`: (опис відсутній)
+- `Register-CleanupToolsTask.ps1`: (опис відсутній)
+- `Run-CleanupSuite.ps1`: (опис відсутній)

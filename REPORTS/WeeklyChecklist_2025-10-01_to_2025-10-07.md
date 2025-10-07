@@ -1,7 +1,7 @@
 # Weekly checklist (2025-10-01 → 2025-10-07)
 
 **Source:** $RestoreLogPath  
-**Generated:** 2025-10-07 15:25:55  
+**Generated:** 2025-10-07 15:28:18  
 
 ## Summary
 | Metric | Value |
@@ -36,5 +36,5 @@
 - [2025-10-07 13:40:28] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 
 ---
-**SHA-256:** 093FC1B4ABB333869F7096DC9B65879F96E7E1B54E381508D893717971F9FC29
+**SHA-256:** 16C7981CAF3BA0A3D2B28A9737DCB9A6AF90A2AD0B6014C0AE1CF0FF273E97E9
 

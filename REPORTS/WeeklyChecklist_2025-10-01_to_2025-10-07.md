@@ -1,40 +1,40 @@
-# Weekly checklist (2025-10-01 → 2025-10-07)
+# Weekly Checklist (2025-10-01 → 2025-10-07)
 
-**Source:** $RestoreLogPath  
-**Generated:** 2025-10-07 15:28:18  
+- Згенеровано: 2025-10-07 21:55:00
+- Гілка: reports
+- Звіт-файл: REPORTS/WeeklyChecklist_2025-10-01_to_2025-10-07.md
 
-## Summary
-| Metric | Value |
-|---|---:|
-| Days | 1 |
-| Records | 30 |
-| Updated status | 5 |
-| Checksums OK | 1 |
-| Warnings | 0 |
-| Errors | 2 |
+## KPI (ITETA)
+_немає даних_
 
-## By day
-| Date | Count | Status | Checks | Warn | Err |
-|---|---:|---:|---:|---:|---:|
-| 2025-10-07 | 30 | 5 | 1 | 0 | 2 |
+## Матриця відновлення — Top-5
+_немає даних або невірні колонки (очікуються score, 
+ame)_
 
-## Last 15 of the week
+## Restore Log (останні 20)
+```text
+- [2025-10-07 12:27:21] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+- [2025-10-07 12:28:49] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
+- [2025-10-07 12:28:49] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
+- [2025-10-07 12:29:15] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+- [2025-10-07 12:45:55] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 12:47:25] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:00:45] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
-- [2025-10-07 13:09:52] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
 - [2025-10-07 13:09:52] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+- [2025-10-07 13:09:52] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
 - [2025-10-07 13:17:02] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:18:04] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:19:11] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:20:17] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:20:50] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:21:53] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
-- [2025-10-07 13:24:20] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
 - [2025-10-07 13:24:20] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+- [2025-10-07 13:24:20] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
 - [2025-10-07 13:36:59] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:40:14] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:40:28] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+```
 
----
-**SHA-256:** 16C7981CAF3BA0A3D2B28A9737DCB9A6AF90A2AD0B6014C0AE1CF0FF273E97E9
+## Контроль цілісності (SHA-256)
+_немає записів для цього інтервалу_
 

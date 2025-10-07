@@ -1,56 +1,16 @@
-# OS/IDE
-Thumbs.db
+# === local noise we don't want in reports repo ===
+C06_FOCUS/
+C07_ANALYTICS/
+C12_KNOWLEDGE/
+TOOLS/
+DAO-GOGS-MAIN/.githooks/
+
+# OS/editor junk
 .DS_Store
-
-# Logs & reports
-C03/LOG/**
-!C03/LOG/.gitkeep
-
-# Releases / дистрибутиви
-C11/SHIELD4_ODESA/releases/**
-C11/SHIELD4_ODESA/dist/**
-
-# Архіви, бекупи, тимчасові
-*.zip
+Thumbs.db
 *.log
 *.tmp
-*.bak
-*.bak_*
-*.broken_*
 
-# Python/Node/npm (про всяк)
-__pycache__/
+# Node/venv/etc
 node_modules/
-# Release artifacts
-C11/SHIELD4_ODESA/Release/*.zip
-C11/SHIELD4_ODESA/Modules/*.zip
-C11/**/work_*/
-# build artifacts / logs
-*.zip
-*.zip.sha256
-C03/LOG/*
-!C03/LOG/*.md
-!C03/LOG/*.md
-# build artifacts / logs
-*.zip
-*.zip.sha256
-C03/LOG/*
-!C03/LOG/*.md
-!C03/LOG/*.md
-
-!C03/LOG/CHECKLIST_GIT_AND_RELEASES.md
-
-C03/*
-
-C03/LOG/*
-!C03/LOG/*.md
-
-C03/LOG/*
-!C03/LOG/
-!C03/LOG/*.md
-
-C03/LOG/*
-!C03/LOG/*.md
-
-*.zip
-*.zip.sha256
+venv/

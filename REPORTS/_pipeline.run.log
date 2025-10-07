@@ -1,0 +1,78 @@
+[2025-10-05 12:33:01] ===== PostExport =====
+STDOUT:
+?? У EXPORTS вже є потр?бн? файли - ок.
+
+STDERR:
+
+[2025-10-05 12:33:02] ===== Copy-Reports =====
+STDOUT:
+[2025-10-05 12:33:02] ?? START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+
+STDERR:
+[31;1mCheCha_Copy-Reports.ps1: [31;1mCannot convert argument "collection", with value: "D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf", for "AddRange" to type "System.Collections.Generic.IEnumerable`1[System.IO.FileInfo]": "Cannot convert the "D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf" value of type "System.IO.FileInfo" to type "System.Collections.Generic.IEnumerable`1[System.IO.FileInfo]"."[0m
+
+[2025-10-05 12:42:27] ===== PostExport =====
+STDOUT:
+?? У EXPORTS вже є потр?бн? файли - ок.
+
+STDERR:
+
+[2025-10-05 12:42:28] ===== Copy-Reports =====
+STDOUT:
+[2025-10-05 12:42:28] ?? START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+
+STDERR:
+[31;1mCheCha_Copy-Reports.ps1: [31;1mCannot convert argument "collection", with value: "D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf", for "AddRange" to type "System.Collections.Generic.IEnumerable`1[System.IO.FileInfo]": "Cannot convert the "D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf" value of type "System.IO.FileInfo" to type "System.Collections.Generic.IEnumerable`1[System.IO.FileInfo]"."[0m
+
+[2025-10-05 12:44:14] ===== PostExport =====
+STDOUT:
+?? У EXPORTS вже є потр?бн? файли - ок.
+
+STDERR:
+
+[2025-10-05 12:44:16] ===== Copy-Reports =====
+STDOUT:
+[2025-10-05 12:44:15] ?? START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+
+STDERR:
+[31;1mCheCha_Copy-Reports.ps1: [31;1mCannot convert argument "collection", with value: "D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf", for "AddRange" to type "System.Collections.Generic.IEnumerable`1[System.IO.FileInfo]": "Cannot convert the "D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf" value of type "System.IO.FileInfo" to type "System.Collections.Generic.IEnumerable`1[System.IO.FileInfo]"."[0m
+
+[2025-10-05 12:57:26] ===== PostExport =====
+STDOUT:
+?? У EXPORTS вже є потр?бн? файли - ок.
+
+STDERR:
+
+[2025-10-05 12:57:27] ===== Copy-Reports =====
+STDOUT:
+
+STDERR:
+[31;1mCheCha_Copy-Reports.ps1: [31;1mThe variable '$dayDir' cannot be retrieved because it has not been set.[0m
+
+[2025-10-05 13:05:18] ===== PostExport =====
+STDOUT:
+?? У EXPORTS вже є потр?бн? файли - ок.
+
+STDERR:
+
+[2025-10-05 13:05:19] ===== Copy-Reports =====
+STDOUT:
+
+STDERR:
+[31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_Copy-Reports.ps1:46[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  46 | [0m   [switch]$ForceCopy[36;1m[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                     ~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mMissing ')' in function parameter list.[0m
+
+[2025-10-05 13:17:47] ?? START PostExport
+[2025-10-05 13:17:47] ?? Без зм?н: CheCha_Report_Digest.pdf
+[2025-10-05 13:17:47] ?? Без зм?н: CheCha_Report_Digest.png
+[2025-10-05 13:17:47] ?? Без зм?н: CheCha_Report_Compact.png
+[2025-10-05 13:17:47] ? END PostExport exit=0
+[2025-10-05 13:17:48] ?? START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 13:17:48] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 13:17:48] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 13:17:48] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 13:17:48] ?? Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 13:17:48] ?? Завершено коп?ювання у: D:\CHECHA_CORE\REPORTS\2025-10-05

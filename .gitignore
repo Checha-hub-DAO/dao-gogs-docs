@@ -1,16 +1,7 @@
-# === local noise we don't want in reports repo ===
-C06_FOCUS/
-C07_ANALYTICS/
-C12_KNOWLEDGE/
-TOOLS/
-DAO-GOGS-MAIN/.githooks/
+# Ignore everything by default
+/*
 
-# OS/editor junk
-.DS_Store
-Thumbs.db
-*.log
-*.tmp
-
-# Node/venv/etc
-node_modules/
-venv/
+# Keep only these:
+!.gitignore
+!/REPORTS/
+!/REPORTS/**

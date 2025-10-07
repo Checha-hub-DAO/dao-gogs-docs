@@ -1,0 +1,150 @@
+[2025-10-05 03:35:59] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 03:35:59] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\EXPORTS
+[2025-10-05 03:35:59] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\REPORTS\_staging
+[2025-10-05 03:35:59] ⚠️ Не знайдено файл: CheCha_Report_Digest.pdf
+[2025-10-05 03:35:59] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\EXPORTS
+[2025-10-05 03:35:59] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\REPORTS\_staging
+[2025-10-05 03:35:59] ⚠️ Не знайдено файл: CheCha_Report_Digest.png
+[2025-10-05 03:35:59] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\EXPORTS
+[2025-10-05 03:35:59] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\REPORTS\_staging
+[2025-10-05 03:35:59] ✅ Скопійовано: C:\Users\serge\Downloads\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 03:36:00] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 03:38:23] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 03:38:23] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\EXPORTS
+[2025-10-05 03:38:23] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\REPORTS\_staging
+[2025-10-05 03:38:23] ⚠️ Не знайдено файл: CheCha_Report_Digest.pdf
+[2025-10-05 03:38:23] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\EXPORTS
+[2025-10-05 03:38:23] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\REPORTS\_staging
+[2025-10-05 03:38:23] ⚠️ Не знайдено файл: CheCha_Report_Digest.png
+[2025-10-05 03:38:23] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\EXPORTS
+[2025-10-05 03:38:23] ℹ️ Пропущено (нема шляху): D:\CHECHA_CORE\REPORTS\_staging
+[2025-10-05 03:38:23] ✅ Скопійовано: C:\Users\serge\Downloads\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 03:38:23] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 03:38:23] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 03:40:44] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 03:40:44] ⚠️ Не знайдено (PDF Digest): патерни = CheCha_Report_Digest.pdf, CheCha_Report*_Digest*.pdf, CheCha_Report*Digest*.pdf
+[2025-10-05 03:40:44] ⚠️ Не знайдено (PNG Digest): патерни = CheCha_Report_Digest.png, CheCha_Report*_Digest*.png, CheCha_Report*Digest*.png
+[2025-10-05 03:40:44] ⚠️ Не знайдено (PNG Compact): патерни = CheCha_Report_Compact.png, CheCha_Report*_Compact*.png
+[2025-10-05 03:40:44] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 03:40:44] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 03:42:05] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 03:42:05] ⚠️ Не знайдено (PDF Digest): патерни = CheCha_Report_Digest.pdf, CheCha_Report*_Digest*.pdf, CheCha_Report*Digest*.pdf
+[2025-10-05 03:42:05] ⚠️ Не знайдено (PNG Digest): патерни = CheCha_Report_Digest.png, CheCha_Report*_Digest*.png, CheCha_Report*Digest*.png
+[2025-10-05 03:42:05] ⚠️ Не знайдено (PNG Compact): патерни = CheCha_Report_Compact.png, CheCha_Report*_Compact*.png
+[2025-10-05 03:42:05] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 03:42:05] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:19:55] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:19:55] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:16:37)
+[2025-10-05 04:19:55] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:19:55] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:19:55] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:19:55] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:21:04] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:21:04] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:16:37)
+[2025-10-05 04:21:04] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:21:04] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:22:39] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:22:39] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:22:39] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:22:39] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:22:39] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:22:39] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:23:28] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:23:28] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:23:28] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:23:28] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:23:28] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:23:28] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:29:13] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:29:13] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:29:13] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:29:13] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:29:13] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:29:13] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:36:59] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:36:59] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:36:59] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:36:59] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:36:59] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:36:59] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:37:06] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:37:07] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:37:07] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:37:07] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:37:07] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:37:07] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:38:30] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:38:30] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:38:30)
+[2025-10-05 04:38:30] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:38:30] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:38:30] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:38:30] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:39:43] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:39:43] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:38:44)
+[2025-10-05 04:39:43] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:39:43] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:39:43] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:39:43] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:41:58] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:41:58] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:38:44)
+[2025-10-05 04:41:58] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:41:58] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:41:58] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:41:58] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:43:43] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:43:43] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:43:13)
+[2025-10-05 04:43:43] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:43:43] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:43:44] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:43:44] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:46:04] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:46:04] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:43:13)
+[2025-10-05 04:46:04] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:46:04] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:46:04] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:46:04] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:46:05] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 04:46:05] ✅ PDF Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (mtime=2025-10-05 04:43:13)
+[2025-10-05 04:46:05] ✅ PNG Digest: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (mtime=2025-10-05 04:22:38)
+[2025-10-05 04:46:05] ✅ PNG Compact: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (mtime=2025-10-05 03:32:09)
+[2025-10-05 04:46:05] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 04:46:05] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 04:48:33] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 12:33:02] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 12:35:14] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 12:42:28] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 12:44:15] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 13:17:10] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 13:17:10] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 13:17:10] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 13:17:10] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 13:17:10] ⚠️ Нічого не скопійовано. Перевір джерела/свіжість/розмір.
+[2025-10-05 13:17:48] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 13:17:48] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 13:17:48] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 13:17:48] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 13:17:48] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 13:17:48] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 13:47:19] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 13:47:20] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 13:47:20] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 13:47:20] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 13:47:20] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 13:47:20] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 13:56:48] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 13:56:48] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 13:56:48] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 13:56:48] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 13:56:48] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 13:56:48] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 14:04:57] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 14:04:57] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 14:04:57] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 14:04:57] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 14:04:57] 📦 Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 14:04:57] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 14:12:37] ▶️ START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 14:12:37] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 14:12:37] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 14:12:37] ℹ️ Без змін: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png → D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 14:12:37] 🏁 Завершено копіювання у: D:\CHECHA_CORE\REPORTS\2025-10-05

@@ -1,0 +1,32 @@
+**********************
+PowerShell transcript start
+Start time: 20251007145505
+Username: DESKTOP-2OLDAUU\serge
+RunAs User: DESKTOP-2OLDAUU\serge
+Configuration Name: 
+Machine: DESKTOP-2OLDAUU (Microsoft Windows NT 10.0.22631.0)
+Host Application: C:\Program Files\PowerShell\7\pwsh.dll -WorkingDirectory ~
+Process ID: 12864
+PSVersion: 7.5.3
+PSEdition: Core
+GitCommitId: 7.5.3
+OS: Microsoft Windows 10.0.22631
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+Transcript started, output file is D:\CHECHA_CORE\REPORTS\_weekly_gen.log
+PS C:\Users\serge> $VerbosePreference = 'Continue'
+PS C:\Users\serge> pwsh -NoProfile -ExecutionPolicy Bypass `
+  -File "D:\CHECHA_CORE\TOOLS\Generate-WeeklyChecklistReport.ps1" `
+  -RestoreLogPath "D:\CHECHA_CORE\C06_FOCUS\FOCUS_RestoreLog.md" `
+  -ReportsRoot "D:\CHECHA_CORE\REPORTS" `
+  -GitPublish -GitBranch reports -RemoteName origin -Verbose
+
+PS C:\Users\serge> Stop-Transcript
+**********************
+PowerShell transcript end
+End time: 20251007145506
+**********************

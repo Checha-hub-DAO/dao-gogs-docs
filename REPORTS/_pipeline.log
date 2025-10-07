@@ -1,0 +1,279 @@
+[2025-10-05 04:03:35] START build→postexport→archive
+[2025-10-05 04:03:35] PostExport exit=
+[2025-10-05 04:03:35] CopyReports exit=
+[2025-10-05 04:03:35] DONE
+[2025-10-05 04:25:37] START build→postexport→archive
+[2025-10-05 04:25:37] ▶️ START PostExport
+STDOUT: ?? Пропущено (замалий):  D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf
+STDERR: [31;1mCopy-Item: [0mD:\CHECHA_CORE\TOOLS\CheCha_PostExport.ps1:56[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  56 | [0m   [36;1mCopy-Item $fi.FullName $dest -Force[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mCannot overwrite the item D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png with itself.[0m
+[2025-10-05 04:25:38] ⏹ END PostExport exit=1
+[2025-10-05 04:25:38] PostExport exit=1
+[2025-10-05 04:25:38] ❌ Abort: PostExport failed
+[2025-10-05 12:32:46] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 12:32:47] DONE
+[2025-10-05 12:33:01] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 12:33:01] ▶️ START PostExport
+[2025-10-05 12:33:01] ⏹ END PostExport exit=0
+[2025-10-05 12:33:01] PostExport exit=0
+[2025-10-05 12:33:01] ▶️ START Copy-Reports
+[2025-10-05 12:33:02] ⏹ END Copy-Reports exit=1
+[2025-10-05 12:33:02] CopyReports exit=1
+[2025-10-05 12:33:02] ❌ Pipeline FAILED (Copy-Reports)
+[2025-10-05 12:42:27] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 12:42:27] ▶️ START PostExport
+[2025-10-05 12:42:27] ⏹ END PostExport exit=0
+[2025-10-05 12:42:27] PostExport exit=0
+[2025-10-05 12:42:27] ▶️ START Copy-Reports
+[2025-10-05 12:42:29] ⏹ END Copy-Reports exit=1
+[2025-10-05 12:42:29] CopyReports exit=1
+[2025-10-05 12:42:29] ❌ Pipeline FAILED (Copy-Reports)
+[2025-10-05 12:44:14] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 12:44:14] ▶️ START PostExport
+[2025-10-05 12:44:14] ⏹ END PostExport exit=0
+[2025-10-05 12:44:14] PostExport exit=0
+[2025-10-05 12:44:14] ▶️ START Copy-Reports
+[2025-10-05 12:44:16] ⏹ END Copy-Reports exit=1
+[2025-10-05 12:44:16] CopyReports exit=1
+[2025-10-05 12:44:16] ❌ Pipeline FAILED (Copy-Reports)
+[2025-10-05 12:57:25] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 12:57:25] ▶️ START PostExport
+[2025-10-05 12:57:26] ⏹ END PostExport exit=0
+[2025-10-05 12:57:26] PostExport exit=0
+[2025-10-05 12:57:26] ▶️ START Copy-Reports
+[2025-10-05 12:57:27] ⏹ END Copy-Reports exit=1
+[2025-10-05 12:57:27] CopyReports exit=1
+[2025-10-05 12:57:27] ❌ Pipeline FAILED (Copy-Reports)
+[2025-10-05 13:05:18] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 13:05:18] ▶️ START PostExport
+[2025-10-05 13:05:18] ⏹ END PostExport exit=0
+[2025-10-05 13:05:18] PostExport exit=0
+[2025-10-05 13:05:18] ▶️ START Copy-Reports
+[2025-10-05 13:05:19] ⏹ END Copy-Reports exit=1
+[2025-10-05 13:05:19] CopyReports exit=1
+[2025-10-05 13:05:19] ❌ Pipeline FAILED (Copy-Reports)
+[2025-10-05 13:17:28] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 13:17:28] ▶️ START PostExport
+[2025-10-05 13:17:28] ▶️ START Copy-Reports
+[2025-10-05 13:17:29] Copy-Reports args: -SourcePaths D:\CHECHA_CORE\EXPORTS,C:\Users\serge\Downloads -ReportsRoot D:\CHECHA_CORE\REPORTS -Date 2025-10-05T13:17:28.3220963+03:00 -RecentMinutes 1440 -MinPdfBytes 51200 -SoftFail
+[2025-10-05 13:17:47] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 13:17:47] ▶️ START PostExport
+[2025-10-05 13:17:48] ⏹ END PostExport exit=0
+[2025-10-05 13:17:48] PostExport exit=0
+[2025-10-05 13:17:48] ▶️ START Copy-Reports
+[2025-10-05 13:17:48] Copy-Reports args: -SourcePaths D:\CHECHA_CORE\EXPORTS,C:\Users\serge\Downloads -ReportsRoot D:\CHECHA_CORE\REPORTS -Date 2025-10-05T13:17:47.4885307+03:00 -RecentMinutes 1440 -MinPdfBytes 51200 -MakeZip -QuietMissing -SoftFail
+[2025-10-05 13:17:48] ⏹ END Copy-Reports exit=0
+[2025-10-05 13:17:49] CopyReports exit=0
+[2025-10-05 13:17:49] ✅ Pipeline OK
+[2025-10-05 13:47:02] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 13:47:03] ▶️ START PostExport
+[2025-10-05 13:47:03] STDERR: The variable '$postExport' cannot be retrieved because it has not been set.
+[2025-10-05 13:47:03] ⏹ END PostExport exit=1
+[2025-10-05 13:47:03] ❌ Pipeline FAILED (PostExport)
+[2025-10-05 13:47:18] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 13:47:18] ▶️ START PostExport
+[2025-10-05 13:47:19] STDERR: [31;1mCheCha_PostExport.ps1: [31;1mA parameter cannot be found that matches parameter name 'RecentMinutes'.[0m
+[2025-10-05 13:47:19] ⏹ END PostExport exit=1
+[2025-10-05 13:47:19] PostExport exit=1
+[2025-10-05 13:47:19] ▶️ START Copy-Reports
+[2025-10-05 13:47:19] STDOUT: [2025-10-05 13:47:19] ?? START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 13:47:20] STDOUT: [2025-10-05 13:47:20] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 13:47:20] STDOUT: [2025-10-05 13:47:20] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 13:47:20] STDOUT: [2025-10-05 13:47:20] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 13:47:20] STDOUT: [2025-10-05 13:47:20] ?? Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 13:47:20] STDOUT: [2025-10-05 13:47:20] ?? Завершено коп?ювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 13:47:20] ⏹ END Copy-Reports exit=0
+[2025-10-05 13:47:20] CopyReports exit=0
+[2025-10-05 13:47:20] ▶️ START ZipGuard
+[2025-10-05 13:47:21] STDOUT: ?? Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 13:47:21] ⏹ END ZipGuard exit=0
+[2025-10-05 13:47:21] ✅ Pipeline OK
+[2025-10-05 13:56:46] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 13:56:46] ▶️ START PostExport
+[2025-10-05 13:56:47] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_PostExport.ps1:48[0m
+[2025-10-05 13:56:47] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 13:56:47] STDERR: [31;1m[0m[36;1m[36;1m  48 | [0m   Write-Log "? [36;1m$label:[0m $src  $dst"[0m
+[2025-10-05 13:56:47] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                ~~~~~~~[0m
+[2025-10-05 13:56:47] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mVariable reference is not valid. ':' was not followed by a valid[0m
+[2025-10-05 13:56:47] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1mvariable name character. Consider using ${} to delimit the name.[0m
+[2025-10-05 13:56:47] ⏹ END PostExport exit=1
+[2025-10-05 13:56:47] PostExport exit=1
+[2025-10-05 13:56:47] ▶️ START Copy-Reports
+[2025-10-05 13:56:48] STDOUT: [2025-10-05 13:56:48] ?? START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 13:56:48] STDOUT: [2025-10-05 13:56:48] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 13:56:48] STDOUT: [2025-10-05 13:56:48] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 13:56:48] STDOUT: [2025-10-05 13:56:48] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 13:56:48] STDOUT: [2025-10-05 13:56:48] ?? Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 13:56:48] STDOUT: [2025-10-05 13:56:48] ?? Завершено коп?ювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 13:56:48] ⏹ END Copy-Reports exit=0
+[2025-10-05 13:56:48] CopyReports exit=0
+[2025-10-05 13:56:48] ▶️ START ZipGuard
+[2025-10-05 13:56:49] STDOUT: ?? Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 13:56:49] ⏹ END ZipGuard exit=0
+[2025-10-05 13:56:49] ✅ Pipeline OK
+[2025-10-05 14:04:56] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 14:04:56] ▶️ START PostExport
+[2025-10-05 14:04:56] STDOUT: [2025-10-05 14:04:56] ?? START CheCha_PostExport.ps1
+[2025-10-05 14:04:56] STDOUT: [2025-10-05 14:04:56] ?? Н?чого не скоп?йовано. Перев?р джерела/св?ж?сть/розм?р.
+[2025-10-05 14:04:56] STDOUT: [2025-10-05 14:04:56] ? END CheCha_PostExport.ps1
+[2025-10-05 14:04:56] ⏹ END PostExport exit=0
+[2025-10-05 14:04:56] PostExport exit=0
+[2025-10-05 14:04:56] ▶️ START Copy-Reports
+[2025-10-05 14:04:57] STDOUT: [2025-10-05 14:04:57] ?? START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 14:04:57] STDOUT: [2025-10-05 14:04:57] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 14:04:57] STDOUT: [2025-10-05 14:04:57] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 14:04:57] STDOUT: [2025-10-05 14:04:57] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 14:04:57] STDOUT: [2025-10-05 14:04:57] ?? Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 14:04:57] STDOUT: [2025-10-05 14:04:57] ?? Завершено коп?ювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 14:04:57] ⏹ END Copy-Reports exit=0
+[2025-10-05 14:04:57] CopyReports exit=0
+[2025-10-05 14:04:57] ▶️ START ZipGuard
+[2025-10-05 14:04:58] STDOUT: ?? Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 14:04:58] ⏹ END ZipGuard exit=0
+[2025-10-05 14:04:58] ✅ Pipeline OK
+[2025-10-05 14:12:36] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 14:12:36] ▶️ START PostExport
+[2025-10-05 14:12:37] STDOUT: [2025-10-05 14:12:37] ?? START CheCha_PostExport.ps1
+[2025-10-05 14:12:37] STDOUT: [2025-10-05 14:12:37] ?? Н?чого не скоп?йовано. Перев?р джерела/св?ж?сть/розм?р.
+[2025-10-05 14:12:37] STDOUT: [2025-10-05 14:12:37] ? END CheCha_PostExport.ps1
+[2025-10-05 14:12:37] ⏹ END PostExport exit=0
+[2025-10-05 14:12:37] PostExport exit=0
+[2025-10-05 14:12:37] ▶️ START Copy-Reports
+[2025-10-05 14:12:37] STDOUT: [2025-10-05 14:12:37] ?? START CheCha_Copy-Reports.ps1 (Date=2025-10-05)
+[2025-10-05 14:12:37] STDOUT: [2025-10-05 14:12:37] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.pdf  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.pdf (пропуск)
+[2025-10-05 14:12:37] STDOUT: [2025-10-05 14:12:37] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Digest.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05.png (пропуск)
+[2025-10-05 14:12:37] STDOUT: [2025-10-05 14:12:37] ?? Без зм?н: D:\CHECHA_CORE\EXPORTS\CheCha_Report_Compact.png  D:\CHECHA_CORE\REPORTS\2025-10-05\CheCha_Report_2025-10-05_compact.png (пропуск)
+[2025-10-05 14:12:37] STDOUT: [2025-10-05 14:12:37] ?? Завершено коп?ювання у: D:\CHECHA_CORE\REPORTS\2025-10-05
+[2025-10-05 14:12:37] ⏹ END Copy-Reports exit=0
+[2025-10-05 14:12:37] CopyReports exit=0
+[2025-10-05 14:12:37] ✅ Pipeline OK
+[2025-10-05 14:36:37] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 14:36:37] ▶️ START PostExport
+[2025-10-05 14:36:37] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_PostExport.ps1:8[0m
+[2025-10-05 14:36:37] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 14:36:37] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [Parameter()][string]$ExportsRoot = [36;1m'D:\CHECHA_CORE\EXPORTS'[0m,[0m
+[2025-10-05 14:36:37] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 14:36:37] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment[0m
+[2025-10-05 14:36:37] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1moperator must be an object that is able to accept assignments, such[0m
+[2025-10-05 14:36:37] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m[31;1m[36;1m     | [31;1mas a variable or a property.[0m
+[2025-10-05 14:36:37] ⏹ END PostExport exit=1
+[2025-10-05 14:36:37] PostExport exit=1
+[2025-10-05 14:36:37] ▶️ START Copy-Reports
+[2025-10-05 14:36:38] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_Copy-Reports.ps1:8[0m
+[2025-10-05 14:36:38] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 14:36:38] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [string]$ReportsRoot = [36;1m'D:\CHECHA_CORE\REPORTS'[0m,[0m
+[2025-10-05 14:36:38] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                          ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 14:36:38] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment[0m
+[2025-10-05 14:36:38] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1moperator must be an object that is able to accept assignments, such[0m
+[2025-10-05 14:36:38] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m[31;1m[36;1m     | [31;1mas a variable or a property.[0m
+[2025-10-05 14:36:38] ⏹ END Copy-Reports exit=1
+[2025-10-05 14:36:38] CopyReports exit=1
+[2025-10-05 14:36:38] ✅ Pipeline OK
+[2025-10-05 14:37:08] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 14:37:08] ▶️ START PostExport
+[2025-10-05 14:37:08] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_PostExport.ps1:8[0m
+[2025-10-05 14:37:08] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 14:37:08] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [Parameter()][string]$ExportsRoot = [36;1m'D:\CHECHA_CORE\EXPORTS'[0m,[0m
+[2025-10-05 14:37:08] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 14:37:08] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment[0m
+[2025-10-05 14:37:08] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1moperator must be an object that is able to accept assignments, such[0m
+[2025-10-05 14:37:08] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m[31;1m[36;1m     | [31;1mas a variable or a property.[0m
+[2025-10-05 14:37:08] ⏹ END PostExport exit=1
+[2025-10-05 14:37:08] PostExport exit=1
+[2025-10-05 14:37:08] ▶️ START Copy-Reports
+[2025-10-05 14:37:09] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_Copy-Reports.ps1:8[0m
+[2025-10-05 14:37:09] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 14:37:09] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [string]$ReportsRoot = [36;1m'D:\CHECHA_CORE\REPORTS'[0m,[0m
+[2025-10-05 14:37:09] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                          ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 14:37:09] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment[0m
+[2025-10-05 14:37:09] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1moperator must be an object that is able to accept assignments, such[0m
+[2025-10-05 14:37:09] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m[31;1m[36;1m     | [31;1mas a variable or a property.[0m
+[2025-10-05 14:37:09] ⏹ END Copy-Reports exit=1
+[2025-10-05 14:37:09] CopyReports exit=1
+[2025-10-05 14:37:09] ▶️ START ZipGuard
+[2025-10-05 14:37:10] STDOUT: ?? Створено ZIP: D:\CHECHA_CORE\REPORTS\2025-10-05.zip
+[2025-10-05 14:37:10] ⏹ END ZipGuard exit=0
+[2025-10-05 14:37:10] ✅ Pipeline OK
+[2025-10-05 14:37:19] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 14:37:19] ▶️ START PostExport
+[2025-10-05 14:37:20] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_PostExport.ps1:8[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [Parameter()][string]$ExportsRoot = [36;1m'D:\CHECHA_CORE\EXPORTS'[0m,[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment operator must be an object that is able to[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1maccept assignments, such as a variable or a property.[0m
+[2025-10-05 14:37:20] ⏹ END PostExport exit=1
+[2025-10-05 14:37:20] PostExport exit=1
+[2025-10-05 14:37:20] ▶️ START Copy-Reports
+[2025-10-05 14:37:20] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_Copy-Reports.ps1:8[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [string]$ReportsRoot = [36;1m'D:\CHECHA_CORE\REPORTS'[0m,[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                          ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment operator must be an object that is able to[0m
+[2025-10-05 14:37:20] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1maccept assignments, such as a variable or a property.[0m
+[2025-10-05 14:37:20] ⏹ END Copy-Reports exit=1
+[2025-10-05 14:37:20] CopyReports exit=1
+[2025-10-05 14:37:20] ✅ Pipeline OK
+[2025-10-05 14:39:28] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 14:39:28] ▶️ START PostExport
+[2025-10-05 14:39:28] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_PostExport.ps1:8[0m
+[2025-10-05 14:39:28] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 14:39:28] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [Parameter()][string]$ExportsRoot = [36;1m'D:\CHECHA_CORE\EXPORTS'[0m,[0m
+[2025-10-05 14:39:28] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 14:39:28] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment operator must be an object that is able to[0m
+[2025-10-05 14:39:28] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1maccept assignments, such as a variable or a property.[0m
+[2025-10-05 14:39:28] ⏹ END PostExport exit=1
+[2025-10-05 14:39:28] PostExport exit=1
+[2025-10-05 14:39:28] ▶️ START Copy-Reports
+[2025-10-05 14:39:29] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_Copy-Reports.ps1:8[0m
+[2025-10-05 14:39:29] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 14:39:29] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [string]$ReportsRoot = [36;1m'D:\CHECHA_CORE\REPORTS'[0m,[0m
+[2025-10-05 14:39:29] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                          ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 14:39:29] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment operator must be an object that is able to[0m
+[2025-10-05 14:39:29] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1maccept assignments, such as a variable or a property.[0m
+[2025-10-05 14:39:29] ⏹ END Copy-Reports exit=1
+[2025-10-05 14:39:29] CopyReports exit=1
+[2025-10-05 14:39:29] ✅ Pipeline OK
+[2025-10-05 15:24:26] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 15:24:26] ▶️ START PostExport
+[2025-10-05 15:24:27] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_PostExport.ps1:8[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [Parameter()][string]$ExportsRoot = [36;1m'D:\CHECHA_CORE\EXPORTS'[0m,[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment operator must be an object that is able to[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1maccept assignments, such as a variable or a property.[0m
+[2025-10-05 15:24:27] ⏹ END PostExport exit=1
+[2025-10-05 15:24:27] PostExport exit=1
+[2025-10-05 15:24:27] ▶️ START Copy-Reports
+[2025-10-05 15:24:27] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_Copy-Reports.ps1:8[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [string]$ReportsRoot = [36;1m'D:\CHECHA_CORE\REPORTS'[0m,[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                          ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment operator must be an object that is able to[0m
+[2025-10-05 15:24:27] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1maccept assignments, such as a variable or a property.[0m
+[2025-10-05 15:24:27] ⏹ END Copy-Reports exit=1
+[2025-10-05 15:24:27] CopyReports exit=1
+[2025-10-05 15:24:27] ✅ Pipeline OK
+[2025-10-05 15:28:33] START build→postexport→archive (Date=2025-10-05)
+[2025-10-05 15:28:33] ▶️ START PostExport
+[2025-10-05 15:28:34] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_PostExport.ps1:8[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [Parameter()][string]$ExportsRoot = [36;1m'D:\CHECHA_CORE\EXPORTS'[0m,[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                                       ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment operator must be an object that is able to[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1maccept assignments, such as a variable or a property.[0m
+[2025-10-05 15:28:34] ⏹ END PostExport exit=1
+[2025-10-05 15:28:34] PostExport exit=1
+[2025-10-05 15:28:34] ▶️ START Copy-Reports
+[2025-10-05 15:28:34] STDERR: [31;1mParserError: [0mD:\CHECHA_CORE\TOOLS\CheCha_Copy-Reports.ps1:8[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1mLine |[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1m[36;1m   8 | [0m   [string]$ReportsRoot = [36;1m'D:\CHECHA_CORE\REPORTS'[0m,[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m                          ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mThe assignment expression is not valid. The input to an assignment operator must be an object that is able to[0m
+[2025-10-05 15:28:34] STDERR: [31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1maccept assignments, such as a variable or a property.[0m
+[2025-10-05 15:28:34] ⏹ END Copy-Reports exit=1
+[2025-10-05 15:28:34] CopyReports exit=1
+[2025-10-05 15:28:34] ✅ Pipeline OK

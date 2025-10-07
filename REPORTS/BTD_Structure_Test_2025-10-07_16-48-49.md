@@ -1,0 +1,1337 @@
+# ✅/❌ SKD-валідація BTD 1.0
+
+- **Час перевірки:** 2025-10-07 16:48:49 +03:00
+- **MANIFEST:** C11\MANIFEST.md
+- **RepoRoot:** D:\CHECHA_CORE
+
+## Підсумок
+- Перевірено записів: **10**
+- Виявлено проблем: **9**
+
+## Деталі перевірки
+| Код | Назва | Шлях | Є файл | Status | SHA (MANIFEST) | SHA (calc) |
+|---|---|---|---|---|---|---|
+| BTD-01 | README.md | C11/README.md | False | Draft | — |  |
+| BTD-02 | TOOLS_INDEX.md | C11/tools/INDEX/TOOLS_INDEX.md | True | Draft | — | 577EB8CC230D692E9F2B3ABCACF5E7539149CEA3AD611EA51C0F864F23C47D8F |
+| BTD-03 | TOOLS_MAP.csv | C11/tools/INDEX/TOOLS_MAP.csv | False | Draft | — |  |
+| BTD-04 | MAT_RESTORE.md | C07_ANALYTICS/MAT_RESTORE.md | False | Draft | — |  |
+| BTD-05 | ITETA_Dashboard.xlsx | C07_ANALYTICS/ITETA_Dashboard.xlsx | False | Draft | — |  |
+| BTD-06 | Audit-Publish.ps1 | C12_KNOWLEDGE/MD_AUDIT/Audit-Publish.ps1 | False | Draft | — |  |
+| BTD-07 | Git_Control.md | C12_KNOWLEDGE/MD_AUDIT/Git_Control.md | False | Draft | — |  |
+| BTD-08 | INBOX-PerfTrim.ps1 | INBOX/INBOX-PerfTrim.ps1 | False | Draft | — |  |
+| BTD-09 | SKD-Report.md | SKD/SKD-Report.md | False | Draft | — |  |
+| BTD-10 | EXPORTS_GUIDE.md | EXPORTS/EXPORTS_GUIDE.md | False | Planned | — |  |
+
+## Проблеми
+| Тип | Код | Назва | Шлях | Деталі |
+|---|---|---|---|---|
+| Missing | BTD-01 | README.md | C11/README.md | Файл відсутній |
+| Missing | BTD-03 | TOOLS_MAP.csv | C11/tools/INDEX/TOOLS_MAP.csv | Файл відсутній |
+| Missing | BTD-04 | MAT_RESTORE.md | C07_ANALYTICS/MAT_RESTORE.md | Файл відсутній |
+| Missing | BTD-05 | ITETA_Dashboard.xlsx | C07_ANALYTICS/ITETA_Dashboard.xlsx | Файл відсутній |
+| Missing | BTD-06 | Audit-Publish.ps1 | C12_KNOWLEDGE/MD_AUDIT/Audit-Publish.ps1 | Файл відсутній |
+| Missing | BTD-07 | Git_Control.md | C12_KNOWLEDGE/MD_AUDIT/Git_Control.md | Файл відсутній |
+| Missing | BTD-08 | INBOX-PerfTrim.ps1 | INBOX/INBOX-PerfTrim.ps1 | Файл відсутній |
+| Missing | BTD-09 | SKD-Report.md | SKD/SKD-Report.md | Файл відсутній |
+| Missing | BTD-10 | EXPORTS_GUIDE.md | EXPORTS/EXPORTS_GUIDE.md | Файл відсутній |
+
+## Зайві файли (не описані в MANIFEST)
+- C07_ANALYTICS/.githooks/pre-commit
+- C07_ANALYTICS/.githooks/pre-push
+- C07_ANALYTICS/README.md
+- C11/AUTOMATION/README.md.bak_20250912_200700
+- C11/AUTOMATION/README.md.bak_20250912_200922
+- C11/AUTOMATION/README.md.bak_20250912_201101
+- C11/AUTOMATION/tools/CHECHA-Weekly.ps1.bak_20250912_192003
+- C11/AUTOMATION/tools/Run-DAOModule-VerifyWeekly.ps1.bak_20250912_182316
+- C11/AUTOMATION/tools/Run-DAOModule-VerifyWeekly.ps1.bak_20250912_182512
+- C11/AUTOMATION/tools/Run-DAOModule-VerifyWeekly.ps1.bak_touch_20250912_182724
+- C11/BTD 1.0/MANIFEST.md
+- C11/BTD 1.0/README.md
+- C11/C11_AUTOMATION/.gitignore
+- C11/C11_AUTOMATION/pipelines/weekly/Start-Planning.ps1
+- C11/C11_AUTOMATION/pipelines/weekly/Validate-Releases.ps1
+- C11/C11_AUTOMATION/README.md
+- C11/C11_AUTOMATION/steps/Start-Planning.ps1
+- C11/C11_AUTOMATION/steps/Validate-Releases.ps1
+- C11/C11_AUTOMATION/tools/Checha-Orchestrator.ps1
+- C11/C11_AUTOMATION/tools/CHECHA-Weekly.ps1
+- C11/C11_AUTOMATION/tools/Check-G43-Health.ps1
+- C11/C11_AUTOMATION/tools/Lint-Scripts.ps1
+- C11/C11_AUTOMATION/tools/Register-DAOModule-VerifyWeekly_v2.ps1
+- C11/C11_AUTOMATION/tools/Run-DAOModule-VerifyWeekly_v4.ps1
+- C11/C11_AUTOMATION/tools/Run-DAOModule-VerifyWeekly.ps1
+- C11/C11_AUTOMATION/tools/Start-Planning.ps1
+- C11/C11_AUTOMATION/tools/steps/Start-Planning.ps1
+- C11/C11_AUTOMATION/tools/steps/Validate-Releases.ps1
+- C11/C11_AUTOMATION/tools/Validate-Releases.ps1
+- C11/MANIFEST.md
+- C11/SHIELD4_ODESA/Archive/CHECKSUMS.txt
+- C11/SHIELD4_ODESA/Archive/final_batch_2025-09-11_16-48-48/SHA256_SHIELD4_ODESA_UltimatePack_v2.6.zip.txt
+- C11/SHIELD4_ODESA/Archive/final_batch_2025-09-11_16-48-48/SHIELD4_ODESA_UltimatePack_v2.6.zip
+- C11/SHIELD4_ODESA/dist/SHIELD4_ODESA_release_v2.6_20250912_170140.zip
+- C11/SHIELD4_ODESA/dist/SHIELD4_ODESA_release_v2.6_20250912_183500.zip
+- C11/SHIELD4_ODESA/dist/SHIELD4_ODESA_release_v2.6_20250912_192256.zip
+- C11/SHIELD4_ODESA/dist/SHIELD4_ODESA_release_v2.6_20250912_192507.zip
+- C11/SHIELD4_ODESA/dist/SHIELD4_ODESA_release_v2.6_20250912_192517.zip
+- C11/SHIELD4_ODESA/dist/SHIELD4_ODESA_release_v2.6_20250912_192929.zip
+- C11/SHIELD4_ODESA/dist/SHIELD4_ODESA_release_v2.6_20250912_193226.zip
+- C11/SHIELD4_ODESA/Final_Release/SHA256_SHIELD4_ODESA_UltimatePack_v2.6.zip.txt
+- C11/SHIELD4_ODESA/Final_Release/SHIELD4_ODESA_UltimatePack_v2.6.zip
+- C11/SHIELD4_ODESA/INDEX.md
+- C11/SHIELD4_ODESA/INDEX/INDEX_SHIELD4_ODESA.md
+- C11/SHIELD4_ODESA/Modules/SHIELD4_ODESA_MegaPack_v1.0.zip
+- C11/SHIELD4_ODESA/Modules/SHIELD4_ODESA_MegaVisualPack_v1.0.zip
+- C11/SHIELD4_ODESA/Release/CHECKSUMS.txt
+- C11/SHIELD4_ODESA/Release/SHIELD4_ODESA_UltimatePack_test.zip
+- C11/SHIELD4_ODESA/Release/SHIELD4_ODESA_UltimatePack_v2.6.zip
+- C11/SHIELD4_ODESA/RELEASES/CHECKSUMS_RELEASES.txt
+- C11/SHIELD4_ODESA/RELEASES/LATEST.txt
+- C11/SHIELD4_ODESA/RELEASES/release_notes_v2.6_20250912_183708.md
+- C11/SHIELD4_ODESA/RELEASES/SHIELD4_ODESA_release_v2.6_20250912_170140.zip
+- C11/SHIELD4_ODESA/RELEASES/SHIELD4_ODESA_release_v2.6_20250912_183500.zip
+- C11/SHIELD4_ODESA/RELEASES/SHIELD4_ODESA_release_v2.6_20250912_185137.zip
+- C11/SHIELD4_ODESA/RELEASES/SHIELD4_ODESA_release_v2.6_20250912_192256.zip
+- C11/SHIELD4_ODESA/RELEASES/SHIELD4_ODESA_release_v2.6_20250912_192507.zip
+- C11/SHIELD4_ODESA/RELEASES/SHIELD4_ODESA_release_v2.6_20250912_192517.zip
+- C11/SHIELD4_ODESA/RELEASES/SHIELD4_ODESA_release_v2.6_20250912_192929.zip
+- C11/SHIELD4_ODESA/RELEASES/SHIELD4_ODESA_release_v2.6_20250912_193226.zip
+- C11/SHIELD4_ODESA/RELEASES/v2.6/CHECKSUMS.txt
+- C11/SHIELD4_ODESA/RELEASES/v2.6/meta/MANIFEST.json
+- C11/SHIELD4_ODESA/RELEASES/v2.6/modules/SHIELD4_ODESA_MegaPack_v1.0.zip
+- C11/SHIELD4_ODESA/RELEASES/v2.6/modules/SHIELD4_ODESA_MegaVisualPack_v1.0.zip
+- C11/SHIELD4_ODESA/RELEASES/v2.6/SHIELD4_ODESA_UltimatePack_v2.6.zip
+- C11/SHIELD4_ODESA/work_20250913_200514/unpacked_v2.6/README_Ultimate.md
+- C11/SHIELD4_ODESA/work_20250913_200514/unpacked_v2.6/SHA256_UltimatePack_v2.5.txt
+- C11/tools/Новий Текстовий документ.txt
+- C11/tools/Build_Shield4_Release_Fallback.ps1
+- C11/tools/Bump-Release.ps1
+- C11/tools/CHECHA_CORE_C11_tools_suite_20250911_165334.zip
+- C11/tools/Check-C11-ToolsHealth.ps1
+- C11/tools/cleanup_c_11_tools_v_2.ps1
+- C11/tools/Cleanup-c11-tools.ps1
+- C11/tools/DAO-G43_v1.0.zip
+- C11/tools/Integrate-DAO-G35_v2.ps1
+- C11/tools/Integrate-DAO-G35.ps1
+- C11/tools/Integrate-DAOModule_v1.ps1
+- C11/tools/Integrate-DAOModule_v1.ps1.bak_20250912_173740
+- C11/tools/Integrate-DAOModule_v1.ps1.bak_20250912_174750
+- C11/tools/Integrate-DAOModule_v1.ps1.broken_20250912_192914
+- C11/tools/Integrate-DAOModule_v2.ps1
+- C11/tools/Integrate-PodilskInfoHub.ps1
+- C11/tools/Manage_Shield4_Release_v2_fixed2.ps1
+- C11/tools/Manage_Shield4_Release_v2_fixed2.ps1.bak_20250911_172107
+- C11/tools/Manage_Shield4_Release_v2_fixed2.ps1.bak_20250911_172917
+- C11/tools/Manage_Shield4_Release_v2_fixed2.ps1.bak_20250912_165001
+- C11/tools/Manage_Shield4_Release_v2_fixed2.ps1.bak_20250912_165224
+- C11/tools/Manage_Shield4_Release_v2_fixed2.ps1.bak_20250912_165505
+- C11/tools/Manage_Shield4_Release.ps1
+- C11/tools/Manage_Shield4_Release.ps1.bak_20250913_161142
+- C11/tools/New-G35WeeklyDigest.ps1
+- C11/tools/PostInstall-C11Suite.ps1
+- C11/tools/Publish_Release_Template.bat
+- C11/tools/Publish_v2.6_DryRun.bat
+- C11/tools/Publish_v2.6.bat
+- C11/tools/Publish-Release.ps1
+- C11/tools/README.md
+- C11/tools/README.txt
+- C11/tools/register_cleanup_suite.ps1
+- C11/tools/register_cleanup_tools_task_v_2_fixed.ps1
+- C11/tools/Register-CleanupToolsTask_API.ps1
+- C11/tools/Register-CleanupToolsTask.ps1
+- C11/tools/Release-Finalize_PodilskInfoHub_v1.2.ps1
+- C11/tools/Rotate-CoreLogs.ps1
+- C11/tools/Run_Shield4_Release.ps1
+- C11/tools/Run-CleanupSuite.ps1
+- C11/tools/Smoke-All.ps1
+- C11/tools/TOOLS_INDEX.md
+- C11/tools/Update-C12Index.ps1.bak_20250917_171034
+- C11/tools/Update-C12Index.ps1.bak_20250917_171416
+- C11/tools/Validate-Releases.ps1
+- C12_KNOWLEDGE/MD_AUDIT/.githooks/pre-commit
+- C12_KNOWLEDGE/MD_AUDIT/.githooks/pre-push
+- C12_KNOWLEDGE/MD_AUDIT/.gitignore
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_012701.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_012711.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_012804.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_013036.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_013048.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_014717.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_014854.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_014946.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_015004.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_015151.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020007.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020116.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020117.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020227.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020238.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020239.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020349.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020401.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020403.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020800.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020813.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020815.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020853.md
+- C12_KNOWLEDGE/MD_AUDIT/AUDIT_DIFF_20251007_020855.md
+- C12_KNOWLEDGE/MD_AUDIT/index.md
+- C12_KNOWLEDGE/MD_AUDIT/manifest.csv
+- C12_KNOWLEDGE/MD_AUDIT/README.md
+- C12_KNOWLEDGE/MD_INBOX/.githooks/pre-commit
+- C12_KNOWLEDGE/MD_INBOX/.githooks/pre-push
+- C12_KNOWLEDGE/MD_INBOX/.gitignore
+- C12_KNOWLEDGE/MD_INBOX/CHANGELOG.md
+- C12_KNOWLEDGE/MD_INBOX/README.md
+- C12_KNOWLEDGE/MD_INBOX/setup-hooks.ps1
+- C12_KNOWLEDGE/MD_INBOX/test.txt
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_CARDS_PACKAGE_20250921_210221_d672c725.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_CARDS_SET2_20250921_210847_d2e6bff4.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_CARDS_SET3_20250921_211458_f63f2345.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_CARDS_SET3_PACKAGE_20250921_211630_27ed3b43.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_CARDS_SET4_PACKAGE_20250921_212229_c15fe4d6.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (1)_20250921_212806_ef808f6e.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (2)_20250921_213311_2b15fc63.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (3)_20250921_213632_c2e522a0.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (4)_20250921_213744_cb440bef.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (5)_20250921_213852_0957a22b.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (6)_20250921_215053_328d3946.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (7)_20250921_215219_e40ff4c7.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (8)_20250921_220319_f197d135.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE (9)_20250921_220439_f40e1b38.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_C_WORLD_ALL_SETS_PACKAGE_20250921_212718_f88d4a53.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_test_big_20251003_102847_6c7dbad4.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_test_huge_20251003_103018_a4a00486.zip
+- C12_KNOWLEDGE/ZIP/WORLD/WORLD_test_huge_recheck.zip
+- INBOX/_archives/1999-W52.zip
+- INBOX/_archives/2025-W37.zip
+- INBOX/_archives/2025-W37/files/Anti-FPV_Package_v1.0_20250908_203414_465b36d4.zip
+- INBOX/_archives/2025-W37/files/Anti-FPV_Package_v1.1_20250908_204307_1421c58f.zip
+- INBOX/_archives/2025-W37/files/AOT_MasterKit_v1.0 (1)_20250909_032404_60c90ca4.zip
+- INBOX/_archives/2025-W37/files/AOT_MasterKit_v1.0_20250909_034005_cb885b62.zip
+- INBOX/_archives/2025-W37/files/AOT_MediaSite_v1.0_20250909_000808_8e7ea504.zip
+- INBOX/_archives/2025-W37/files/AOT_MediaSite_v1.1_20250909_003410_e4a29f16.zip
+- INBOX/_archives/2025-W37/files/AOT_SocialMediaKit_v1.0_20250909_013804_de5e76ef.zip
+- INBOX/_archives/2025-W37/files/C-CATALOG_CORE_v1.0_20250909_120423_aa6ccbd1.zip
+- INBOX/_archives/2025-W37/files/C-CATALOG_CORE_v1.1_20250909_124040_904c28eb.zip
+- INBOX/_archives/2025-W37/files/C-CATALOG_v1.1_20250909_114556_f2ce1592.zip
+- INBOX/_archives/2025-W37/files/C-CATALOG_v2.2_20250909_160752_2e876a62.zip
+- INBOX/_archives/2025-W37/files/C-CATALOG_v2.4_20250909_162229_9e8575da.zip
+- INBOX/_archives/2025-W37/files/C-CATALOG_v2.4_with_notes_20250909_171642_e4903de4.zip
+- INBOX/_archives/2025-W37/files/C-CONTEXT_CLEANUP_STARTER_v1.0_20250909_130126_4c458e75.zip
+- INBOX/_archives/2025-W37/files/C-REPORT-ARCHIVE_STARTER_v1.0_20250909_125146_6ea8b258.zip
+- INBOX/_archives/2025-W37/files/C10_DAO-DNA_v1.7_20250909_150007_7a3eea08.zip
+- INBOX/_archives/2025-W37/files/C11-AGENTS_v1.0_20250909_121434_3df8931e.zip
+- INBOX/_archives/2025-W37/files/C11-AGENTS_v1.1_20250909_123600_63009bd5.zip
+- INBOX/_archives/2025-W37/files/CHECHA_CORE_C11_tools_suite_20250911_165334_208400de.zip
+- INBOX/_archives/2025-W37/files/DAO-G35_v1.0_20250911_215632_f99cc011.zip
+- INBOX/_archives/2025-W37/files/DAO-GOGS Інститут Майбутнього_files_20250909_150824_22399f9e.zip
+- INBOX/_archives/2025-W37/files/DAO-GOGS_MAP_v1.0_20250910_200622_ca738dbb.zip
+- INBOX/_archives/2025-W37/files/DAO-MEDIA_FULL_v1.0_20250910_015721_6b5cf713.zip
+- INBOX/_archives/2025-W37/files/DAO-Media-Dashboard_20250910_134509_b2fc4fe8.zip
+- INBOX/_archives/2025-W37/files/DAO-Media-Timeline-Q4-2025_20250910_142520_2f74b5ad.zip
+- INBOX/_archives/2025-W37/files/DAO-Onboarding_MediaPack_20250909_032237_28272a8d.zip
+- INBOX/_archives/2025-W37/files/DAO-OnboardingCards_Pack_20250909_031022_68fc42e1.zip
+- INBOX/_archives/2025-W37/files/DAO-Ukraine-Node_v1.0_full_20250909_132404_cea08f99.zip
+- INBOX/_archives/2025-W37/files/G-CATALOG_v1.0_20250909_162235_53a2fb6e.zip
+- INBOX/_archives/2025-W37/files/G-CATALOG_v1.1_20250909_171128_e77f7252.zip
+- INBOX/_archives/2025-W37/files/G-CATALOG_v1.1_with_notes_20250909_171441_794088a1.zip
+- INBOX/_archives/2025-W37/files/G-CATALOG_v1.2_20250909_112841_55f0140e.zip
+- INBOX/_archives/2025-W37/files/G-CATALOG_v1.3_20250909_113704_a2c979d2.zip
+- INBOX/_archives/2025-W37/files/G-CATALOG_v1.5_20250909_113935_127203bc.zip
+- INBOX/_archives/2025-W37/files/G-CATALOG_v1.6_20250909_114153_e8709496.zip
+- INBOX/_archives/2025-W37/files/G15-DAO-Community_20250910_153108_bda3e8fb.zip
+- INBOX/_archives/2025-W37/files/G35_DAO-MEDIA_START_v1.0_20250910_030521_22a50d2c.zip
+- INBOX/_archives/2025-W37/files/G35_DAO-MEDIA_START_v1.1_20250910_031454_a1bebd44.zip
+- INBOX/_archives/2025-W37/files/G35_DAO-MEDIA_STRUCTURE_v1.0_20250910_021729_172a5f65.zip
+- INBOX/_archives/2025-W37/files/G35-AGENT-01_20250910_134102_8b174948.zip
+- INBOX/_archives/2025-W37/files/G35-Campaign-01-v2_20250910_135322_67fcf033.zip
+- INBOX/_archives/2025-W37/files/G35-Campaign-02_20250910_141321_5735999c.zip
+- INBOX/_archives/2025-W37/files/g35-dao-media_v1.0.0_20250910_002915_f5526ae5.zip
+- INBOX/_archives/2025-W37/files/g35-dao-media-monorepo-files_20250910_003155_1c35c8ce.zip
+- INBOX/_archives/2025-W37/files/G35-Gallery-README-v1.0_20250910_122531_28573fe9.zip
+- INBOX/_archives/2025-W37/files/G35-Gallery-README-v1.1_20250910_123708_18ef1c14.zip
+- INBOX/_archives/2025-W37/files/G35-Gallery-README-v1.2_20250910_124248_969bdf62.zip
+- INBOX/_archives/2025-W37/files/G35-Gallery-README-v1.3_20250910_124407_b107b349.zip
+- INBOX/_archives/2025-W37/files/G35-MediaPack_20250910_122412_7c65066c.zip
+- INBOX/_archives/2025-W37/files/G36-MediaPack_20250910_150427_65c059a8.zip
+- INBOX/_archives/2025-W37/files/G38-Word-of-Life_20250910_145946_8f9cc539.zip
+- INBOX/_archives/2025-W37/files/G39-Ethical-Mobilization_20250910_144025_a7ffdf71.zip
+- INBOX/_archives/2025-W37/files/G41-DAO-Temple_20250910_144432_70135dfb.zip
+- INBOX/_archives/2025-W37/files/G43.2_Future-Institute_v0.1_20250909_154516_23fcc135.zip
+- INBOX/_archives/2025-W37/files/G45_Module_AOT_Shchyt_v2.2_20250908_232645_ab155cf8.zip
+- INBOX/_archives/2025-W37/files/G45_Module_AOT_Shchyt_v2.3_20250908_235712_1dc53c95.zip
+- INBOX/_archives/2025-W37/files/G45_Module_Shchyt_GitBook_v1.1_20250908_230215_66f8d302.zip
+- INBOX/_archives/2025-W37/files/G45_Module_Shchyt_GitBook_v1.2_20250908_225727_74850c99.zip
+- INBOX/_archives/2025-W37/files/G45_Module_Shchyt_GitBook_v1.3_20250908_230013_2cba29c2.zip
+- INBOX/_archives/2025-W37/files/G45_Module_Shchyt_GitBook_v1.5_20250908_230248_9d38c516.zip
+- INBOX/_archives/2025-W37/files/G45_Module_Shchyt_GitBook_v1.7_20250908_230546_007553b9.zip
+- INBOX/_archives/2025-W37/files/G45_Module_Shchyt_GitBook_v2.0_20250908_230948_579af43c.zip
+- INBOX/_archives/2025-W37/files/G45_Module_Shchyt_GitBook_v2.1_20250908_231507_aeb8522b.zip
+- INBOX/_archives/2025-W37/files/G45_Package_v2.0_20250908_210950_543142a7.zip
+- INBOX/_archives/2025-W37/files/G45_Package_v2.2_20250908_214755_6dcaeeee.zip
+- INBOX/_archives/2025-W37/files/GitBook_Pages_v1.0_20250910_203011_7dbec2fc.zip
+- INBOX/_archives/2025-W37/files/HOWTO_ADD_MODULE_20250910_010914_3701e601.zip
+- INBOX/_archives/2025-W37/files/Manage_Shield4_Release_Package_20250911_213642_20782df6.zip
+- INBOX/_archives/2025-W37/files/MEDIA_CATALOG_20250910_154850_efb27a51.zip
+- INBOX/_archives/2025-W37/files/MEDIA_CATALOG_bundle_20250910_152110_54e142d3.zip
+- INBOX/_archives/2025-W37/files/MEDIA_CATALOG_core_20250910_152109_2c382c92.zip
+- INBOX/_archives/2025-W37/files/MEDIA_CATALOG_release_20250910_152109_a9cae9b3.zip
+- INBOX/_archives/2025-W37/files/MEDIA_CATALOG_v1.0_20250910_164558_62329048.zip
+- INBOX/_archives/2025-W37/files/MonthlyScheduler_kit_20250910_200648_d5a1a439.zip
+- INBOX/_archives/2025-W37/files/NARRATIVE_v1.0_20250910_162611_dc1d10a1.zip
+- INBOX/_archives/2025-W37/files/NARRATIVE_v1.1_20250910_163805_68ffe43b.zip
+- INBOX/_archives/2025-W37/files/ReleaseArtifacts_20250910_201225_8625ee55.zip
+- INBOX/_archives/2025-W37/files/SchedulerSuite_v1.0_20250910_200630_e81708bf.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_GSheets_Tracker_v1.0_20250911_115211_cc3088a8.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_GITBOOK_v1.1_20250911_113736_5eff4423.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_MASTER_PosterBook_Short_v1.0_PNG_20250911_122933_289a0b90.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_MASTER_v1.0_20250911_120627_cf0632b1.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_MegaPack_v1.0_20250913_161325_b9ebc48c.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_MegaVisualPack_v1.0_20250911_123233_d59ebd2d.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_PosterPack_v1.0_20250911_122316_76cbc32e.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_Slides_v1.0_20250911_121348_1de0d546.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_UltimatePack_v2.5_20250911_134539_6e1f34b8.zip
+- INBOX/_archives/2025-W37/files/SHIELD4_ODESA_UltimatePack_v2.6_20250911_134651_05254195.zip
+- INBOX/_archives/2025-W37/files/SOCIAL_CAROUSEL_v1.0_20250910_170605_e44f5128.zip
+- INBOX/_archives/2025-W37/files/SYMBOLIC_v1.0_20250910_161312_e09fee02.zip
+- INBOX/_archives/2025-W37/files/SYMBOLIC_v1.1_with_PNG_20250910_161749_e800489a.zip
+- INBOX/_archives/2025-W37/files/WeeklyScheduler_kit_20250910_200641_705a5c60.zip
+- INBOX/_archives/2025-W38.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Full_Set (1)_20250920_213352_dfdcf38b.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Full_Set_20250920_213158_dfdcf38b.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_GitBook_Import_20250920_234814_1155ad90.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (1)_20250920_222611_a833c533.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (10)_20250920_232451_689f9adf.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (11)_20250920_234841_d68f0a11.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (12)_20250921_000501_a7351f7b.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (13)_20250921_000706_3e115b06.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (14)_20250921_001131_9e800526.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (15)_20250921_001331_e35cc7bb.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (16)_20250921_002913_42454166.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (17)_20250921_003726_d3e55178.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (18)_20250921_003919_afb32639.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (19)_20250921_004311_ae1f5274.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (2)_20250920_222738_9166ba97.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (20)_20250921_011030_6aeded5e.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (21)_20250921_012125_eaac5879.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (22)_20250921_012303_7d3887fd.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (23)_20250921_012400_f09f0baa.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (24)_20250921_012548_187c4fae.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (25)_20250921_012816_33508016.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (26)_20250921_013005_66c525d6.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (27)_20250921_013411_e8a6ee99.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (28)_20250921_013554_9aa20de1.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (29)_20250921_014030_9aa20de1.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (3)_20250920_223014_9bd06435.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (4)_20250920_223043_fa2aefab.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (5)_20250920_223241_4c46e267.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (6)_20250920_223315_2ecdd96f.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (7)_20250920_224655_34ab3a91.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (8)_20250920_224730_f428674f.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set (9)_20250920_230757_689f9adf.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set_20250920_222447_f5ed703f.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set_CLEAN_20250920_232856_49a8008c.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set_CLEAN_PLUS_20250920_233321_9f30e2e7.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set_CLEAN_SEQ_20250920_233555_cfc39d27.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set_DISTR_v1.1_20250921_023802_3be31e76.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set_Structured (1)_20250921_015103_5ee203bd.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Mythic_Set_Structured_20250921_014913_c2cfc5c1.zip
+- INBOX/_archives/2025-W38/files/Agent_Bibliotekar_Set_20250920_203245_cea95e1b.zip
+- INBOX/_archives/2025-W38/files/archive_map_kit_20250921_233649_fce9d6e2.zip
+- INBOX/_archives/2025-W38/files/C05_ARCHIVE_G46_v1.0_20250921_153519_a1b5aa09.zip
+- INBOX/_archives/2025-W38/files/C12_KNOWLEDGE_v0.2_20250915_092121_40ad5778.zip
+- INBOX/_archives/2025-W38/files/CH_WORLD_v1.0 (1)_20250921_183403_5b90e0ff.zip
+- INBOX/_archives/2025-W38/files/CH_WORLD_v1.0 (2)_20250921_184623_79d84d9d.zip
+- INBOX/_archives/2025-W38/files/CH_WORLD_v1.0 (3)_20250921_190803_f99fe5fe.zip
+- INBOX/_archives/2025-W38/files/CH_WORLD_v1.0_20250921_182055_9ffac482.zip
+- INBOX/_archives/2025-W38/files/checha_workflows_archive_20250921_224128_a67d120d.zip
+- INBOX/_archives/2025-W38/files/Complete_Packages_Set_20250920_135726_aaacd09f.zip
+- INBOX/_archives/2025-W38/files/G46_Podilsk_InfoShield_v1.0_full_svg_20250920_083032_d2aaf424.zip
+- INBOX/_archives/2025-W38/files/G46_Podilsk_InfoShield_v1.0_full_with_MediaKit_20250920_083248_8eb636e2.zip
+- INBOX/_archives/2025-W38/files/G46_v1.0 (1)_20250921_101908_b6aa9142.zip
+- INBOX/_archives/2025-W38/files/G46_v1.0 (2)_20250921_102141_b6aa9142.zip
+- INBOX/_archives/2025-W38/files/G46_v1.0 (3)_20250921_153451_7ed11c43.zip
+- INBOX/_archives/2025-W38/files/G46_v1.0_20250921_101737_48a28251.zip
+- INBOX/_archives/2025-W38/files/g46-monitor_skeleton_v1.0_20250920_093645_45b02547.zip
+- INBOX/_archives/2025-W38/files/G46.1_Podilsk_InfoHub_Package_20250920_001438_3bffdce3.zip
+- INBOX/_archives/2025-W38/files/G46.1_Podilsk_InfoHub_v1.0_complete_20250920_083652_fd9fe426.zip
+- INBOX/_archives/2025-W38/files/GLI_Instrument_Package_20250921_201728_c48ec1d9.zip
+- INBOX/_archives/2025-W38/files/Grand_StarterPack_Mova_InfoHub_20250920_122338_8530fb00.zip
+- INBOX/_archives/2025-W38/files/Heroes_H01-H10_Package_20250921_195227_50997544.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage (1)_20250921_202240_c560a2d5.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage (2)_20250921_202425_12172700.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage (3)_20250921_202527_2c1e9e7c.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage (4)_20250921_202607_d49b503d.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage (5)_20250921_202642_e32af9c7.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage (6)_20250921_203020_d835fbe1.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage (7)_20250921_203142_632e5b1c.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage (8)_20250921_204227_7cec7735.zip
+- INBOX/_archives/2025-W38/files/Heroes_Organization_MegaPackage_20250921_201811_336b66d2.zip
+- INBOX/_archives/2025-W38/files/InfoHub_Shields_Visuals_Pack_20250920_122052_567c6894.zip
+- INBOX/_archives/2025-W38/files/Mova_Ce_Zhyttya_StarterPack_20250920_121821_6f7bdd1a.zip
+- INBOX/_archives/2025-W38/files/Organizer_Instrument_Package_20250921_201311_17d5e5db.zip
+- INBOX/_archives/2025-W38/files/Podilsk_InfoHub_v1.2_20250919_232236_54aa360b.zip
+- INBOX/_archives/2025-W38/files/Podilsk.InfoHub_GitBookRelease_v1.1_20250919_213931_e281e613.zip
+- INBOX/_archives/2025-W38/files/Podilsk.InfoHub_MediaKit_v1.0_20250919_210851_e71675b8.zip
+- INBOX/_archives/2025-W38/files/Podilsk.InfoHub_MediaKit_v1.0_full_20250919_212115_db090fc8.zip
+- INBOX/_archives/2025-W38/files/Podilsk.InfoHub_MediaKit_v1.1_full_20250919_212455_7363370f.zip
+- INBOX/_archives/2025-W38/files/Podilsk.InfoHub_MediaKit_v1.1_GitBook_20250919_212609_e3a6fe49.zip
+- INBOX/_archives/2025-W38/files/Podilsk.InfoHub_SupportFiles_v1.1_20250919_213812_44539c20.zip
+- INBOX/_archives/2025-W38/files/POKIT_CARDS_FINAL_20250920_184013_beab6e5f.zip
+- INBOX/_archives/2025-W38/files/POKIT_CARDS_FIXED_20250920_183400_1db74ad2.zip
+- INBOX/_archives/2025-W38/files/SC-SIGN_v1.0_20250921_175554_66236961.zip
+- INBOX/_archives/2025-W38/files/SOP_LookerStudio_AllFormats_20250920_094425_2a9762d7.zip
+- INBOX/_archives/2025-W38/files/StarterPack_Bibliotekar_DigitalTime_20250920_131313_082f5da7.zip
+- INBOX/_archives/2025-W38/files/StarterPack_Bibliotekar_DigitalTime_v2_20250920_135239_4c0a5474.zip
+- INBOX/_archives/2025-W38/files/Svitlyachok_Set_20250920_195755_2aae6434.zip
+- INBOX/_archives/2025-W38/files/symbol_flame_full_pack_20250921_162500_cb3552e2.zip
+- INBOX/_archives/2025-W38/files/symbol_flame_package (1)_20250921_162416_53a3e5f8.zip
+- INBOX/_archives/2025-W38/files/symbol_flame_package_20250921_160851_53a3e5f8.zip
+- INBOX/_archives/2025-W38/files/symbol_flame_total_clean_pack_20250921_165445_6fb51afc.zip
+- INBOX/_archives/2025-W38/files/symbol_flame_total_pack_20250921_162703_d0b57c0d.zip
+- INBOX/_archives/2025-W38/files/symbol_flame_total_pack_v2_20250921_164200_66bdee31.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_CARDS_PACKAGE_20250921_210221_d672c725.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_CARDS_SET2_20250921_210847_d2e6bff4.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_CARDS_SET3_20250921_211458_f63f2345.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_CARDS_SET3_PACKAGE_20250921_211630_27ed3b43.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_CARDS_SET4_PACKAGE_20250921_212229_c15fe4d6.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (1)_20250921_212806_ef808f6e.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (2)_20250921_213311_2b15fc63.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (3)_20250921_213632_c2e522a0.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (4)_20250921_213744_cb440bef.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (5)_20250921_213852_0957a22b.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (6)_20250921_215053_328d3946.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (7)_20250921_215219_e40ff4c7.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (8)_20250921_220319_f197d135.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE (9)_20250921_220439_f40e1b38.zip
+- INBOX/_archives/2025-W38/files/WORLD_C_WORLD_ALL_SETS_PACKAGE_20250921_212718_f88d4a53.zip
+- INBOX/_archives/2025-W39.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_EN_20250926_004015_57447668.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_GitBook_Structure_20250926_002033_ebd90af7.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_Package_v1.0_20250926_001310_3670fe1a.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_Package_v1.1_20250926_001932_e367f7d4.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_PublicKit_v1.4_20250925_174112_d9fb5465.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_Starter_v1.0_20250925_172048_423c1aeb.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_Starter_v1.1_20250925_172707_c00108c0.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_Starter_v1.2_20250925_172805_51d3cef3.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_Starter_v1.3_20250925_173543_de06a263.zip
+- INBOX/_archives/2025-W39/files/Adaptive_Presentation_Starter_v1.4_20250925_173818_74f0eb50.zip
+- INBOX/_archives/2025-W39/files/AGENT-ENTRY-01_FIXED_v1.1_20250922_115924_17ce7eec.zip
+- INBOX/_archives/2025-W39/files/AGENT-ENTRY-01_PACK_v1.2_20250922_121208_a8e03943.zip
+- INBOX/_archives/2025-W39/files/AGENT-ENTRY-01_STARTER_v1.0 (1)_20250922_114250_8c247c56.zip
+- INBOX/_archives/2025-W39/files/AGENT-ENTRY-01_STARTER_v1.0_20250922_114117_8c247c56.zip
+- INBOX/_archives/2025-W39/files/Army_Nodes_Cards_FullPack_20250925_125846_e5bcc37a.zip
+- INBOX/_archives/2025-W39/files/ASCII_MAP_2024_2025_20250927_135850_f7d18c7a.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.5_20250925_175824_5377e9cf.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.5.1_20250925_180439_a7333b52.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.5.1_BW_OnePagers_20250925_180441_968a6ce1.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6_20250925_182504_6ee4c1f0.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6_full_20250925_184044_c60f23ec.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6_PREVIEW_20250925_184343_cc2b3192.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6_RELEASE_20250925_184150_48d88e93.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6_WEB_PREVIEW_20250925_185236_3840f73d.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6_withCHANGELOG_20250925_183911_22be1914.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6.3_PublicRelease (1)_20250925_200711_4a8bc0e1.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6.3_PublicRelease (2)_20250925_201026_a10aa18c.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6.3_PublicRelease (3)_20250925_201242_e937e8f0.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6.3_PublicRelease (4)_20250925_201449_c7de7e11.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6.3_PublicRelease (5)_20250925_201607_16027fd2.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6.3_PublicRelease (6)_20250925_201705_e932aee0.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6.3_PublicRelease (7)_20250925_201745_9d9b0129.zip
+- INBOX/_archives/2025-W39/files/AudienceKits_v1.6.3_PublicRelease_20250925_200354_1e5dfb6b.zip
+- INBOX/_archives/2025-W39/files/AUDIT_FLOW_GITBOOK_20250926_152351_fc2975f8.zip
+- INBOX/_archives/2025-W39/files/AUDIT_FLOW_VISUALS-stable_20250926_152028_bd5df17d.zip
+- INBOX/_archives/2025-W39/files/AUTO-SCHEDULE_20250926_150717_4ce0f1ff.zip
+- INBOX/_archives/2025-W39/files/C02_GLOSSARY_UPDATE_v1.0_20250927_011231_6ebd4de0.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_Q1_2025 (1)_20250927_135314_64ebc460.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_Q1_2025_20250927_135303_8f0fce5d.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_Q2_2025 (1)_20250927_135315_b50f752c.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_Q2_2025_20250927_135300_e1321cf5.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_Q3_2025 (1)_20250927_135316_53a46d2c.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_Q3_2025_20250927_135258_da0099f0.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_Q4_2025 (1)_20250927_135327_8b838d9b.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_Q4_2025_20250927_135306_d50934ce.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_YEAR_2025 (1)_20250927_135325_f5fd89aa.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_YEAR_2025 (2)_20250927_135328_e6c23086.zip
+- INBOX/_archives/2025-W39/files/C05_ARCHIVE_YEAR_2025_20250927_135309_0784f7b7.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (1)_20250926_221348_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (10)_20250926_221458_d568b602.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (11)_20250926_221502_c8835df3.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (12)_20250926_221508_de640aab.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (13)_20250926_221514_23aa053b.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (14)_20250926_221524_069290dc.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (15)_20250926_221535_0e815138.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (16)_20250926_221539_85f850ac.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (17)_20250926_221545_66ac342b.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (18)_20250926_221552_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (19)_20250926_221553_463de46d.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (2)_20250926_221353_0d10bab1.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (20)_20250926_221600_e0125147.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (21)_20250926_221606_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (22)_20250926_221610_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (23)_20250926_221615_584d02cb.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (24)_20250926_221618_eb883681.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (25)_20250926_221621_a20c82e4.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (26)_20250926_221625_7d5bd2b2.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (27)_20250926_221632_d4900045.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (28)_20250926_221637_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (29)_20250926_221638_fae307ca.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (3)_20250926_221400_594e5cf6.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (30)_20250926_221641_74ebca7e.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (31)_20250926_221644_257df899.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (32)_20250926_221648_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (33)_20250926_221653_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (34)_20250926_221654_7671f6c4.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (35)_20250926_221657_a3f2f8c3.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (36)_20250926_221701_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (37)_20250926_221814_b6355b88.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (38)_20250926_222005_39165365.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (39)_20250926_222031_6137f874.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (4)_20250926_221411_a74af333.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (40)_20250926_232944_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (41)_20250926_233020_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (42)_20250926_233030_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (43)_20250926_233032_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (44)_20250926_233032_344a9b07.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (45)_20250926_233034_cce20cea.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (46)_20250926_233041_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (47)_20250926_233044_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (48)_20250926_233044_c92352c2.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (49)_20250926_233055_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (5)_20250926_221425_175f8f14.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (50)_20250926_233106_f2440f12.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (51)_20250926_233106_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (52)_20250926_233111_b37eb15f.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (53)_20250926_233138_ea8e93db.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (54)_20250926_235317_39c7d472.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (55)_20250927_000154_a4948942.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (56)_20250927_000331_391a3557.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (57)_20250927_000557_1dce0149.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (58)_20250927_000627_1dce0149.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (59)_20250927_000653_104d4675.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (6)_20250926_221431_420e99bf.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (60)_20250927_000947_c2bbb983.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (61)_20250927_001251_6a46550b.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (62)_20250927_001949_c8bf50a5.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (63)_20250927_002103_51c055c5.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (7)_20250926_221442_66dcdea6.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (8)_20250926_221449_b520a5d3.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0 (9)_20250926_221454_e02e8788.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_GITBOOK_v1.0_20250926_221332_54649f45.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_RELEASE_20250926 (1)_20250926_200925_266cd8e9.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_RELEASE_20250926 (2)_20250926_200952_266cd8e9.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_RELEASE_20250926 (3)_20250926_200959_266cd8e9.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_RELEASE_20250926 (4)_20250926_201251_27a0c3a1.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_RELEASE_20250926 (5)_20250926_221324_7f612c64.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_RELEASE_20250926 (6)_20250926_221451_e3217dae.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_RELEASE_20250926_20250926_200826_9c105e49.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_ZIPTOOLS_v1.0 (1)_20250926_200950_53dbf4b7.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_ZIPTOOLS_v1.0 (2)_20250926_200957_53dbf4b7.zip
+- INBOX/_archives/2025-W39/files/C11_AUTOMATION_ZIPTOOLS_v1.0_20250926_200921_53dbf4b7.zip
+- INBOX/_archives/2025-W39/files/CABINET_CREATOR_v1.0_20250922_021859_259c46d5.zip
+- INBOX/_archives/2025-W39/files/CATALOG_GITBOOK_STRUCTURE_v0.3.1_20250924_155957_b7665540.zip
+- INBOX/_archives/2025-W39/files/CATALOG_GITBOOK_STRUCTURE_v0.3.2_20250924_160141_cea86520.zip
+- INBOX/_archives/2025-W39/files/CATALOG_STRUCTURE_v0.2_20250924_144020_864ffe45.zip
+- INBOX/_archives/2025-W39/files/CATALOG_UPDATE_v0.1_20250924_165709_4491e26f.zip
+- INBOX/_archives/2025-W39/files/CHECHA_TOOLS_20250923_20250923_092206_383a1775.zip
+- INBOX/_archives/2025-W39/files/CHECHA_TOOLS_ONECLICK_20250926_150813_adf0bc30.zip
+- INBOX/_archives/2025-W39/files/CHECHA_TOOLS_ONECLICK_v2_1_20250926_150617_70d0edd3.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v1.0 (1)_20250922_035315_e96bd4e3.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v1.0 (2)_20250922_040539_90c323f8.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v1.0 (3)_20250922_040857_f5aa992a.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v1.0 (4)_20250922_040858_f5aa992a.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v1.0_20250922_035227_24085a91.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.0_20250922_042328_9cdc2407.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (1)_20250922_050157_a9435a29.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (10)_20250922_053900_d8549e26.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (11)_20250922_054117_a4aa7f64.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (12)_20250922_055008_307ec62d.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (13)_20250922_060351_5121b614.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (2)_20250922_050225_ab08cf5f.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (3)_20250922_050305_bef1aa42.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (4)_20250922_050350_fe6f9bad.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (5)_20250922_050434_321ff2b3.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (6)_20250922_050517_171996cf.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (7)_20250922_050545_7b9da4b6.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (8)_20250922_050740_6be8b238.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1 (9)_20250922_051442_723e38c8.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_DOCS_v2.1_20250922_050104_b89001ce.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_v1.0 (1)_20250922_022612_73c60a92.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_v1.0_20250922_022529_73c60a92.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_v1.2_20250922_023926_375d599f.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_v1.3_20250922_024322_a650b7c0.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_v1.4_20250922_025406_51a2b41d.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_v1.5_20250922_025637_89abe408.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_v1.6_20250922_030034_2dfcb8f6.zip
+- INBOX/_archives/2025-W39/files/CREATOR_SUITE_v1.7_20250922_030429_f3b60124.zip
+- INBOX/_archives/2025-W39/files/DAILY_CHECKLIST-stable_20250926_151245_74cf87d6.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (1)_20250927_140541_0433d753.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (10)_20250927_143447_47ee0b5a.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (11)_20250927_143510_47ee0b5a.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (12)_20250927_143547_6c1b6c57.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (13)_20250927_143957_54520623.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (14)_20250927_144006_6c1b6c57.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (2)_20250927_140646_d4999b69.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (3)_20250927_140747_034da6f6.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (4)_20250927_141053_54520623.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (5)_20250927_142424_59925977.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (6)_20250927_142639_091b0f02.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (7)_20250927_142835_12a03e31.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (8)_20250927_143149_e3635487.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025 (9)_20250927_143400_f0e60e67.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_ALL_IN_ONE_KIT_2025_20250927_140502_3165e114.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_20250927_135825_a46170dc.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_FINAL_20250927_135845_c59d6c00.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_FINAL_FULL_20250927_135910_f6106ff5.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_FINAL_PLUS_ASCII_20250927_135853_c9d30cb4.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_FINAL_PLUS_ASCII_PNG_20250927_135901_b0fc431f.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_FINAL_WITH_HOWTO_20250927_135924_64c5d581.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_FINAL_WITH_HOWTO_CHEATSHEET_20250927_135927_790285d3.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_FULL_20250927_135838_006be0cc.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_LIGHT_20250927_135929_6ff072be.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_GITBOOK_READY_2025_ULTRA_LIGHT_20250927_135934_8739c76e.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_PRESENTATION_KIT_2025 (1)_20250927_135942_ecc48698.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_PRESENTATION_KIT_2025 (2)_20250927_135951_fa65bf47.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_PRESENTATION_KIT_2025 (3)_20250927_140004_eee9d662.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_PRESENTATION_KIT_2025 (4)_20250927_140010_288aa29a.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_PRESENTATION_KIT_2025 (5)_20250927_140014_d44e088f.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_PRESENTATION_KIT_2025 (6)_20250927_140018_0aa12498.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_PRESENTATION_KIT_2025 (7)_20250927_140408_23ec0e9c.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_PRESENTATION_KIT_2025_20250927_135939_8ccb457a.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_SOCIAL_MEDIA_KIT_2025_20250927_140434_fe799f7a.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_SUMMARIES_2025 (1)_20250927_135813_5affbb51.zip
+- INBOX/_archives/2025-W39/files/DAO_GOGS_SUMMARIES_2025_20250927_135756_5affbb51.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_ALL_VISUALS_20250926_015551_be2daefd.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_ALL_VISUALS_SVG_20250926_015628_4c33a3be.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_ANALYTICS_VISUALS_20250926_015500_7e2974b8.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_MONTHLY_VISUALS_20250926_015530_df8bda1f.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_REPORTS_HUB_EN_PACK_20250926_020402_f7fb36df.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_REPORTS_HUB_MEGA_PACK_20250926_020435_4d77f5c5.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_REPORTS_HUB_MEGA_PACK_v2_20250926_021413_161ece3f.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_REPORTS_HUB_MEGA_PACK_v3_20250926_022228_7ab706b3.zip
+- INBOX/_archives/2025-W39/files/DAO_MEDIA_REPORTS_HUB_PACK_20250926_020240_e273bc39.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Adaptive_Presentation_Package_20250926_002137_c14572e4.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_EN-Mirror_20250926_003424_d99b64c4.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_GitBook_InstallPackage_20250926_002756_b61f00fd.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_GitBook_InstallPackage_v2_20250926_002844_12000f18.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_MediaKit_20250926_004452_1b9c2019.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Root_Full_20250926_002212_ac62f118.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Root_Full_v2_20250926_002326_413eebb9.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Root_Full_v3 (1)_20250926_002510_0734bf8c.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Root_Full_v3_20250926_002418_0734bf8c.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Root_Full_v4_20250926_003220_817b0381.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_ROOT_v1.0_20250925_234537_e20a9492.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v1_20250926_003322_9d8ca0d6.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v10 (1)_20250926_005641_2193b3ba.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v10_20250926_005341_2193b3ba.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v11_20250926_005835_ac824111.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v12_20250926_005904_24e60fb3.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v13_20250926_005952_36ce58c6.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v14_20250926_010040_0b77f4e8.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v15 (1)_20250926_010317_fb165f48.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v15_20250926_010239_fb165f48.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v16 (1)_20250926_010520_5c970672.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v16_20250926_010342_5c970672.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v17_20250926_010547_6772cdd1.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v2_20250926_003454_a5abbc3c.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v20_20250926_011114_787fb169.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v21_20250926_011354_3c6c3362.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v22_20250926_011533_ec060817.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v23_20250926_011730_1b070fae.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v24_20250926_011836_231f3cb7.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v25_20250926_012306_068bebc9.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v26_20250926_012339_b73a7893.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v3_20250926_003717_c19cd41e.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v4_20250926_004037_edb53134.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v5_20250926_004202_7afbe9fb.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v6 (1)_20250926_004327_ac4b7222.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v6_20250926_004259_ac4b7222.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v8_20250926_004958_52952901.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_Ultimate_Starter_v9_20250926_005230_0aae5754.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_ControlSet_20250925_212630_4f918da4.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_ControlSet_UPDATED_20250925_212809_d1289312.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_FULL_RELEASE (1)_20250925_233215_1f6127fa.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_FULL_RELEASE_20250925_212126_a7c5764b.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_FULL_RELEASE_ANALYSIS (1)_20250925_233650_0dd903f8.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_FULL_RELEASE_ANALYSIS_20250925_233630_0dd903f8.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_20250925_214404_bd56810a.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_CONTROLREPORT_20250925_230234_8739c76e.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_DCEPDF_20250925_230502_91c80b5d.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_FINAL_20250925_214529_28295e19.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_FINAL_TIMELINE_20250925_220922_db94c5bd.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_INDEXED_20250925_214424_178cddc3.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_INDEXPDF_20250925_221214_79b33d23.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_README_20250925_214553_72bab1e3.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_ROADMAP_20250925_215425_cf16ff1e.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_ROADMAPS_20250925_215754_030b6dab.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_ROOTMAP_20250925_232829_e2cbeb30.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_SUMMARY_20250925_231856_8dbc13b3.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_TIMELINE_20250925_220757_d10a6bdc.zip
+- INBOX/_archives/2025-W39/files/DAO-MEDIA_VisualSystem_v1.0_GITBOOK_READY_TIMELINE_PDF_20250925_221025_8dcc5572.zip
+- INBOX/_archives/2025-W39/files/Deploy-RHYTHM-KIT_20250926_175501_9a86b2ca.zip
+- INBOX/_archives/2025-W39/files/Deploy-RHYTHM-KIT_v2_20250926_175857_5ade1de1.zip
+- INBOX/_archives/2025-W39/files/English_Course_Months_01_02_Full_Pack_20250923_224312_e0d8932b.zip
+- INBOX/_archives/2025-W39/files/ENGLISH_GITBOOK_v1.0_20250923_191052_0a603e05.zip
+- INBOX/_archives/2025-W39/files/English_Program_Starter_Kit_for_Marko_v1.0_20250923_212241_b4327a0d.zip
+- INBOX/_archives/2025-W39/files/ENGLISH_PROJECTS_v1.0_20250923_190919_a2068338.zip
+- INBOX/_archives/2025-W39/files/G45_KodZakhystu_FullBranch_v1.3.3_20250925_170100_a236cce2.zip
+- INBOX/_archives/2025-W39/files/G45_Shchyt_v10_20250925_162749_9432618e.zip
+- INBOX/_archives/2025-W39/files/G45_Shchyt_v11_20250925_162922_5fd98c25.zip
+- INBOX/_archives/2025-W39/files/G45_Shchyt_v12_20250925_163309_c8fb68ea.zip
+- INBOX/_archives/2025-W39/files/G45_Shchyt_v13_20250925_163638_f4c06538.zip
+- INBOX/_archives/2025-W39/files/G45_Shchyt_v14_20250925_164836_dd513150.zip
+- INBOX/_archives/2025-W39/files/G45_Shchyt_v15_20250925_165035_db338101.zip
+- INBOX/_archives/2025-W39/files/G45_Shchyt_v16_20250925_165355_bc6eb782.zip
+- INBOX/_archives/2025-W39/files/G45_Shchyt_v9_20250925_161450_3612e1c7.zip
+- INBOX/_archives/2025-W39/files/G45.2_Ecosystem_FullPack_20250925_131709_910e61a0.zip
+- INBOX/_archives/2025-W39/files/GITBOOK_SUMMARY_2024_2025_20250927_135803_70a410d0.zip
+- INBOX/_archives/2025-W39/files/INBOX_AUTOMATION_v1.5_20250927_155122_352ab478.zip
+- INBOX/_archives/2025-W39/files/INBOX_STARTER_v1.0_20250927_152437_4f4be0f8.zip
+- INBOX/_archives/2025-W39/files/INBOX_STARTER_v1.2_20250927_152607_49bd72e0.zip
+- INBOX/_archives/2025-W39/files/INBOX_STARTER_v1.3_20250927_152658_1d11f637.zip
+- INBOX/_archives/2025-W39/files/INBOX_STARTER_v1.4_20250927_154744_ecda0f55.zip
+- INBOX/_archives/2025-W39/files/INDEX_2025_v1.0_20250927_135330_d0b293dd.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_v2_20250923_113246_87888135.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_v3_20250923_114326_dcfd6f2b.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_v4_20250923_115246_a1321d94.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_v5_20250923_115734_1204fa3b.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_v6_20250923_115916_728dec12.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_V8_FULL_2_20250923_123922_b2f1dbe6.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_v8_FULL_20250923_122200_5d94b2c4.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_V8_RELEASE_20250923_124033_095bf421.zip
+- INBOX/_archives/2025-W39/files/KNOWLEDGE_HOME_NETWORK_v8_visuals_20250923_121418_d2826f87.zip
+- INBOX/_archives/2025-W39/files/MAISTERNIA_IDEAS_PACK_v0.1_20250926_150138_4ddbef94.zip
+- INBOX/_archives/2025-W39/files/MASTER_AUDIT_CHECKLISTS-stable_20250926_151641_c1a63d65.zip
+- INBOX/_archives/2025-W39/files/MASTER_AUDIT_FULL_v3_20250926_152529_aa26e57b.zip
+- INBOX/_archives/2025-W39/files/MASTER_AUDIT_v2-stable_20250926_151804_15e6aff1.zip
+- INBOX/_archives/2025-W39/files/MASTER_SUPERPACK_APPLY_AUDIT_v1_20250926_152615_25e95357.zip
+- INBOX/_archives/2025-W39/files/MASTER_SUPERPACK_APPLY_AUDIT_v1b_20250926_152711_8c9f7b7d.zip
+- INBOX/_archives/2025-W39/files/MASTER_SUPERPACK_APPLY_AUDIT_v1c_20250926_152831_a1453f12.zip
+- INBOX/_archives/2025-W39/files/MASTER_SUPERPACK_APPLY_AUDIT_v1d (1)_20250926_153056_2e69fca7.zip
+- INBOX/_archives/2025-W39/files/MASTER_SUPERPACK_APPLY_AUDIT_v1d_20250926_152936_2e69fca7.zip
+- INBOX/_archives/2025-W39/files/MASTER_SUPERPACK_SHORT_v1_20250926_153132_1e6d4f10.zip
+- INBOX/_archives/2025-W39/files/MASTER_UPDATE_APPLY_v2-stable_20250926_150428_1f35ab95.zip
+- INBOX/_archives/2025-W39/files/MASTER_UPDATE_APPLY_v3-stable_20250926_151425_74cf87d6.zip
+- INBOX/_archives/2025-W39/files/MASTER_UPDATE_APPLY-stable_20250926_150449_d3ccf3a1.zip
+- INBOX/_archives/2025-W39/files/MASTERSHOP_MAPS_PACK_v1.0 (1)_20250922_084612_65816de5.zip
+- INBOX/_archives/2025-W39/files/MASTERSHOP_MAPS_PACK_v1.0_20250922_084349_65816de5.zip
+- INBOX/_archives/2025-W39/files/MASTERSHOP_PUBLIC_v1.0 (1)_20250924_004741_e8957040.zip
+- INBOX/_archives/2025-W39/files/MASTERSHOP_PUBLIC_v1.0_20250924_004611_1788e700.zip
+- INBOX/_archives/2025-W39/files/MediaPack_v1.6.3 (1)_20250925_194759_26c91ff3.zip
+- INBOX/_archives/2025-W39/files/MediaPack_v1.6.3 (2)_20250925_194847_b506d3d7.zip
+- INBOX/_archives/2025-W39/files/MediaPack_v1.6.3 (3)_20250925_194959_9d8aeb94.zip
+- INBOX/_archives/2025-W39/files/MediaPack_v1.6.3 (4)_20250925_195315_fcb3a17a.zip
+- INBOX/_archives/2025-W39/files/MediaPack_v1.6.3 (5)_20250925_195657_01c1e957.zip
+- INBOX/_archives/2025-W39/files/MediaPack_v1.6.3 (6)_20250925_200427_d41ca831.zip
+- INBOX/_archives/2025-W39/files/MediaPack_v1.6.3_20250925_194719_637d91e0.zip
+- INBOX/_archives/2025-W39/files/MEGA_INDEX_2024_2025_v1.1_20250927_135602_d57e15ed.zip
+- INBOX/_archives/2025-W39/files/MEGA_MERMAID_MAP_2024_2025_20250927_135806_7f196914.zip
+- INBOX/_archives/2025-W39/files/MERMAID_MAP_2025_20250927_135809_cbce0026.zip
+- INBOX/_archives/2025-W39/files/MODE_GUIDE_v1.0_20250924_205408_c4d3aa1f.zip
+- INBOX/_archives/2025-W39/files/MODE_GUIDE_v1.1_20250924_205556_a3815659.zip
+- INBOX/_archives/2025-W39/files/Month_01_Full_Pack (1)_20250923_224241_8ecedd88.zip
+- INBOX/_archives/2025-W39/files/Month_01_Full_Pack_20250923_221920_4700e676.zip
+- INBOX/_archives/2025-W39/files/Month_02_Full_Pack_20250923_224157_5ad5e2d9.zip
+- INBOX/_archives/2025-W39/files/Month1_English_Cards_Pack_FULL_v1.0_20250923_213434_971bfb94.zip
+- INBOX/_archives/2025-W39/files/Month1_English_Cards_Pack_v1.0_20250923_213235_807b4756.zip
+- INBOX/_archives/2025-W39/files/MONTHLY_AUDIT-stable_20250926_151543_dae8b2b0.zip
+- INBOX/_archives/2025-W39/files/MY_ENGLISH_BOOK_v1.0_20250923_185702_3358265d.zip
+- INBOX/_archives/2025-W39/files/Mythical_Deck_Architecture_Maps_v1.0_20250923_204425_b03bc9f0.zip
+- INBOX/_archives/2025-W39/files/PARAMETERS_UPDATE_20250926_150605_0b3a307e.zip
+- INBOX/_archives/2025-W39/files/PARAMETERS_UPDATE_FLOW-stable_20250926_150438_3b30f6c1.zip
+- INBOX/_archives/2025-W39/files/Posts_PublicRelease_Cards_20250925_200957_50674eb0.zip
+- INBOX/_archives/2025-W39/files/QUARTER_SUMMARY_2025-Q3_20250927_135745_81115301.zip
+- INBOX/_archives/2025-W39/files/README_AUDIT_FLOW-stable_20250926_151702_1907e65a.zip
+- INBOX/_archives/2025-W39/files/RELEASE_NOTES_STRATEGIC_STARTER_KIT_v1.0_20250927_021722_a5de62e4.zip
+- INBOX/_archives/2025-W39/files/Report_EN_20250926_004240_80086b03.zip
+- INBOX/_archives/2025-W39/files/RHYTHM_FULL_PACK_20250926_155259_a50ade52.zip
+- INBOX/_archives/2025-W39/files/RHYTHM_FULL_PACK_v1.1_20250926_155428_d25a683d.zip
+- INBOX/_archives/2025-W39/files/RHYTHM_FULL_PACK_v1.2_20250926_160419_e88c571d.zip
+- INBOX/_archives/2025-W39/files/RHYTHM_GUIDE-stable_20250926_153701_65533faa.zip
+- INBOX/_archives/2025-W39/files/strategic_analysis_full_package_with_README_SC_20250923_181055_0d3d04b0.zip
+- INBOX/_archives/2025-W39/files/strategic_analysis_media_package_SC_20250923_182053_b75236ad.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_CHECKLIST_INFOGRAPHIC_v1.0_20250927_023231_19f5973c.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_COMBINED_v1.0_20250927_135148_e10a7a97.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_FORM_TO_PDF_SCRIPT_v1.0_20250927_024829_a7cd9005.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_OVERVIEW_v1.0_20250927_135150_2ce634ed.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_REPORT_TEMPLATE_v1.0_20250927_135146_1d1d544c.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_RHYTHM_v1.0_20250927_135142_ade99c7a.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_ROADMAP_TIMELINE_v1.2_20250927_022908_2ea827ec.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.0_20250927_021247_0858d004.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.1_20250927_021816_df92a8e4.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.2_20250927_022514_ee40934f.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.2.1 (1)_20250927_023111_0539b9cc.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.2.1_20250927_023018_0539b9cc.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.2.3_20250927_024007_6e4cc316.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.2.4_20250927_024320_af20a5a9.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.2.5_20250927_024457_745d37b4.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_META_v1.2.6_20250927_024831_5fa97221.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_TREE_v1.0_20250927_021151_2c3ba18e.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_UPDATE_v1.2_20250927_022108_6c863b4d.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.0 (1)_20250927_020957_5f4e556a.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.0 (2)_20250927_135156_eb045d7d.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.0_20250927_020224_5f4e556a.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.0_FULL_20250927_020345_bbbde026.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.1_20250927_135200_ba6a5265.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.2_20250927_135211_d5baac35.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.3_20250927_135215_be53c2a1.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.4_20250927_135218_6fc688dc.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.6_20250927_135232_e787ec2c.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.7_20250927_135235_fb354256.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v1.8_20250927_135254_f58816e4.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v2.1_20250927_135634_35f7b85f.zip
+- INBOX/_archives/2025-W39/files/STRATEGIC_STARTER_KIT_v2.2_20250927_135643_dfcd3576.zip
+- INBOX/_archives/2025-W39/files/STRUCTURE_MAP_ARTIFACTS_20250922 (1)_20250923_000301_4257435c.zip
+- INBOX/_archives/2025-W39/files/STRUCTURE_MAP_ARTIFACTS_20250922_20250923_000230_71d456bb.zip
+- INBOX/_archives/2025-W39/files/STRUCTURE_MAP_ARTIFACTS_20250922_FULL_20250923_001406_c93a8fb2.zip
+- INBOX/_archives/2025-W39/files/STYLE_RELEASE_v1.0_20250926_233616_5b28c32b.zip
+- INBOX/_archives/2025-W39/files/StyleGuide_EN_20250926_004141_b827747b.zip
+- INBOX/_archives/2025-W39/files/STYLEGUIDE_v1.0_PACK (1)_20250925_204336_25b859f2.zip
+- INBOX/_archives/2025-W39/files/STYLEGUIDE_v1.0_PACK_20250925_203059_c17d8625.zip
+- INBOX/_archives/2025-W39/files/STYLEGUIDE_v1.0_READY_BANNERS_20250925_204546_7f08c6cf.zip
+- INBOX/_archives/2025-W39/files/STYLEGUIDE_v1.0_RELEASE_20250925 (1)_20250925_210759_e19222d6.zip
+- INBOX/_archives/2025-W39/files/STYLEGUIDE_v1.0_RELEASE_20250925_20250925_210535_e19222d6.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_CARDS_v1.1_20250922_172347_7870339b.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_CARDS_v1.2_20250922_172415_61290446.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_FULL_v1.0 (1)_20250922_174239_51c3bd26.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_FULL_v1.0 (2)_20250922_174425_02c0517e.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_FULL_v1.0 (3)_20250922_175149_befef237.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_FULL_v1.0 (4)_20250922_175424_befef237.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_FULL_v1.0_20250922_174139_deb33ae0.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_FULL_v1.0_updated (1)_20250922_191958_9cfcdc2e.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_FULL_v1.0_updated_20250922_191947_9cfcdc2e.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v10 (1)_20250922_200802_6933ac77.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v10_20250922_200316_6933ac77.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v2_20250922_193411_0fa29b32.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v3_20250922_194340_93921105.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v4_20250922_195026_7f28804d.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v5_20250922_195126_b4288d25.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v6_20250922_195313_6dc2611f.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v7_20250922_195451_ed97ee22.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_COMPLETE_v8_20250922_195633_c1171dad.zip
+- INBOX/_archives/2025-W39/files/SVIT_CH_GITBOOK_STARTER_20250922_192954_d2046c7a.zip
+- INBOX/_archives/2025-W39/files/TECH_SETUP_STARTER_PACK_20250926_150826_d2bc44d0.zip
+- INBOX/_archives/2025-W39/files/UPDATE_APPLY_FLOW-stable_20250926_150454_5b57504d.zip
+- INBOX/_archives/2025-W39/files/UPDATE_APPLY_TOOLS-stable_20250926_150517_08158a10.zip
+- INBOX/_archives/2025-W39/files/Week1_Family_School_Cards_Pack_v1.0_20250923_212827_abc30b15.zip
+- INBOX/_archives/2025-W39/files/Week2_Toys_Animals_Cards_Pack_v1.0_20250923_213126_7a9d85c9.zip
+- INBOX/_archives/2025-W39/files/WEEKLY_CHECKLIST-stable_20250926_151515_6dc7a9ad.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CHECHA_START_20250922_061153_509c362f.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.0_20250922_013729_24dec78e.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.1_20250922_014626_51a625ce.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.2_20250922_014756_b9d5612e.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.3_20250922_014830_06675a7a.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.4_20250922_014953_3f1135a0.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.6_20250922_015122_8fb50f66.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.7 (1)_20250922_015428_fb633de6.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.7_20250922_015340_fb633de6.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.8_20250922_015517_55406ca6.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v1.9_20250922_020121_ac11abd9.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.0_20250922_020334_7d880fe4.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.1_20250922_020501_53d80493.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.2_20250922_020649_6380c5cc.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.3_20250922_020802_4b549773.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.4_20250922_021109_12f6b7a8.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.5_20250922_022512_a14135cd.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.6_20250922_023622_dea47881.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.7_20250922_023925_a987f609.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.8_20250922_024321_ac6af941.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v2.9_20250922_024843_7c196769.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v3.0_20250922_025016_f31ec426.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v3.1_20250922_025203_d1db8cd0.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v3.2_20250922_025405_3cc1c9ba.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v3.3_20250922_025635_426254da.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v3.4_20250922_030030_ce23bcc9.zip
+- INBOX/_archives/2025-W39/files/WORKSHOP_CREATOR_v3.5_20250922_030427_b3ffbf7c.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_FRAME_v1.0 (1)_20250927_014311_0142fb59.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_FRAME_v1.0_20250927_014127_0142fb59.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_INPUT_FRAME_v1.0 (1)_20250927_013800_5e13928d.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_INPUT_FRAME_v1.0_20250927_013757_5e13928d.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_MAP_v1.0_20250927_011407_6509dbf9.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_PACKAGE_v0.2_20250924_143315_f1134471.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (1)_20250924_115045_c5439d1b.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (10)_20250924_115739_3e9a2b7a.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (11)_20250924_115820_fbcfa79f.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (12)_20250924_115904_6adacfea.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (13)_20250924_115937_b8e8e8ed.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (14)_20250924_120018_8927d1a6.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (15)_20250924_120055_f39357f2.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (2)_20250924_115135_e29a7337.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (3)_20250924_115217_06e891a8.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (4)_20250924_115252_6f1a6608.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (5)_20250924_115325_05a97e66.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (6)_20250924_115357_65276c92.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (7)_20250924_115451_a1b54ae1.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (8)_20250924_115535_a24baeb7.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1 (9)_20250924_115635_7c394123.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.1_20250924_114618_afba4b5a.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (1)_20250924_120213_b7f83b73.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (10)_20250924_121746_1fea5a27.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (11)_20250924_121853_a2886df5.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (12)_20250924_121945_f9b48fed.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (13)_20250924_122024_d27a4e0f.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (14)_20250924_122104_699ddaaa.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (15)_20250924_122201_d9accb72.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (16)_20250924_122307_1d7ce23d.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (17)_20250924_122345_bd63cf28.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (18)_20250924_123150_0540a537.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (19)_20250924_123344_6ca1af34.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (2)_20250924_120319_a565bda9.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (20)_20250924_123526_62a2cee1.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (21)_20250924_124224_c22ff43d.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (22)_20250924_124300_6788b156.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (23)_20250924_124351_a807201e.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (24)_20250924_124436_a68ca33a.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (25)_20250924_124524_48e27b87.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (26)_20250924_124617_064caf4e.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (27)_20250924_124703_e5e70311.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (28)_20250924_124738_8f896782.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (29)_20250924_124817_051505d3.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (3)_20250924_120408_d259c62b.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (30)_20250924_124919_ddf61f2b.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (31)_20250924_125020_fffbd446.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (32)_20250924_125109_26043441.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (33)_20250924_125209_d041db3c.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (34)_20250924_125251_ce4462be.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (35)_20250924_125348_ac69c356.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (36)_20250924_125854_8837bcfd.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (37)_20250924_125939_8e0e0c23.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (38)_20250924_130027_f49190ee.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (39)_20250924_130100_1c323d36.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (4)_20250924_120458_148a6dbc.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (40)_20250924_130151_2e8c4cbc.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (41)_20250924_130244_2e8c4cbc.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (42)_20250924_130319_828f9868.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (43)_20250924_130400_60261343.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (44)_20250924_130537_1020f1c7.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (45)_20250924_130639_7d5130c0.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (46)_20250924_130744_506253e2.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (47)_20250924_130845_b44e1e1d.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (48)_20250924_130921_7428fd91.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (49)_20250924_131004_761d5850.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (5)_20250924_120533_3cfb4074.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (50)_20250924_131055_0e6b285d.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (51)_20250924_131132_2f846d9a.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (52)_20250924_131212_4158815f.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (6)_20250924_120834_5ecc660d.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (7)_20250924_121441_84e0c8ec.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (8)_20250924_121609_eb5bb641.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2 (9)_20250924_121707_a541bb2a.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.2_20250924_120123_f39357f2.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3 (1)_20250924_131534_58400224.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3 (2)_20250924_131616_6893812a.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3 (3)_20250924_131654_9a9bc981.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3 (4)_20250924_131920_877d4092.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3 (5)_20250924_132026_83107066.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3 (6)_20250924_132051_cf8d1fb2.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3 (7)_20250924_132136_2d0b9b29.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3 (8)_20250924_132250_2aabd1a0.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.3_20250924_131255_48fc00e4.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.4 (1)_20250924_133602_caf7a7ce.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.4 (2)_20250924_133634_5d525cc2.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.4 (3)_20250924_133710_50d09461.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.4 (4)_20250924_133746_58ebe753.zip
+- INBOX/_archives/2025-W39/files/WORKSHOPS_README_PACK_v0.4_20250924_133021_aa9d8652.zip
+- INBOX/_archives/2025-W39/files/Year_Program_Maps_v1.0_20250923_212133_84730531.zip
+- INBOX/_archives/2025-W40.zip
+- INBOX/_archives/2025-W40/files/CHECHA_CORE_LogTools_v1.0_20251002_194651_2797b6bf.zip
+- INBOX/_archives/2025-W40/files/CHECHA_CORE_LogTools_v1.1_20251002_194753_2e8b3923.zip
+- INBOX/_archives/2025-W40/files/CHECHA_CORE_LogTools_v1.2_20251002_195017_a0c9f52b.zip
+- INBOX/_archives/2025-W40/files/CHECHA_CORE_LogTools_v1.3_20251002_195225_8ec770d8.zip
+- INBOX/_archives/2025-W40/files/CHECHA_CORE_LogTools_v2.0 (1)_20251002_200122_dfdfe2c2.zip
+- INBOX/_archives/2025-W40/files/CHECHA_CORE_LogTools_v2.0_20251002_200039_dfdfe2c2.zip
+- INBOX/_archives/2025-W40/files/DAO_Edu_FastStartPack_v1.0_Full (1)_20251002_152024_15a36ba8.zip
+- INBOX/_archives/2025-W40/files/DAO_Edu_FastStartPack_v1.0_Full_20251002_151500_2b9b3432.zip
+- INBOX/_archives/2025-W40/files/DAO_Edu_Packs_v1.1_Full_20251002_143731_2e2de0eb.zip
+- INBOX/_archives/2025-W40/files/DAO_Edu_Packs_v1.1_Full_Final_20251002_144512_3ac49be9.zip
+- INBOX/_archives/2025-W40/files/DAO_Edu_Packs_v1.1_Full_Final_v2_20251002_144633_dffdfff2.zip
+- INBOX/_archives/2025-W40/files/DAO_Edu_Packs_v1.1_Full_Final_v3_20251002_144758_fd3a7654.zip
+- INBOX/_archives/2025-W40/files/DAO_Edu_Packs_v1.1_Full_Updated_20251002_144113_83faef41.zip
+- INBOX/_archives/2025-W40/files/DAO_Edu_Packs_v1.1_Full_Updated2_20251002_144235_13c475e6.zip
+- INBOX/_archives/2025-W40/files/DAO_Education_GitBook_v1.1_20251002_135420_7f7fda3e.zip
+- INBOX/_archives/2025-W40/files/DAO_Education_MediaKit_v1.1_20251002_135448_34175ff7.zip
+- INBOX/_archives/2025-W40/files/DAO-EDU_Explained_Package_20251003_015903_047dc02a.zip
+- INBOX/_archives/2025-W40/files/DAO-EDU_FULL_Package_20251003_021229_1b8b8c9f.zip
+- INBOX/_archives/2025-W40/files/DAO-EDU_Structured_20251003_022915_783423dc.zip
+- INBOX/_archives/2025-W40/files/DAO-EDU_v1.0_20251003_022406_8d10ae20.zip
+- INBOX/_archives/2025-W40/files/DAO-EDU_v2.0_20251003_024312_a95ea1bb.zip
+- INBOX/_archives/2025-W40/files/DAO-EDU_v2.0_GitBook_20251003_024612_0d41e573.zip
+- INBOX/_archives/2025-W40/files/Data_CSV_TestKit_v1_20251002_215035_158feb2d.zip
+- INBOX/_archives/2025-W40/files/G46_1_Podilsk_InfoHub_v1.0_20251002_120434_df46c90b.zip
+- INBOX/_archives/2025-W40/files/G46_2_Mohyliv_InfoHub_v1.0_20251002_120630_57d14fea.zip
+- INBOX/_archives/2025-W40/files/G46_3_Haisyn_InfoHub_v1.0_20251002_120801_172d39e2.zip
+- INBOX/_archives/2025-W40/files/G46_4_Vinnytsia_InfoHub_v1.0_20251002_120928_3186fa16.zip
+- INBOX/_archives/2025-W40/files/G46_5_Odesa_InfoHub_v1.0_20251002_121200_b9132e57.zip
+- INBOX/_archives/2025-W40/files/G46_ALL_Integrated_FULL_v1.1_20251002_120717_b7b2d9ff.zip
+- INBOX/_archives/2025-W40/files/G46_ALL_Integrated_FULL_v1.1_PLUS_20251002_120823_c034735d.zip
+- INBOX/_archives/2025-W40/files/G46_ALL_Integrated_FULL_v1.4_draft (1)_20251003_053930_19e0b0ca.zip
+- INBOX/_archives/2025-W40/files/G46_ALL_Integrated_FULL_v1.4_draft_20251003_053155_19e0b0ca.zip
+- INBOX/_archives/2025-W40/files/G46_ALL_Integrated_MEGA_v1.1_20251002_121009_1fe2f7e2.zip
+- INBOX/_archives/2025-W40/files/G46_ALL_Integrated_MEGA_v1.2_20251002_121346_cb553d05.zip
+- INBOX/_archives/2025-W40/files/G46_ALL_Integrated_MEGA_v1.3_20251002_122338_918cbfac.zip
+- INBOX/_archives/2025-W40/files/G46_ALL_Integrated_MEGA_v1.4_draft_20251003_052912_99f85dc2.zip
+- INBOX/_archives/2025-W40/files/G46_FULL_v1_20251003_054156_8d454289.zip
+- INBOX/_archives/2025-W40/files/G46_Integrated_Release_v1.1_20251002_120526_c9f590a8.zip
+- INBOX/_archives/2025-W40/files/G46_Podillya_v1.1_FULL_20251002_120227_5bafe3ac.zip
+- INBOX/_archives/2025-W40/files/G46_Public_Roadmap_v1.0_20251002_123916_5b938f22.zip
+- INBOX/_archives/2025-W40/files/G46_Public_Roadmap_v1.1_20251002_125234_b63cc9b0.zip
+- INBOX/_archives/2025-W40/files/G46_Public_Roadmap_v1.2_20251002_130320_4498aca5.zip
+- INBOX/_archives/2025-W40/files/G46_ServicePack_v1.2.1_20251002_121920_3cfcf5a2.zip
+- INBOX/_archives/2025-W40/files/G46_Shield_Podillya_Scaffold_20251002_120142_8c49d024.zip
+- INBOX/_archives/2025-W40/files/G46_Shield_Podillya_v1.1_20251002_115948_e86f89de.zip
+- INBOX/_archives/2025-W40/files/G46_Strategic_Roadmap_v1.0_20251002_123722_32416e44.zip
+- INBOX/_archives/2025-W40/files/G46_TeachersPack_v1.0_20251002_130626_fcd486a1.zip
+- INBOX/_archives/2025-W40/files/G46_TeachersPack_v1.1_20251002_131349_a7928ab5.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (1)_20251003_065243_36d4d83e.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (2)_20251003_065324_2202a7d2.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (3)_20251003_065352_2edcc1cf.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (4)_20251003_072309_f348d405.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (5)_20251003_072925_be1c3538.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (6)_20251003_073130_5a9d07e2.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (7)_20251003_073234_5a9d07e2.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (8)_20251003_073528_f7756c3e.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL (9)_20251003_085050_41aa4851.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_FULL_20251003_065130_4b3875c6.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_MediaKit (1)_20251003_070849_777bd265.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_MediaKit (2)_20251003_071050_3d40e40c.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_MediaKit (3)_20251003_071403_78362ee2.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_MediaKit (4)_20251003_072927_f65e4ab0.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_MediaKit_20251003_070652_17a1e978.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_PUBLIC_20251003_071443_f5c56d54.zip
+- INBOX/_archives/2025-W40/files/G46_v1.4_Slides_PNG_20251003_065846_1c58abb4.zip
+- INBOX/_archives/2025-W40/files/GitBook_Packages (1)_20251002_235233_57e4fd64.zip
+- INBOX/_archives/2025-W40/files/GitBook_Packages (2)_20251002_235537_1e1fc29d.zip
+- INBOX/_archives/2025-W40/files/GitBook_Packages (3)_20251003_013222_4e021d9d.zip
+- INBOX/_archives/2025-W40/files/GitBook_Packages (4)_20251003_013403_4f055bc4.zip
+- INBOX/_archives/2025-W40/files/GitBook_Packages_20251002_234825_0a770e40.zip
+- INBOX/_archives/2025-W40/files/InfoHub_Media_Page_20251003_060847_972ebe07.zip
+- INBOX/_archives/2025-W40/files/My_English_Book_Family_Edition_v2.0 (1)_20251002_181356_b95dc60c.zip
+- INBOX/_archives/2025-W40/files/My_English_Book_Family_Edition_v2.0_20251002_181312_2f8c1e4b.zip
+- INBOX/_archives/2025-W40/files/My_English_Book_Family_Edition_v2.1_20251002_181556_1115b53f.zip
+- INBOX/_archives/2025-W40/files/My_English_Book_Family_Edition_v2.2_20251002_181849_a41825ee.zip
+- INBOX/_archives/2025-W40/files/My_English_Book_Family_Edition_v2.3_20251002_182100_d7c06ac2.zip
+- INBOX/_archives/2025-W40/files/My_Ukrainian_Book_Family_Edition_v1.0_PilotPack_20251002_192704_8813ec48.zip
+- INBOX/_archives/2025-W40/files/My_Ukrainian_Book_Family_Edition_v1.1_PilotPack_20251002_192715_c27e1a46.zip
+- INBOX/_archives/2025-W40/files/My_Ukrainian_Book_Family_Edition_v1.2_PilotPack_20251002_192720_8ad6c0cd.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_CARDS_20251002_160541_7c150a15.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_CORE_20251002_152439_12108f3b.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_Grand_Bundle_20251002_170834_77b0bdf3.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_MEDIA_PACK_20251002_161150_d3d46ff1.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_MEDIA_PACK_FINAL_20251002_161349_03fa5103.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_Package_20251003_020335_2fff39f1.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_POSTERS_20251002_160503_4647104c.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_PRINT_20251002_153349_c567d30d.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_VISUALS_20251002_160655_2bfbb94d.zip
+- INBOX/_archives/2025-W40/files/MyEnglishBook_WORKBOOK_ICONS_20251002_160608_a7919ba2.zip
+- INBOX/_archives/2025-W40/files/MyUkrainianBook_Cards_PNG_v1.0_20251002_192730_49850f3b.zip
+- INBOX/_archives/2025-W40/files/MyUkrainianBook_Icon_Set_v1.0_20251002_193432_7bbc040d.zip
+- INBOX/_archives/2025-W40/files/MyUkrainianBook_MegaPack_v1.0_20251002_193508_14be4710.zip
+- INBOX/_archives/2025-W40/files/MyUkrainianBook_Poster_Pack_PNG_v1.0_20251002_193316_d2f97e0f.zip
+- INBOX/_archives/2025-W40/files/Parents_Starter_Kit_20251002_170633_3b1aeb01.zip
+- INBOX/_archives/2025-W40/files/Podilsk_InfoHub_Live_MediaKit_v1.0_20251003_085048_fc79c204.zip
+- INBOX/_archives/2025-W40/files/Presentation_Pack_20251002_170137_0837f9ba.zip
+- INBOX/_archives/2025-W40/files/Promo_Pack_20251002_170239_23d90fb6.zip
+- INBOX/_archives/2025-W40/files/School_Integration_Pack_20251002_170726_5976c15c.zip
+- INBOX/_archives/2025-W40/files/SHIELD4_ODESA_UltimatePack_test_20251001_095402_e1e05868.zip
+- INBOX/_archives/2025-W40/files/Starter_Kits_Bundle_20251002_170657_88fbbd86.zip
+- INBOX/_archives/2025-W40/files/Students_Starter_Kit_20251002_170555_20244b55.zip
+- INBOX/_archives/2025-W40/files/StudentsPack_GitBook_v1.1_20251002_143726_0df746e9.zip
+- INBOX/_archives/2025-W40/files/StudentsPack_MediaKit_v1.1_20251002_143728_d6041ff8.zip
+- INBOX/_archives/2025-W40/files/StudentsPack_v1.0_20251002_132435_e5b7c636.zip
+- INBOX/_archives/2025-W40/files/StudentsPack_v1.0_Full_20251002_132558_4905a26d.zip
+- INBOX/_archives/2025-W40/files/StudentsPack_v1.0_Full_v1.1_20251002_133012_9b3970e1.zip
+- INBOX/_archives/2025-W40/files/StudentsPack_v1.0_MediaKit_20251002_132505_64733faf.zip
+- INBOX/_archives/2025-W40/files/StudentsPack_v1.1_with_MANIFEST_20251002_135411_3eea84bb.zip
+- INBOX/_archives/2025-W40/files/Teachers_Starter_Kit_20251002_170459_ad7f52a5.zip
+- INBOX/_archives/2025-W40/files/TeachersPack_GitBook_v1.1_20251002_143721_7dbb0d05.zip
+- INBOX/_archives/2025-W40/files/TeachersPack_v1.1_20251002_133112_2fe4bd19.zip
+- INBOX/_archives/2025-W40/files/TeachersPack_v1.1_with_MANIFEST_20251002_135412_1d277d90.zip
+- INBOX/_check/DAO_pack_big_20251003_102849_2a6a4ba6.zip
+- INBOX/_check/DAO_pack_huge_20251003_103019_8eb5cb84.zip
+- INBOX/_check/Podilsk_InfoHub_Live_MediaKit_v1.0_20251003_101657_e275f537.zip
+- INBOX/_check/WORLD_test_huge_20251003_103018_a4a00486.zip
+- INBOX/_check/WORLD_test_huge_recheck.zip
+- INBOX/_deprecated/Архітектура_ГОГС_GitBook_20000101_020000_a329ddb1.zip
+- INBOX/_deprecated/Візуали-20250523T144445Z-1-001_20000101_020000_c3946cba.zip
+- INBOX/_deprecated/ГОГС_Медіа_Пакет_Старт_20000101_020000_2e9639f8.zip
+- INBOX/_deprecated/ГОГС_Оновлення_Тиждень_1_20000101_020000_066088c5.zip
+- INBOX/_deprecated/ГОГС_Публічний_Старт_20000101_020000_f4021803.zip
+- INBOX/_deprecated/ГОГС_ФАЗА_1_Архів_20000101_020000_2af86f25.zip
+- INBOX/_deprecated/ГОГС_GitBook_Фрейм1_20000101_020000_71319b8a.zip
+- INBOX/_deprecated/ГОГС_Starter_Kit_v1.0_20000101_020000_3c125d93.zip
+- INBOX/_deprecated/ГОГС_Starter_Kit_v1.2_20000101_020000_a577c52f.zip
+- INBOX/_deprecated/ГОГС_Starter_Kit_v1.3_20000101_020000_e74f557d.zip
+- INBOX/_deprecated/Знання_ГОГС_v1.0 (1)_20000101_020000_635f842e.zip
+- INBOX/_deprecated/Знання_ГОГС_v1.0_20000101_020000_d9704b01.zip
+- INBOX/_deprecated/Ініціативи_ГОГС_MD_20000101_020000_2dcc553c.zip
+- INBOX/_deprecated/Інститут_Батьківства_v1.0_20000101_020000_dcf4ca4c.zip
+- INBOX/_deprecated/Інструменти_ГОГС_v1.0_20000101_020000_c609c4c1.zip
+- INBOX/_deprecated/Комплект_Архітектора_ГОГС_20000101_020000_6588694a.zip
+- INBOX/_deprecated/Комплект_Тиждень_2_Програма_Марка_20000101_020000_a090f7e9.zip
+- INBOX/_deprecated/Мій_Портал_2026_20000101_020000_0b526a0b.zip
+- INBOX/_deprecated/Онбординг_Метафізика_ГОГС_20000101_020000_3d00b60f.zip
+- INBOX/_deprecated/Пакет_Навчання_Новачка_ГОГС_20000101_020000_d209413a.zip
+- INBOX/_deprecated/Папка без назви-20250511T172133Z-1-001_20000101_020000_9a9989c2.zip
+- INBOX/_deprecated/Папка без назви-20250523T103609Z-1-001_20000101_020000_a4655f42.zip
+- INBOX/_deprecated/Перше_коло_Бібліотеки_Свідомих_20000101_020000_b6f2c63e.zip
+- INBOX/_deprecated/Стартовий_Набір_ГОГС_Медіа_20000101_020000_d501b521.zip
+- INBOX/_deprecated/Структура_Громада_Свідомих_20000101_020000_fa49d1fe.zip
+- INBOX/_deprecated/Структура_Громада_Свідомих_з_титульною_інструкцією (1)_20000101_020000_9f7a4ed6.zip
+- INBOX/_deprecated/Структура_Громада_Свідомих_з_титульною_інструкцією (2)_20000101_020000_9f7a4ed6.zip
+- INBOX/_deprecated/Структура_Громада_Свідомих_з_титульною_інструкцією (3)_20000101_020000_9f7a4ed6.zip
+- INBOX/_deprecated/Структура_Громада_Свідомих_з_титульною_інструкцією_20000101_020000_9f7a4ed6.zip
+- INBOX/_deprecated/Структура_Громада_Свідомих_з_шаблонами_20000101_020000_3f56d61b.zip
+- INBOX/_deprecated/Тиждень 1-20250516T203402Z-1-001_20000101_020000_05c3284c.zip
+- INBOX/_deprecated/BTD-1.0_20000101_020000_06bfe039.zip
+- INBOX/_deprecated/BTD-1.0_FULL_20000101_020000_9c67d3dd.zip
+- INBOX/_deprecated/BTD-1.0_FULL_with_SUMMARY (1)_20000101_020000_ea25ad0c.zip
+- INBOX/_deprecated/BTD-1.0_FULL_with_SUMMARY_20000101_020000_ea25ad0c.zip
+- INBOX/_deprecated/BTD-1.0_FULL_with_SUMMARY_YAML_20000101_020000_cbadbd06.zip
+- INBOX/_deprecated/BTD-Templates_v1.0_20000101_020000_83ea7ce0.zip
+- INBOX/_deprecated/BTD-Templates-MARKDOWN_v1.0_20000101_020000_87c91acd.zip
+- INBOX/_deprecated/C02_symbol_pack_v1.0_20000101_020000_64375d94.zip
+- INBOX/_deprecated/C11_AGENTS_analytics_bundle_20000101_020000_2546bd85.zip
+- INBOX/_deprecated/C11_AGENTS_complete_kit_v10_20000101_020000_5f35c90e.zip
+- INBOX/_deprecated/C11_AGENTS_complete_kit_v11_20000101_020000_d89c6144.zip
+- INBOX/_deprecated/C11_AGENTS_docs_20000101_020000_1db585d5.zip
+- INBOX/_deprecated/C11_AGENTS_tree_20000101_020000_cac25865.zip
+- INBOX/_deprecated/C12_DoubleCycle_Manifest_20000101_020000_ff39044d.zip
+- INBOX/_deprecated/C12_DoubleCycle_Manifest_v2_20000101_020000_f3fd8800.zip
+- INBOX/_deprecated/C20_EXEC_PACKAGE (1)_20000101_020000_da09f60e.zip
+- INBOX/_deprecated/C20_EXEC_PACKAGE_20000101_020000_da09f60e.zip
+- INBOX/_deprecated/CheCha_Algorithms_v1.2_Pack_20000101_020000_ab5b77d5.zip
+- INBOX/_deprecated/CHECHA_CORE_STARTER_v1.0.3_20000101_020000_78897134.zip
+- INBOX/_deprecated/CHECHA_CORE_v1.1_20000101_020000_a609be37.zip
+- INBOX/_deprecated/CHECHA_Release_Installer_v1.0_20000101_020000_88ef1432.zip
+- INBOX/_deprecated/CHECHA_Release_Repo_Skeleton_v1.0_20000101_020000_faf73264.zip
+- INBOX/_deprecated/core-functional-text-consciousness_20000101_020000_b0ec794c.zip
+- INBOX/_deprecated/DAO_Analytics_v1.0_20000101_020000_f32e9788.zip
+- INBOX/_deprecated/DAO_Compass_Map_GitBook_20000101_020000_87b020f5.zip
+- INBOX/_deprecated/DAO_GOGS_20000101_020000_29be471b.zip
+- INBOX/_deprecated/DAO_GOGS_Public_Pack (1)_20000101_020000_082713b8.zip
+- INBOX/_deprecated/DAO_GOGS_Public_Pack_20000101_020000_082713b8.zip
+- INBOX/_deprecated/DAO_GROUPS_GitBook_Kit_20000101_020000_0fb2f183.zip
+- INBOX/_deprecated/DAO_MEDIA_Full_Pack_20000101_020000_1fcd0b63.zip
+- INBOX/_deprecated/dao_navigation_index_files_20000101_020000_28dac53e.zip
+- INBOX/_deprecated/dao_templates_20000101_020000_9b2e4830.zip
+- INBOX/_deprecated/DAO_v1.1 (1)_20000101_020000_7129abe0.zip
+- INBOX/_deprecated/DAO_v1.1_20000101_020000_9bf51c42.zip
+- INBOX/_deprecated/DAO-BLOCK-MEMORY-KIT-1.0_20000101_020000_27d12046.zip
+- INBOX/_deprecated/dao-cos-kit_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/DAO-Gallery_READMEs_20000101_020000_b43105f2.zip
+- INBOX/_deprecated/DAO-Gallery_READMEs_with_INDEX_20000101_020000_abf3011f.zip
+- INBOX/_deprecated/DAO-Gallery_SimpleKit_20000101_020000_2ee4896f.zip
+- INBOX/_deprecated/DAO-GLOBAL_Module_20000101_020000_527d3f73.zip
+- INBOX/_deprecated/DAO-GOGS_FULL_G01-G30_20000101_020000_41cc4314.zip
+- INBOX/_deprecated/DAO-GOGS_Kit_v1.0_20000101_020000_4fe34a97.zip
+- INBOX/_deprecated/dao-gogs-docs_20000101_020000_6471aad8.zip
+- INBOX/_deprecated/dao-gogs-docs-3525adb7ab2dc2ecb743fd2f677a40e1a06ef328_20000101_020000_0fe14b47.zip
+- INBOX/_deprecated/DAO-GOGS-GitBook-MAIN_20000101_020000_d876d67c.zip
+- INBOX/_deprecated/dao-gogs-gitbook-structure_20000101_020000_0a238741.zip
+- INBOX/_deprecated/dao-gogs-markdown-export_20000101_020000_b27419f8.zip
+- INBOX/_deprecated/DAO-GOGS-Media-Kit-v1_20000101_020000_5dacd39f.zip
+- INBOX/_deprecated/DAO-GOGS-PACK-v1.1_20000101_020000_b3c06306.zip
+- INBOX/_deprecated/DAO-GOGS-Visual-Series_20000101_020000_32dd1c3d.zip
+- INBOX/_deprecated/dao-validator_20000101_020000_964893e8.zip
+- INBOX/_deprecated/departments_readme_20000101_020000_8f158635.zip
+- INBOX/_deprecated/FL_Studio_Template_Moral_Warrior_20000101_020000_d4f3ae71.zip
+- INBOX/_deprecated/functional-consciousness-core (1)_20000101_020000_2cc22b47.zip
+- INBOX/_deprecated/functional-consciousness-core_20000101_020000_2cc22b47.zip
+- INBOX/_deprecated/G04_AUTOMATION_v1.1_20000101_020000_3674897c.zip
+- INBOX/_deprecated/G05_DAO-Values_v1.0_20000101_020000_6b4a3803.zip
+- INBOX/_deprecated/G11-GPT-Agents_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/G11-Starter_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/G27_DAO-Market_v1.0_20000101_020000_0b445eb4.zip
+- INBOX/_deprecated/G35_test (1).zip
+- INBOX/_deprecated/G35_test (2).zip
+- INBOX/_deprecated/G35_test (3).zip
+- INBOX/_deprecated/G43_ITETA_Module_20000101_020000_6ad6621a.zip
+- INBOX/_deprecated/G43-Agents_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/G43-Q3_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/G45_GitBook_StdPack_v1_20000101_020000_49c67608.zip
+- INBOX/_deprecated/g45-1-aot_2025-09-06_build_20000101_020000_cd71939d.zip
+- INBOX/_deprecated/G45.1_DAO-AOT_Package_20000101_020000_b0167f48.zip
+- INBOX/_deprecated/gallery_ETHNO_dist_demo_20000101_020000_59b3f83a.zip
+- INBOX/_deprecated/gitbook_ГОГС_20000101_020000_379ce633.zip
+- INBOX/_deprecated/GitBook_стартовий_набір_20000101_020000_4712043a.zip
+- INBOX/_deprecated/GitBook_C12_DoubleCycle_20000101_020000_ab7c6480.zip
+- INBOX/_deprecated/GitBook_C12_v2_20000101_020000_0a3c6c32.zip
+- INBOX/_deprecated/GitBook_DAO_Structure_20000101_020000_092c395b.zip
+- INBOX/_deprecated/GitBook_g45-1-aot_v1.0_bundle_20000101_020000_14c8cd4a.zip
+- INBOX/_deprecated/gitbook_gogs_20000101_020000_5c52f781.zip
+- INBOX/_deprecated/GOGS_COVER_3 (1)_20000101_020000_5a4d5a23.zip
+- INBOX/_deprecated/GOGS_COVER_3 (2)_20000101_020000_5a4d5a23.zip
+- INBOX/_deprecated/GOGS_COVER_3 (3)_20000101_020000_5a4d5a23.zip
+- INBOX/_deprecated/GOGS_COVER_3_20000101_020000_5a4d5a23.zip
+- INBOX/_deprecated/gogs_dao_starter_pack_20000101_020000_59aa28a6.zip
+- INBOX/_deprecated/GOGS_DAO_Systemtled (1)_20000101_020000_b195f803.zip
+- INBOX/_deprecated/GOGS_DAO_Systemtled_20000101_020000_b195f803.zip
+- INBOX/_deprecated/gogs_departments_statutes_20000101_020000_5b57bf1e.zip
+- INBOX/_deprecated/GOGS_Drive_Starter_20000101_020000_c1b3d59d.zip
+- INBOX/_deprecated/GOGS_GitBook_FULL_PACK_20000101_020000_3c8afa80.zip
+- INBOX/_deprecated/GOGS_GitBook_Full_Package_20000101_020000_113777c2.zip
+- INBOX/_deprecated/GOGS_GitBook_Full_Package_v10_20000101_020000_ba22c7b0.zip
+- INBOX/_deprecated/GOGS_GitBook_Full_Package_v5_20000101_020000_00237953.zip
+- INBOX/_deprecated/GOGS_GitBook_Full_Package_v6_20000101_020000_b660da45.zip
+- INBOX/_deprecated/GOGS_GitBook_Full_Package_v7_20000101_020000_05608cba.zip
+- INBOX/_deprecated/GOGS_GitBook_Navigation_Pack_20000101_020000_a6411c42.zip
+- INBOX/_deprecated/GOGS_GitBook_Pack_20000101_020000_7a0d6afa.zip
+- INBOX/_deprecated/GOGS_GitBook_Starter_20000101_020000_30d8c6e8.zip
+- INBOX/_deprecated/GOGS_GitBook_TOC_Extra_Pack_20000101_020000_55e2594e.zip
+- INBOX/_deprecated/GOGS_GitBook_v2_Starter_20000101_020000_12420c97.zip
+- INBOX/_deprecated/GOGS_GitBook_Visual_Package_20000101_020000_4a4c4413.zip
+- INBOX/_deprecated/GOGS_GitBook_VisualPack_20000101_020000_b9198dd0.zip
+- INBOX/_deprecated/GOGS_Navigation_Buttons_ASCII_20000101_020000_706314bb.zip
+- INBOX/_deprecated/GOGS_Starter_Kit_MD_20000101_020000_4d2b1e0e.zip
+- INBOX/_deprecated/gogs_structure_v10.1 (1)_20000101_020000_3527f7ed.zip
+- INBOX/_deprecated/gogs_structure_v10.1 (2)_20000101_020000_962e1558.zip
+- INBOX/_deprecated/gogs_structure_v10.1 (3)_20000101_020000_962e1558.zip
+- INBOX/_deprecated/gogs_structure_v10.1 (4)_20000101_020000_6dc081b7.zip
+- INBOX/_deprecated/gogs_structure_v10.1 (5)_20000101_020000_e18a4af4.zip
+- INBOX/_deprecated/gogs_structure_v10.1_20000101_020000_81cf0c75.zip
+- INBOX/_deprecated/GOGS_SVIDOMA_ZBROIA_EXPORT_20000101_020000_e1934a67.zip
+- INBOX/_deprecated/GOGS_Visuals_Svydoma_Zbroia_20000101_020000_c8e67ca5.zip
+- INBOX/_deprecated/gogs-architecture_20000101_020000_18c16c7b.zip
+- INBOX/_deprecated/gogs-architecture-full (1)_20000101_020000_31d62acf.zip
+- INBOX/_deprecated/gogs-architecture-full (2)_20000101_020000_183d8b48.zip
+- INBOX/_deprecated/gogs-architecture-full (3)_20000101_020000_e36cdb76.zip
+- INBOX/_deprecated/gogs-architecture-full_20000101_020000_80225796.zip
+- INBOX/_deprecated/gogs-core (1)_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/gogs-core_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/gogs-gitbook (1)_20000101_020000_ab1b9f44.zip
+- INBOX/_deprecated/gogs-gitbook_20000101_020000_f2b3d6db.zip
+- INBOX/_deprecated/gogs-gitbook-export_20000101_020000_1ef3a1a8.zip
+- INBOX/_deprecated/gogs-manual-transfer_20000101_020000_145b2951.zip
+- INBOX/_deprecated/GOGSbot_Starter_Kit (1)_20000101_020000_27ccfaff.zip
+- INBOX/_deprecated/GOGSbot_Starter_Kit_20000101_020000_27ccfaff.zip
+- INBOX/_deprecated/GOGSbot_Starter_Kit_v2_20000101_020000_f5d7eb1f.zip
+- INBOX/_deprecated/GOHS_visuals_bundle_20000101_020000_554dc401.zip
+- INBOX/_deprecated/GPT_Agent_Syla_Usvidomlennia_20000101_020000_b4ce52fd.zip
+- INBOX/_deprecated/GPT-БЕЗСМЕРТЯ-PACK_20000101_020000_5f89f46c.zip
+- INBOX/_deprecated/gpt-shield-package_20000101_020000_5118ba89.zip
+- INBOX/_deprecated/guides_package_20000101_020000_cb84f5ca.zip
+- INBOX/_deprecated/GYA-Agents_20000101_020000_c98049ca.zip
+- INBOX/_deprecated/INIT-0001_Archive_20000101_020000_eb05fc00.zip
+- INBOX/_deprecated/initiative-templates_20000101_020000_b404df0d.zip
+- INBOX/_deprecated/McHelpers_StarterPack_v0.3.2_20000101_020000_c5043f63.zip
+- INBOX/_deprecated/McHelpers_StarterPack_v0.3.3_20000101_020000_35dbbbe6.zip
+- INBOX/_deprecated/mental-monitoring-pack_20000101_020000_176cc309.zip
+- INBOX/_deprecated/modules_archive (1)_20000101_020000_5353631f.zip
+- INBOX/_deprecated/modules_archive_20000101_020000_5353631f.zip
+- INBOX/_deprecated/modules_structure_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/Moral_Warrior_Beat_Demo_20000101_020000_a5742652.zip
+- INBOX/_deprecated/Moral_Warrior_FL_Tutorial_20000101_020000_8e840807.zip
+- INBOX/_deprecated/navigation_map_package (1)_20000101_020000_bff1afc5.zip
+- INBOX/_deprecated/navigation_map_package (2)_20000101_020000_c6a445fb.zip
+- INBOX/_deprecated/navigation_map_package (3)_20000101_020000_c6a445fb.zip
+- INBOX/_deprecated/navigation_map_package (4)_20000101_020000_20afa2e9.zip
+- INBOX/_deprecated/navigation_map_package (5)_20000101_020000_fc38b668.zip
+- INBOX/_deprecated/navigation_map_package (6)_20000101_020000_6f525713.zip
+- INBOX/_deprecated/navigation_map_package_20000101_020000_3aa15fd9.zip
+- INBOX/_deprecated/README_GOGS_package_20000101_020000_6a0bc0fd.zip
+- INBOX/_deprecated/resonance-kit_20000101_020000_ee50d084.zip
+- INBOX/_deprecated/result-files-g03-g05_20000101_020000_9130a5c5.zip
+- INBOX/_deprecated/sergii-checha-gitbook_20000101_020000_f06c85f5.zip
+- INBOX/_deprecated/shchyt2_md_files_20000101_020000_7ed34a82.zip
+- INBOX/_deprecated/shield1_module_full_package_20000101_020000_752ba060.zip
+- INBOX/_deprecated/Shield4_Odesa_GoogleForm_Pack_v0.1_20000101_020000_8bc82a63.zip
+- INBOX/_deprecated/ssk-gitbook_20000101_020000_91b75046.zip
+- INBOX/_deprecated/ssk-kit_20000101_020000_bc2cb690.zip
+- INBOX/_deprecated/SSK-Starter-Kit_20000101_020000_78ee816d.zip
+- INBOX/_deprecated/Starter_Kit_GOGS_v1_20000101_020000_8739c76e.zip
+- INBOX/_deprecated/starter-kit-2.0-full_20000101_020000_178f5aed.zip
+- INBOX/_deprecated/starter-kit-gitbook_20000101_020000_a30c227f.zip
+- INBOX/_deprecated/starter-kit-tvorcya_20000101_020000_232adb9f.zip
+- INBOX/_deprecated/StarterPack_DAOGOGS_20000101_020000_b62b7521.zip
+- INBOX/_deprecated/StarterPack_Notion_20000101_020000_1c854d17.zip
+- INBOX/_deprecated/Telegram_шаблони_20000101_020000_d5ac7c7a.zip
+- INBOX/_deprecated/tri-evolution-package_20000101_020000_71d1771b.zip
+- INBOX/_deprecated/VALIDATOR_DAO_GXX_20000101_020000_c4156a28.zip
+- INBOX/_deprecated/WEEKLY-REPORT-0526_20000101_020000_8e399c22.zip
+- INBOX/_integrated/G35_test_20251003_102034_92a04f8b.zip
+- INBOX/_integrated/G35_test_big_20251003_102850_8d308198.zip
+- INBOX/_integrated/G35_test_huge_20251003_103021_014a26a4.zip
+- INBOX/_integrated/WORLD_test_big_20251003_102847_6c7dbad4.zip
+- INBOX/INBOX-Run.ps1.bak_20251004_183956
+- INBOX/INBOX-Run.ps1.bak_20251004_184043
+- INBOX/INBOX-Run.ps1.bak_auto_20251004_184549
+- INBOX/INBOX-Run.ps1.bak_clean_20251004_184439
+- INBOX/INBOX-Run.ps1.bak_links_20251004_184213
+- INBOX/INBOX-Run.ps1.bak_perf_20251004_191206
+- INBOX/INBOX-Run.ps1.bak_perf_fix_20251004_191350
+- INBOX/INBOX-Run.ps1.bak_perf_init_20251004_191504
+- INBOX/INBOX-SELFCHECK.ps1.bak
+- INBOX/logs/Archive-20250930_195424.log
+- INBOX/logs/Health-20250930_195431.log
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_145004
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_152253
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_152259
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_153128
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_153432
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_154710
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_155544
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_160459
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_170740
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_171024
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_172939
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_173137
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_173314
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_20250930_174137
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_catch_20250930_155950
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_fix_20250930_145242
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_fix615_20250930_170400
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_FixHot_20250930_175813
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_fullfix_20250930_145959
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_HotfixA_20250930_183431
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_if_20250930_155916
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_inline_20250930_150532
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_local_20250930_160648
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_local_20250930_161034
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_local_20250930_161348
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase10_20250930_180645
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase11_20250930_181215
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase12_20250930_181836
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase13_20250930_182244
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase14_20250930_183054
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase15_20250930_183802
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase16_20250930_184043
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase17_20250930_184333
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase18_20250930_184352
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase19_20250930_184403
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase20_20250930_184750
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase21_20250930_185055
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase21_20250930_190034
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase21_20250930_190340
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase4_20250930_173548
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase5_6_20250930_173758
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase7_20250930_174527
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase7_20250930_174926
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase8_20250930_175349
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase9_20250930_180206
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_Phase9_20250930_180228
+- INBOX/SCRIPTS/Health-INBOX.ps1.bak_sumfix_20250930_145546
+- INBOX/SCRIPTS/Health-INBOX.ps1.broken_20250930_153916
+- INBOX/SCRIPTS/Health-INBOX.ps1.phase4_reduced.ps1.bak_Phase5_20250930_173637
+- INBOX/SESSIONS/INBOX_SESSION_20250927.zip
+- INBOX/SESSIONS/INBOX_SESSION_20250930_100759.zip
+- INBOX/SESSIONS/INBOX_SESSION_20250930_101144.zip
+- INBOX/SESSIONS/INBOX_SESSION_20250930_101533.zip
+- INBOX/SESSIONS/INBOX_SESSION_20250930_102847.zip
+- INBOX/SESSIONS/INBOX_SESSION_20250930_142020.zip
+- INBOX/SESSIONS/INBOX_SESSION_20250930_142021.zip
+- INBOX/SESSIONS/INBOX_SESSION_20250930.zip
+- INBOX/SESSIONS/INBOX_SESSION_20251001_085416.zip
+- REPORTS/_pipeline.log
+- REPORTS/_pipeline.run.log
+- REPORTS/_weekly_gen.log
+- REPORTS/.zip
+- REPORTS/2025-10-05.zip
+- REPORTS/ARCHIVE/2025/WeeklyChecklist_2025-10-01_to_2025-10-07.zip
+- REPORTS/BTD_Structure_Test_2025-10-07_16-47-25.md
+- REPORTS/CHECKSUMS.txt
+- REPORTS/REPORTS_COPY.log
+- REPORTS/WeeklyChecklist_2025-10-01_to_2025-10-07.md
+- SKD/SKD-GOGS_Master_G01-G46.csv.bak_20251001_150135
+
+— _С.Ч._

@@ -1,6 +1,6 @@
 # Weekly Checklist (2025-10-01 → 2025-10-07)
 
-- Згенеровано: 2025-10-07 23:02:46
+- Згенеровано: 2025-10-07 23:06:46
 - Гілка: reports
 - Звіт-файл: REPORTS/WeeklyChecklist_2025-10-01_to_2025-10-07.md
 
@@ -34,4 +34,7 @@ ame)_
 - [2025-10-07 13:40:14] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:40:28] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 ```
+
+## Контроль цілісності (SHA-256)
+_немає записів для цього інтервалу_
 

@@ -1,0 +1,15 @@
+Strategic Achievements • weekly_2025-10-01_to_2025-10-07
+Generated: 2025-10-08 03:02:12
+
+CHECKSUMS.txt                                         1 039 bytes  2025-10-08 03:02:08
+LOG.txt                                                  94 bytes  2025-10-08 03:02:12
+README.md                                             1 574 bytes  2025-10-07 23:36:58
+Strategic_Achievements_Kit_2025-10-07.zip           116 876 bytes  2025-10-08 03:02:08
+Strategic_Achievements_Map_Extended.pdf               2 811 bytes  2025-10-07 23:30:46
+Strategic_Achievements_Map_Extended.png              36 532 bytes  2025-10-07 23:31:38
+Strategic_Achievements_Map_Highlighted.png           42 906 bytes  2025-10-07 23:32:22
+Strategic_Achievements_Map_Interactive.html          23 658 bytes  2025-10-07 23:34:12
+Strategic_Achievements_Map_Interactive.svg           22 410 bytes  2025-10-07 23:34:12
+Strategic_Achievements_Map.png                       22 077 bytes  2025-10-07 23:28:30
+
+TOTAL: 269 977 bytes

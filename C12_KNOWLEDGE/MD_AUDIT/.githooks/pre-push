@@ -1,0 +1,30 @@
+#!/bin/sh
+# Block direct pushes to main; allow tags and whitelisted branches.
+
+blocked="refs/heads/main"
+
+# whitelist examples:
+is_whitelisted() {
+  ref=""
+  case "" in
+    refs/heads/release/*|refs/heads/hotfix/*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# stdin: <local_ref> <local_sha> <remote_ref> <remote_sha>
+while read local_ref local_sha remote_ref remote_sha
+do
+  case "" in refs/tags/*) continue ;; esac
+  case "" in refs/tags/*) continue ;; esac
+
+  ref_to_check=""; [ -z "" ] && ref_to_check=""
+
+  is_whitelisted "" || is_whitelisted "" && continue
+
+  [ "" = "" ] || [ "" = "" ] && {
+    echo "[BLOCK] Direct push to 'main' is disallowed. Create a feature branch & PR."
+    exit 1
+  }
+done
+exit 0

@@ -21,7 +21,7 @@ jobs:
         with:
           lfs: true
           fetch-depth: 0
-          fetch-tags: true   # <— ВАЖЛИВО: тягнемо теги
+          fetch-tags: true   # <- ВАЖЛИВО: тягнемо теги
 
       - name: Make repo safe for git
         shell: pwsh
@@ -102,3 +102,4 @@ jobs:
             C11/SHIELD4_ODESA/Archive/CHECKSUMS.txt
           if-no-files-found: warn
           retention-days: 7
+

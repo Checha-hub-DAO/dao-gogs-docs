@@ -24,7 +24,7 @@
 | 2025-10-10 18:14 | 100 | 5 | ✓ |
 | 2025-10-10 18:12 | 100 | 5 | ✓ |
 
-### C13 — Learning Feedback
+### C13 - Learning Feedback
 - Total Done: 0 (avg=0; Δweek=0)
 - Total Open: 0 (avg=0; Δweek=0)
 - Issues mentions: 0
@@ -51,6 +51,7 @@
 | Coord-Weekly | Ready | 2025-10-06 18:07 | 2147946720 | 2025-10-12 18:05 | ⚠️ |
 | Dashboard-Refresh | Ready | 2025-10-10 09:00 | 0 | 2025-10-11 09:00 | ✅ |
 <!-- END SCHEDULER -->
+
 
 
 

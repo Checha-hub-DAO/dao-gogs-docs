@@ -1,4 +1,4 @@
-⚡️ CheCha | Щоденний дайджест — 2025-10-10
+⚡️ CheCha | Щоденний дайджест - 2025-10-10
 
 🧭 Стан: архіви → Ok=?; Missing=?; Mismatch=?; Extras=?
 
@@ -14,8 +14,8 @@ LeaderIntel-Daily: Ready; Last=09.10 14:30 rc=0; Next=10.10 07:45
 ".Trim()
 
 📊 Аналітика:
-• MAT_BALANCE — дужка
-• MAT_RESTORE — події ↓
+• MAT_BALANCE - дужка
+• MAT_RESTORE - події ↓
 - [2025-10-07 13:24:20] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:24:20] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
 - [2025-10-07 13:36:59] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
@@ -25,3 +25,4 @@ LeaderIntel-Daily: Ready; Last=09.10 14:30 rc=0; Next=10.10 07:45
 📡 Sync: GitHub → OK
 
 _С.Ч._
+

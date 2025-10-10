@@ -13,12 +13,12 @@ _Generated: 2025-10-09 23:55:02 +03:00_
 - WARN_CHECKSUMS_UNKNOWN: 2
 
 ## Top 10 by size
-- **scripts_cleanup_20250921_210001** — 0,01 MB, files: 1, category: scripts_cleanup
-- **scripts_cleanup_20250911_201214** — 0 MB, files: 3, category: scripts_cleanup
+- **scripts_cleanup_20250921_210001** - 0,01 MB, files: 1, category: scripts_cleanup
+- **scripts_cleanup_20250911_201214** - 0 MB, files: 3, category: scripts_cleanup
 
 ## Latest 10
-- **scripts_cleanup_20250921_210001** — 2025-09-22T03:30:03.1405110+03:00
-- **scripts_cleanup_20250911_201214** — 2025-09-22T03:30:03.1395101+03:00
+- **scripts_cleanup_20250921_210001** - 2025-09-22T03:30:03.1405110+03:00
+- **scripts_cleanup_20250911_201214** - 2025-09-22T03:30:03.1395101+03:00
 
 ## Issues
 ### Missing MANIFEST.json
@@ -33,8 +33,9 @@ _Generated: 2025-10-09 23:55:02 +03:00_
 ## By Category
 ### scripts_cleanup
 
-- **scripts_cleanup_20250921_210001** — 0,01 MB, files: 1, health: WARN_MISSING_MANIFEST
+- **scripts_cleanup_20250921_210001** - 0,01 MB, files: 1, health: WARN_MISSING_MANIFEST
   - path: D:\CHECHA_CORE\C05\ARCHIVE\scripts_cleanup_20250921_210001; tags: 
-- **scripts_cleanup_20250911_201214** — 0 MB, files: 3, health: WARN_MISSING_MANIFEST
+- **scripts_cleanup_20250911_201214** - 0 MB, files: 3, health: WARN_MISSING_MANIFEST
   - path: D:\CHECHA_CORE\C05\ARCHIVE\scripts_cleanup_20250911_201214; tags: 
+
 

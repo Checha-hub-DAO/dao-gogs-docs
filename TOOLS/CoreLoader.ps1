@@ -47,4 +47,17 @@ if (-not $Quiet) {
 $env:CHECHA_CORE_INIT = "1"
 if (-not $Quiet) { Write-Ok "CHECHA_CORE environment initialized." }
 
+# --- 7) Core health (silent) ---
+try {
+  $chk = Join-Path $PSScriptRoot "Check-CoreHealth.ps1"
+  if (Test-Path $chk) {
+    & $chk -Root (Split-Path -Parent $PSScriptRoot) -Quiet | Out-Null
+    # Не шумимо при OK/WARN; ALERT створюється самим чекером
+  } else {
+    Write-Wrn ("CoreHealth script missing: {0}" -f $chk)
+  }
+} catch {
+  Write-Wrn ("CoreHealth invocation failed: {0}" -f $_.Exception.Message)
+}
+
 # ==========================================================

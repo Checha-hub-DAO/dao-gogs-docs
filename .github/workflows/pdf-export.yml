@@ -1,0 +1,43 @@
+name: Export PDF with Cover
+
+on:
+  workflow_dispatch:
+    inputs:
+      cover:
+        description: 'Cover image number (3)'
+        required: false
+        default: '1'
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install md-to-pdf
+        run: npm install -g md-to-pdf
+
+      - name: Generate PDF with selected cover
+        run: |
+          COVER_PATH="./covers/cover-${{ github.event.inputs.cover }}.png"
+          OUTPUT="GOGS_DOC_v1-$(date +'%Y%m%d').pdf"
+          echo "Using cover: $COVER_PATH"
+          md-to-pdf README.md \
+            --stylesheet ./pdf-styles.css \
+            --pdf-options "{\"format\": \"A4\"}" \
+            --image-scale 1.0 \
+            --cover-image "$COVER_PATH" \
+            --output "$OUTPUT"
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: gogs-doc-pdf
+          path: GOGS_DOC_v1-*.pdf

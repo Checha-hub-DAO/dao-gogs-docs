@@ -1,0 +1,13 @@
+{
+  "version": "v2.6",
+  "built_at": "2025-09-12T19:32:26",
+  "base_zip": "SHIELD4_ODESA_UltimatePack_v2.6.zip",
+  "modules": "SHIELD4_ODESA_MegaVisualPack_v1.0.zip'",
+  "files": [
+    "CHECKSUMS.txt",
+    "SHIELD4_ODESA_UltimatePack_v2.6.zip",
+    "meta\\MANIFEST.json",
+    "modules\\SHIELD4_ODESA_MegaPack_v1.0.zip",
+    "modules\\SHIELD4_ODESA_MegaVisualPack_v1.0.zip"
+  ]
+}

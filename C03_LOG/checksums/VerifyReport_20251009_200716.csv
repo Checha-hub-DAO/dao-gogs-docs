@@ -1,0 +1,4 @@
+"SumsFile","Line","FileName","FilePath","Expected","Actual","Status"
+"SHA256_SUMS_CheCha_Report_2025-10-09.txt","1","CheCha_Report_2025-10-09.md","","58db0c7a20104469e07c40463c857dece75dd914140aadad3806a95ba16c2b04","","MISSING_FILE"
+"SHA256_SUMS_CheCha_Report_2025-10-09.txt","2","CheCha_Report_2025-10-09.pdf","","a5d897b21d80423beed50dafd2baa04911d922c00581a8f3c22dc502483d067d","","MISSING_FILE"
+"SHA256_SUMS_CheCha_Report_2025-10-09.txt","3","CheCha_Report_2025-10-09.png","D:\CHECHA_CORE\C03_LOG\visuals\CheCha_Report_2025-10-09.png","5f15b84964c208c51b5883ffd209bd9a79b87716cf637c8e4b2fff81b2cfb74b","5f15b84964c208c51b5883ffd209bd9a79b87716cf637c8e4b2fff81b2cfb74b","OK"

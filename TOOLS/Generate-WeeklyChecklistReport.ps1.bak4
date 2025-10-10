@@ -1,0 +1,158 @@
+<# 
+  Generate-WeeklyChecklistReport.ps1
+  Тижневий чек-звіт з FOCUS_RestoreLog.md + SHA-256 і (опційно) Git-публікація.
+#>
+
+param(
+  [datetime]$WeekEnd = (Get-Date),
+  [string]$RestoreLogPath = "D:\CHECHA_CORE\C06_FOCUS\FOCUS_RestoreLog.md",
+  [string]$ReportsRoot = "D:\CHECHA_CORE\REPORTS",
+  [switch]$GitPublish,
+  [string]$GitBranch = "main",
+  [string]$RemoteName = "origin",
+  [switch]$Open
+)
+
+# --- Налаштування ---
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+function Info([string]$m){ Write-Host "[INFO] $m" }
+function Fail([string]$m){ throw $m }
+
+try {
+  # 1) Перевірки
+  if (-not (Test-Path -LiteralPath $RestoreLogPath)) { Fail "Не знайдено RestoreLogPath: $RestoreLogPath" }
+  if (-not (Test-Path -LiteralPath $ReportsRoot))    { New-Item -ItemType Directory -Path $ReportsRoot -Force | Out-Null }
+
+  # Межі тижня
+  $WeekEnd   = [datetime]::SpecifyKind($WeekEnd.Date.AddHours(23).AddMinutes(59).AddSeconds(59), [System.DateTimeKind]::Local)
+  $WeekStart = $WeekEnd.AddDays(-6).Date
+  Info ("Тиждень: {0} .. {1}" -f $WeekStart.ToString('yyyy-MM-dd'), $WeekEnd.ToString('yyyy-MM-dd'))
+
+  # 2) Парсинг логу
+  $raw = Get-Content -LiteralPath $RestoreLogPath -Raw -ErrorAction Stop
+  $pattern = '^\-\s*\[(?<ts>\d{4}\-\d{2}\-\d{2}\s+\d{2}\:\d{2}\:\d{2})\]\s*(?<msg>.+)$'
+  $matches = [System.Text.RegularExpressions.Regex]::Matches($raw, $pattern, 'Multiline')
+
+  $items = foreach ($m in $matches) {
+    $ts = [datetime]::ParseExact($m.Groups['ts'].Value, 'yyyy-MM-dd HH:mm:ss', $null)
+    [pscustomobject]@{ Timestamp=$ts; Date=$ts.Date; Message=$m.Groups['msg'].Value.Trim() }
+  }
+
+  $weekItems = $items | Where-Object { $_.Timestamp -ge $WeekStart -and $_.Timestamp -le $WeekEnd } | Sort-Object Timestamp
+
+  # 3) Агрегації
+  $byDay = $weekItems |
+    Group-Object Date | Sort-Object Name | ForEach-Object {
+      [pscustomobject]@{
+        Date   = (Get-Date $_.Name).ToString('yyyy-MM-dd')
+        Count  = $_.Count
+        Status = ($_.Group.Message | Where-Object { $_ -match 'Updated status' }).Count
+        Checks = ($_.Group.Message | Where-Object { $_ -match 'Checksums verified OK' }).Count
+        Warn   = ($_.Group.Message | Where-Object { $_ -match '\bwarn(=|:|\b)|warning' }).Count
+        Err    = ($_.Group.Message | Where-Object { $_ -match '\berr(=|:|\b)|error|failed' }).Count
+      }
+    }
+
+  $totalAll  = $weekItems.Count
+  $totalDays = ($byDay | Measure-Object).Count
+  $totalUpd  = ($weekItems | Where-Object { $_.Message -match 'Updated status' }).Count
+  $totalCsum = ($weekItems | Where-Object { $_.Message -match 'Checksums verified OK' }).Count
+  $totalWarn = ($weekItems | Where-Object { $_.Message -match '\bwarn(=|:|\b)|warning' }).Count
+  $totalErr  = ($weekItems | Where-Object { $_.Message -match '\berr(=|:|\b)|error|failed' }).Count
+
+  # 4) Формування звіту
+  $tag = "{0}_to_{1}" -f $WeekStart.ToString('yyyy-MM-dd'), $WeekEnd.ToString('yyyy-MM-dd')
+  $outName = "WeeklyChecklist_$tag.md"
+  $outPath = Join-Path $ReportsRoot $outName
+
+  $sb = New-Object System.Text.StringBuilder
+  [void]$sb.AppendLine("# Щотижневий чек-звіт ($($WeekStart.ToString('yyyy-MM-dd')) → $($WeekEnd.ToString('yyyy-MM-dd')))")
+  [void]$sb.AppendLine()
+  [void]$sb.AppendLine("**Джерело:** `$RestoreLogPath`  ")
+  [void]$sb.AppendLine("**Згенеровано:** $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')  ")
+  [void]$sb.AppendLine()
+  [void]$sb.AppendLine("## Підсумки тижня")
+  [void]$sb.AppendLine("| Показник | Значення |")
+  [void]$sb.AppendLine("|---|---:|")
+  [void]$sb.AppendLine( ("| Днів покрито | {0} |"   -f $totalDays) )
+  [void]$sb.AppendLine( ("| Усього записів | {0} |" -f $totalAll) )
+  [void]$sb.AppendLine( ("| Updated status | {0} |" -f $totalUpd) )
+  [void]$sb.AppendLine( ("| Checksums OK | {0} |"   -f $totalCsum) )
+  [void]$sb.AppendLine( ("| Попереджень | {0} |"    -f $totalWarn) )
+  [void]$sb.AppendLine( ("| Помилок | {0} |"        -f $totalErr) )
+  [void]$sb.AppendLine()
+  [void]$sb.AppendLine("## Динаміка за днями")
+  [void]$sb.AppendLine("| Дата | Записів | Status | Checks | Warn | Err |")
+  [void]$sb.AppendLine("|---|---:|---:|---:|---:|---:|")
+  foreach ($d in $byDay) { [void]$sb.AppendLine("| {0} | {1} | {2} | {3} | {4} | {5} |" -f $d.Date,$d.Count,$d.Status,$d.Checks,$d.Warn,$d.Err) }
+  [void]$sb.AppendLine()
+  [void]$sb.AppendLine("## Останні 15 записів тижня")
+  $last = $weekItems | Sort-Object Timestamp -Descending | Select-Object -First 15 | Sort-Object Timestamp
+  foreach ($it in $last) { [void]$sb.AppendLine("- [{0}] {1}" -f $it.Timestamp.ToString('yyyy-MM-dd HH:mm:ss'), $it.Message) }
+  [void]$sb.AppendLine()
+
+  # 5) Збереження + SHA-256
+  $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+  [System.IO.File]::WriteAllText($outPath, $sb.ToString(), $utf8NoBom)
+
+  $hash = (Get-FileHash -LiteralPath $outPath -Algorithm SHA256).Hash.ToUpperInvariant()
+  $checksumPath = Join-Path $ReportsRoot "CHECKSUMS.txt"
+  Add-Content -LiteralPath $checksumPath -Value ("{0}  {1}" -f $hash, (Split-Path $outPath -Leaf)) -Encoding UTF8
+  Add-Content -LiteralPath $outPath -Value "`n---`n**SHA-256:** $hash`n" -Encoding UTF8
+  Info ("Звіт збережено: $outPath")
+  Info ("Checksum записано: $checksumPath")
+
+  # 6) Опційна Git-публікація
+  if ($GitPublish) {
+    function Find-GitRoot([string]$start) {
+      $dir = (Resolve-Path $start).Path
+      while ($true) {
+        if (Test-Path (Join-Path $dir ".git")) { return $dir }
+        $parent = Split-Path $dir -Parent
+        if (-not $parent -or $parent -eq $dir) { return $null }
+        $dir = $parent
+      }
+    }
+
+    $gitRoot = Find-GitRoot -start $ReportsRoot
+    if (-not $gitRoot) { Fail "Не знайдено git-репозиторій вище $ReportsRoot. Ініціалізуй: git init; git remote add origin <URL>.git" }
+
+    Push-Location $gitRoot
+    try {
+      $originUrl = (& git config --get remote.$RemoteName.url)
+      if (-not $originUrl) { Fail "Remote '$RemoteName' не налаштовано. Виконай: git remote add $RemoteName <URL>.git" }
+
+      & git add -- "$outPath" "$checksumPath" 2>$null | Out-Null
+      $pending = (& git status --porcelain)
+      $hasChanges = -not [string]::IsNullOrWhiteSpace( ( $pending | Out-String ).Trim() )
+      if ($hasChanges) {
+        $stamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+        & git commit -m "reports: weekly checklist $tag (gen @ $stamp) | sha256:$hash" 2>$null | Out-Null
+      } else {
+        Info "Git: немає змін для коміту."
+      }
+
+      $curBranch = (& git rev-parse --abbrev-ref HEAD).Trim()
+      if ($curBranch -ne $GitBranch) {
+        & git show-ref --verify --quiet "refs/heads/$GitBranch"
+        if ($LASTEXITCODE -ne 0) { & git checkout -b $GitBranch } else { & git checkout $GitBranch }
+      }
+
+      & git ls-remote $RemoteName -h | Out-Null
+      & git push -u $RemoteName $GitBranch
+      Info ("Git: запушено у {0}/{1}" -f $RemoteName, $GitBranch)
+    }
+    finally { Pop-Location }
+  }
+
+  if ($Open) { Invoke-Item -LiteralPath $outPath }
+
+} catch {
+  # Акуратний вивід помилки
+  Write-Error ($_.Exception | Out-String)
+  if ($_.InvocationInfo) {
+    Write-Error ("At {0}:{1}" -f $_.InvocationInfo.ScriptName, $_.InvocationInfo.ScriptLineNumber)
+  }
+  exit 1
+}

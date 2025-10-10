@@ -1,0 +1,1 @@
+pwsh -NoProfile -ExecutionPolicy Bypass -File "D:\CHECHA_CORE\TOOLS\Build-CheChaRadarReport.ps1" -Version v1.0 -InstrumentsMap "D:\CHECHA_CORE\C12_KNOWLEDGE\MD_SYSTEM\INSTRUMENTS_MAP_v1.0.md" -InfoFieldMap "D:\CHECHA_CORE\C12_KNOWLEDGE\MD_SYSTEM\InfoField_Map_v1.0.md"

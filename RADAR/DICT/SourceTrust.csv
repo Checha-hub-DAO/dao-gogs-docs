@@ -1,0 +1,8 @@
+key_type,key_value,trust,notes,updated_at
+source,telegram:@mil_inform,0.85,офіційний/перевірений канал,2025-10-09
+source,telegram:@random_news,0.25,низька перевіреність,2025-10-09
+author,John Doe,0.6,журналіст локального видання,2025-10-09
+domain,bbc.com,0.9,трастове ЗМІ,2025-10-09
+domain,example.live,0.2,агрегатор/сумнівний,2025-10-09
+regex,^telegram:@(.*official.*)$,0.8,позначка офіційності у хендлі,2025-10-09
+regex,^(?:https?://)?(?:www\.)?t\.me/(.+)$,0.7,будь-який телеграм-лінк,2025-10-09

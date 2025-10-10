@@ -1,0 +1,27 @@
+⚡️ CheCha | Щоденний дайджест — 2025-10-10
+
+🧭 Стан: архіви → Ok=?; Missing=?; Mismatch=?; Extras=?
+
+⚙️ Run-Alert:
+[2025-10-10 04:35:01] START Run-Alert
+[2025-10-10 04:35:03] END Run-Alert (rc=0)
+ERROR: [2025-10-10 04:05:39] Notify-If-Degraded.ps1 failed (rc=1)
+Помилок 24h: 13
+
+Планувальник:
+CHECHA_Weekly_Publish: Ready; Last=08.10 02:14 rc=0; Next=12.10 20:03
+LeaderIntel-Daily: Ready; Last=09.10 14:30 rc=0; Next=10.10 07:45
+".Trim()
+
+📊 Аналітика:
+• MAT_BALANCE — дужка
+• MAT_RESTORE — події ↓
+- [2025-10-07 13:24:20] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+- [2025-10-07 13:24:20] Weekly report: WEEKLY_CHECKLIST_2025-W41.md | Days=0 | Total= | Done= | Todo= | AvgPct=0% | DoneShare=0% | Median=0% | Streak=0
+- [2025-10-07 13:36:59] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+- [2025-10-07 13:40:14] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+- [2025-10-07 13:40:28] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+
+📡 Sync: GitHub → OK
+
+_С.Ч._

@@ -1,0 +1,6 @@
+whoami=nt authority\система
+GH_TOKEN?=True
+git=C:\Program Files\Git\cmd\git.exe
+gh=C:\Program Files\GitHub CLI\gh.exe
+gh_auth_ok=False
+2025-10-08 00:29:55Z

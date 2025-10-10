@@ -1,0 +1,15 @@
+{
+  "Email": {
+    "SmtpHost": "smtp.example.com",
+    "SmtpPort": 587,
+    "EnableSsl": true,
+    "From": "checha-core@example.com",
+    "To":   ["ops@example.com"],
+    "User": "checha-core@example.com",
+    "Password": "REPLACE_ME"
+  },
+  "Telegram": {
+    "BotToken": "123456789:REPLACE_ME",
+    "ChatId":   "-1001234567890"
+  }
+}

@@ -1,0 +1,83 @@
+name: BTD Weekly Digest
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Щонеділі о 17:10 UTC ≈ 20:10 Київ
+    - cron: '10 17 * * 0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-weekly-digest:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git user
+        run: |
+          git config user.name "checha-bot"
+          git config user.email "actions@github.com"
+
+      - name: Ensure PowerShell execution policy (process only)
+        shell: pwsh
+        run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+      # (Необов'язково) Патчимо шляхи в скрипті, якщо в репо немає оновленої копії
+      - name: Ensure Build-WeeklyBTD-Digest.ps1 exists and patch RepoRoot
+        shell: pwsh
+        run: |
+          $repo = (Get-Location).Path
+          if (-not (Test-Path ".\TOOLS")) { New-Item -ItemType Directory -Force -Path ".\TOOLS" | Out-Null }
+          if (-not (Test-Path ".\TOOLS\Build-WeeklyBTD-Digest.ps1")) {
+            throw "Очікується .\TOOLS\Build-WeeklyBTD-Digest.ps1 у репозиторії"
+          }
+          $src = Get-Content ".\TOOLS\Build-WeeklyBTD-Digest.ps1" -Raw
+          $src = $src -replace "(?m)^\s*\$RepoRoot\s*=\s*'[^']*'", "$`$RepoRoot = '$repo'"
+          Set-Content ".\TOOLS\Build-WeeklyBTD-Digest.ps1" -Value $src -Encoding UTF8
+
+      - name: Run weekly digest
+        shell: pwsh
+        run: pwsh -NoProfile -ExecutionPolicy Bypass -File ".\TOOLS\Build-WeeklyBTD-Digest.ps1"
+
+      - name: Upload digest artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: btd-weekly-digest
+          path: |
+            REPORTS/BTD_Manifest_Digest_*.md
+            REPORTS/CHECKSUMS.txt
+          if-no-files-found: warn
+
+      # ── ДОДАНО: автооновлення індексів REPORTS ─────────────────────────
+      - name: Ensure Update-ReportsIndexes.ps1 exists and patch RepoRoot
+        shell: pwsh
+        run: |
+          $repo = (Get-Location).Path
+          if (-not (Test-Path ".\TOOLS\Update-ReportsIndexes.ps1")) {
+            throw "Очікується .\TOOLS\Update-ReportsIndexes.ps1 у репозиторії"
+          }
+          $src = Get-Content ".\TOOLS\Update-ReportsIndexes.ps1" -Raw
+          $src = $src -replace "(?m)^\s*\[string\]\$RepoRoot\s*=\s*'[^']*'", "[string]`$RepoRoot = '$repo'"
+          Set-Content ".\TOOLS\Update-ReportsIndexes.ps1" -Value $src -Encoding UTF8
+
+      - name: Update REPORTS indexes (digests & checklists)
+        shell: pwsh
+        run: pwsh -NoProfile -ExecutionPolicy Bypass -File ".\TOOLS\Update-ReportsIndexes.ps1" -Count 8
+
+      - name: Commit index changes (if any)
+        shell: pwsh
+        run: |
+          $status = git status --porcelain
+          if ([string]::IsNullOrWhiteSpace($status)) {
+            Write-Host "No changes to commit."
+          } else {
+            git add REPORTS/BTD_Manifest_Digest_index.md REPORTS/CHECHA_CHECKLIST_index.md
+            git commit -m "docs(reports): auto-update indexes after weekly digest"
+            git push
+          }

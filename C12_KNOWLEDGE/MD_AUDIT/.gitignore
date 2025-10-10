@@ -1,9 +1,0 @@
-# build/exports
-EXPORTS/
-REPORTS/
-*.zip
-*.xlsx
-*.csv
-*.log
-.DS_Store
-Thumbs.db

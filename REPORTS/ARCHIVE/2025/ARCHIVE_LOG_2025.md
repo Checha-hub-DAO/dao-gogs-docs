@@ -46,3 +46,4 @@
 | 2025-10-11 | digest | CheCha_Digest_2025-10-10.zip | 1811 | $sha |
 | 2025-10-11 | digest | CheCha_Digest_2025-10-10.zip | 1811 | $sha |
 | 2025-10-11 | strategic | CheCha_Strategic_2025-10-11.zip | 43289 | $sha |
+| 2025-10-11 | strategic | CheCha_Strategic_2025-10-11.zip | 43289 | $sha |

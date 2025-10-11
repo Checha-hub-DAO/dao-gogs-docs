@@ -39,3 +39,4 @@
 | 3 | 2025-10-09 | CheCha_Report_2025-10-09_v1.1.zip | v1.1 | 831e7a97c9d2cf65b3a3f22a2c7d5f7bcd064920193bb57e85ba360abccf6c5d | ✅ Stable | Integrity Release (з офіційним PDF) |
 | 4 | 2025-10-09 | CheCha_Report_2025-10-09_v1.1.zip | v1.1 | 831e7a97c9d2cf65b3a3f22a2c7d5f7bcd064920193bb57e85ba360abccf6c5d | ✅ Stable | Integrity Release (з офіційним PDF) |
 | 2025-10-11 | CheCha_Strategic_2025-10-11.zip | 43289 | $sha |
+| 2025-10-11 | CheCha_Strategic_2025-10-11.zip | 43289 | $sha |

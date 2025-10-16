@@ -1,0 +1,151 @@
+{
+  "package": "CadreEval",
+  "version": "v1.0",
+  "builtAt": "2025-10-16 11:35:57",
+  "sourceDir": "D:\\CHECHA_CORE\\C12_KNOWLEDGE\\MD_AUDIT",
+  "preserveTree": true,
+  "include": [
+    "*.md",
+    "*.pdf"
+  ],
+  "exclude": [],
+  "totalFiles": 26,
+  "totalBytes": 9780,
+  "components": [
+    {
+      "path": "README.md",
+      "size": 422,
+      "sha": "A65523CBAE10095419896858C9DD14C1"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_012701.md",
+      "size": 217,
+      "sha": "CDB115B79CFD2D18EEB4E81FFEF8EBB0"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_012711.md",
+      "size": 224,
+      "sha": "520146930086FC6CAC60EAE02ED3A0BD"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_012804.md",
+      "size": 224,
+      "sha": "A8F7903F2D4EB04DC4BE64B8939EF205"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_013036.md",
+      "size": 224,
+      "sha": "DF2C65237C32E3055DECEF3CCECB4D9D"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_013048.md",
+      "size": 224,
+      "sha": "D02A9E087F0E43C40A8CD3355A16F2E6"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_014717.md",
+      "size": 224,
+      "sha": "EAAC4BF49597D99D6354E977457B590C"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_014854.md",
+      "size": 224,
+      "sha": "7E2BEAAD9F1B54B4713A71AB41059FC0"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_014946.md",
+      "size": 224,
+      "sha": "B77B5660AD1572D8755252138366A705"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_015004.md",
+      "size": 224,
+      "sha": "13AA9A4428F7C0FA67DF906513BE2FAE"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_015151.md",
+      "size": 222,
+      "sha": "ADFFEF9ACD13573E817221F034C35268"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020007.md",
+      "size": 222,
+      "sha": "DF81AA5F81DA372A0F4B7C6ACBDC36F1"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020116.md",
+      "size": 222,
+      "sha": "3C3A05434B197F7EDFECB78FCA2BCAD0"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020117.md",
+      "size": 222,
+      "sha": "74B8FADAE1502FA3A1A411F72407EB0F"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020227.md",
+      "size": 220,
+      "sha": "2393A44493E6E3E37B202D65B1BF4EAD"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020238.md",
+      "size": 220,
+      "sha": "864C99651042F6F9E575C2915C77CCB7"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020239.md",
+      "size": 220,
+      "sha": "C1E2873C51E1B4CB398F703F9E98222B"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020349.md",
+      "size": 220,
+      "sha": "25C4B210AF337721AF1B1876B1EFCC6E"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020401.md",
+      "size": 220,
+      "sha": "EDE5F7531B668280C77CD03EF99A08FB"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020403.md",
+      "size": 220,
+      "sha": "3B93F58F09848DFB4B1476457FD6641B"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020800.md",
+      "size": 220,
+      "sha": "6096C31ED325AFD6EDF742D8B7B507A2"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020813.md",
+      "size": 220,
+      "sha": "77427290C59F45D7F982F0A8AE1DD0E0"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020815.md",
+      "size": 220,
+      "sha": "0C42D33AD5D53130E94B26C710E2BA01"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020853.md",
+      "size": 220,
+      "sha": "0338506FBE2C4151DDCA64D27603D1BB"
+    },
+    {
+      "path": "files/AUDIT_DIFF_20251007_020855.md",
+      "size": 220,
+      "sha": "75AB9ACE8C0AA228D0EE29636AB1074F"
+    },
+    {
+      "path": "files/index.md",
+      "size": 4449,
+      "sha": "D9025234B25FE2E0999D5D66448B78C8"
+    },
+    {
+      "path": "files/README.md",
+      "size": 14,
+      "sha": "6CB332F86AFBC5486E7CCFB250ED5373"
+    }
+  ]
+}

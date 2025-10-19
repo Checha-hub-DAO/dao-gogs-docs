@@ -1,56 +1,104 @@
-# OS/IDE
-Thumbs.db
+# === CHECHA_CORE .gitignore (2025) ===
+# General
 .DS_Store
+Thumbs.db
+desktop.ini
 
-# Logs & reports
-C03/LOG/**
-!C03/LOG/.gitkeep
-
-# Releases / дистрибутиви
-C11/SHIELD4_ODESA/releases/**
-C11/SHIELD4_ODESA/dist/**
-
-# Архіви, бекупи, тимчасові
-*.zip
+# Logs and temporary data
+logs/
 *.log
 *.tmp
 *.bak
-*.bak_*
-*.broken_*
+*.swp
+*.old
+*.orig
+*.rej
+*.lock
 
-# Python/Node/npm (про всяк)
+# Build outputs and generated files
+/out/
+/_out/
+/build/
+/dist/
+/publish/
+/reports/
+/artifacts/
+/coverage/
+/node_modules/
+/__pycache__/
+/*.egg-info/
+
+# PowerShell local runs
+*.ps1.format_*.bak
+*.ps1.fix_*.bak
+*.ps1.zone*_*.bak
+*.ps1.final*.bak
+
+# VS Code & IDE
+.vscode/
+.history/
+.idea/
+*.code-workspace~
+
+# Python / virtual environments
+.env/
+.venv/
+venv/
+env/
+
+# Archives
+*.zip
+*.7z
+*.tar
+*.gz
+*.tgz
+*.rar
+
+# Data files (large or generated)
+*.csv
+*.xlsx
+*.xlsm
+*.ods
+*.jsonl
+
+# Reports / artifacts from CHECHA system
+C03_LOG/digests/
+C03_LOG/reports/
+C05_ARCHIVE/tmp/
+C07_ANALYTICS/tmp/
+_tmp/
+_out/
+_outpdf/
+
+# GPG, security
+*.sig
+*.asc
+*.key
+*.pfx
+*.crt
+*.pem
+
+# Windows executables or utilities
+*.exe
+*.dll
+*.bat
+*.msi
+*.cmd
+
+# Cache
+.cache/
 __pycache__/
-node_modules/
-# Release artifacts
-C11/SHIELD4_ODESA/Release/*.zip
-C11/SHIELD4_ODESA/Modules/*.zip
-C11/**/work_*/
-# build artifacts / logs
-*.zip
-*.zip.sha256
-C03/LOG/*
-!C03/LOG/*.md
-!C03/LOG/*.md
-# build artifacts / logs
-*.zip
-*.zip.sha256
-C03/LOG/*
-!C03/LOG/*.md
-!C03/LOG/*.md
+.tmp/
+*.pid
 
-!C03/LOG/CHECKLIST_GIT_AND_RELEASES.md
+# Git backup
+*.orig
+*.merge
+*.BACKUP.*
 
-C03/*
+# Local backups
+*_backup_*.zip
+*_restore_*.zip
+*_202*.bak
 
-C03/LOG/*
-!C03/LOG/*.md
-
-C03/LOG/*
-!C03/LOG/
-!C03/LOG/*.md
-
-C03/LOG/*
-!C03/LOG/*.md
-
-*.zip
-*.zip.sha256
+# === End of .gitignore ===

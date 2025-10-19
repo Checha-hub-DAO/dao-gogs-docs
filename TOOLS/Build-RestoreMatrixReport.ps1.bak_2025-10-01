@@ -1,0 +1,212 @@
+
+#Requires -Version 7.0
+<#
+.SYNOPSIS
+  Build-RestoreMatrixReport.ps1 — єдиний скрипт для роботи з Матрицею відновлення (MAT_RESTORE).
+
+.DESCRIPTION
+  - Знаходить останній файл формату MAT_RESTORE_YYYY-MM-DD.csv у каталозі C07_ANALYTICS.
+  - (Опційно) об'єднує з новими рядками з CSV (AppendCsvPath).
+  - Валідує структуру та оцінки (0–3).
+  - Створює новий файл за сьогоднішню дату MAT_RESTORE_2025-10-01.csv (UTF-8 BOM).
+  - Генерує Markdown-звіт (GitBook-ready) з підсумками та топ-пріоритетами.
+
+.PARAMETER CsvDir
+  Каталог з файлами MAT_RESTORE_*.csv. Типово: D:\CHECHA_CORE\C07_ANALYTICS
+
+.PARAMETER AppendCsvPath
+  (Опційно) Шлях до CSV з новими рядками (ті ж колонки). Рядки додаються після валідації.
+
+.PARAMETER OutMd
+  Шлях для Markdown-звіту. Типово: D:\CHECHA_CORE\C06_FOCUS\MAT_RESTORE.md
+
+.PARAMETER TopN
+  Кількість записів у секції Топ пріоритетів (оцінка 3→2→1). Типово: 7
+
+.PARAMETER OpenAfter
+  Відкрити створений Markdown після генерації.
+
+.EXAMPLE
+  pwsh -NoProfile -File "D:\CHECHA_CORE\TOOLS\Build-RestoreMatrixReport.ps1" -OpenAfter
+
+.EXAMPLE
+  pwsh -NoProfile -File "D:\CHECHA_CORE\TOOLS\Build-RestoreMatrixReport.ps1" `
+    -AppendCsvPath "D:\CHECHA_CORE\INBOX\MAT_RESTORE_APPEND.csv" -TopN 10 -OpenAfter
+
+.NOTES
+  Версія: 1.0.0  |  Автор: С.Ч. + GPT-5 Thinking  |  Ліцензія: CC-BY 4.0
+#>
+
+param(
+  [string]$CsvDir = "D:\CHECHA_CORE\C07_ANALYTICS",
+  [string]$AppendCsvPath,
+  [string]$OutMd = "D:\CHECHA_CORE\C06_FOCUS\MAT_RESTORE.md",
+  [int]$TopN = 7,
+  [switch]$OpenAfter
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+function Write-Info([string]$msg) { Write-Host "[INFO]  $msg" }
+function Write-Warn([string]$msg) { Write-Host "[WARN]  $msg" -ForegroundColor Yellow }
+function Write-Err ([string]$msg) { Write-Host "[ERROR] $msg" -ForegroundColor Red }
+
+# 1) Перевірка каталогу
+if (-not (Test-Path -LiteralPath $CsvDir)) {
+  Write-Err "Каталог не знайдено: $CsvDir"
+  exit 1
+}
+
+# 2) Пошук останнього MAT_RESTORE_*.csv
+$pattern = "MAT_RESTORE_*.csv"
+$files = Get-ChildItem -LiteralPath $CsvDir -Filter $pattern -File | Sort-Object LastWriteTime -Descending
+if (-not $files) {
+  Write-Err "У каталозі немає файлів виду $pattern"
+  exit 2
+}
+
+$latest = $files[0].FullName
+Write-Info "Останній файл: $latest"
+
+# 3) Завантаження CSV
+$requiredHeaders = @("Місце","Людина/група","Ідея/символ","Оцінка (0–3)","Дата")
+
+function Import-CheckedCsv([string]$path) {
+  if (-not (Test-Path -LiteralPath $path)) {
+    throw "CSV не знайдено: $path"
+  }
+  $csv = Import-Csv -LiteralPath $path
+  if (-not $csv) {
+    return @()
+  }
+  # Перевірка заголовків
+  $headers = @()
+  if ($csv.Count -gt 0) {
+    $headers = $csv[0].psobject.Properties.Name
+  } else {
+    # Порожній, але перевіримо заголовки вручну
+    $firstLine = Get-Content -LiteralPath $path -TotalCount 1 -Encoding UTF8
+    if ($firstLine) {
+      $headers = $firstLine -split "," | ForEach-Object { $_.Trim('"').Trim() }
+    }
+  }
+  foreach ($h in $requiredHeaders) {
+    if ($headers -notcontains $h) {
+      throw "Немає колонки '0' у файлі 1" -f $h, $path
+    }
+  }
+  return $csv
+}
+
+$data = Import-CheckedCsv $latest
+
+# 4) (Опційно) Додавання нових рядків
+$append = @()
+if ($AppendCsvPath) {
+  Write-Info "Додаю рядки з: $AppendCsvPath"
+  $append = Import-CheckedCsv $AppendCsvPath
+}
+
+# 5) Нормалізація та валідація
+function Normalize-Row($row) {
+  $r = [ordered]@{
+    "Місце" = ($row."Місце" | ForEach-Object { $_.ToString().Trim() })
+    "Людина/група" = ($row."Людина/група" | ForEach-Object { $_.ToString().Trim() })
+    "Ідея/символ" = ($row."Ідея/символ" | ForEach-Object { $_.ToString().Trim() })
+    "Оцінка (0–3)" = [int]($row."Оцінка (0–3)")
+    "Дата" = if ($row."Дата") { (Get-Date $row."Дата").ToString("yyyy-MM-dd") } else { (Get-Date).ToString("yyyy-MM-dd") }
+  }
+  # Обмеження 0–3
+  if ($r."Оцінка (0–3)" -lt 0) { $r."Оцінка (0–3)" = 0 }
+  if ($r."Оцінка (0–3)" -gt 3) { $r."Оцінка (0–3)" = 3 }
+  return [pscustomobject]$r
+}
+
+$normData = @()
+foreach ($row in $data) { $normData += (Normalize-Row $row) }
+foreach ($row in $append) { $normData += (Normalize-Row $row) }
+
+# 6) Додаємо контрольні метадані (без дублікатів повністю ідентичних рядків)
+$unique = New-Object System.Collections.Generic.HashSet[string]
+$final = New-Object System.Collections.Generic.List[object]
+
+foreach ($r in $normData) {
+  $key = "0|1|2|3|4" -f $r."Місце",$r."Людина/група",$r."Ідея/символ",$r."Оцінка (0–3)",$r."Дата"
+  if ($unique.Add($key)) {
+    $final.Add($r) | Out-Null
+  }
+}
+
+# 7) Запис нового CSV за сьогоднішню дату
+$today = Get-Date -Format "yyyy-MM-dd"
+$outCsv = Join-Path $CsvDir ("MAT_RESTORE_2025-10-01.csv")
+Write-Info "Записую: $outCsv"
+# UTF-8 with BOM
+$Utf8Bom = New-Object System.Text.UTF8Encoding($true)
+[System.IO.File]::WriteAllText($outCsv, ($final | ConvertTo-Csv -NoTypeInformation | Out-String), $Utf8Bom)
+
+# 8) Генерація Markdown-звіту
+function To-MdTable($rows) {
+  if (-not $rows -or $rows.Count -eq 0) { return "" }
+  $md = @()
+  $md += "| Місце | Людина/група | Ідея/символ | Оцінка (0–3) | Дата |"
+  $md += "|---|---|---|---:|---|"
+  foreach ($r in $rows) {
+    $md += ("| 0 | 1 | 2 | 3 | 4 |" -f `
+      ($r."Місце" -replace "\|","/"), `
+      ($r."Людина/група" -replace "\|","/"), `
+      ($r."Ідея/символ" -replace "\|","/"), `
+      $r."Оцінка (0–3)", `
+      $r."Дата")
+  }
+  return ($md -join "`n")
+}
+
+# Сортування для Топа: за оцінкою (desc), потім за датою (desc)
+$sorted = $final | Sort-Object @{ Expression = "Оцінка (0–3)"; Descending = $true }, @{ Expression = "Дата"; Descending = $true }
+$top = $sorted | Select-Object -First $TopN
+
+# Групування по "Місце"
+$byPlace = $final | Group-Object "Місце" | Sort-Object Name
+
+$summary = @()
+$summary += "# Матриця відновлення — звіт"
+$summary += ""
+$summary += "**Дата формування:** $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')  "
+$summary += "**Джерело правди:** `$CsvDir`  "
+$summary += "**Оригінальний CSV:** `$outCsv`  "
+$summary += ""
+$summary += "## Топ пріоритетів (Top $TopN)"
+$summary += To-MdTable $top
+$summary += ""
+$summary += "## Усі записи за місцями"
+foreach ($g in $byPlace) {
+  $summary += "### " + $g.Name
+  $summary += To-MdTable ($g.Group | Sort-Object @{ Expression = "Оцінка (0–3)"; Descending = $true }, @{ Expression = "Дата"; Descending = $true })
+  $summary += ""
+}
+$summaryText = $summary -join "`n"
+
+# Створення каталогу для MD
+$mdDir = Split-Path -Parent $OutMd
+if (-not (Test-Path -LiteralPath $mdDir)) {
+  New-Item -ItemType Directory -Path $mdDir -Force | Out-Null
+}
+
+# Запис MD
+[System.IO.File]::WriteAllText($OutMd, $summaryText, $Utf8Bom)
+Write-Info "Markdown збережено: $OutMd"
+
+if ($OpenAfter) {
+  if ($IsWindows) {
+    Start-Process $OutMd
+  } else {
+    Write-Warn "OpenAfter підтримується лише на Windows"
+  }
+}
+
+Write-Host ""
+Write-Host "=== Done ==="
+Write-Host "CSV: $outCsv"
+Write-Host "MD : $OutMd"

@@ -3,18 +3,18 @@
 # Хук версіонується у .githooks\pre-push і підключається через core.hooksPath.
 
 param(
-  [string]$Root = 'D:\CHECHA_CORE',
-  [switch]$DryRun,                    # лише показати що буде зроблено
-  [string[]]$WhitelistBranches = @('refs/heads/release/*','refs/heads/hotfix/*') # дозволені патерни
+    [string]$Root = 'D:\CHECHA_CORE',
+    [switch]$DryRun,                    # лише показати що буде зроблено
+    [string[]]$WhitelistBranches = @('refs/heads/release/*', 'refs/heads/hotfix/*') # дозволені патерни
 )
 
-function Write-Step($msg){ Write-Host "• $msg" -ForegroundColor Cyan }
-function Matches-Whitelist($ref, $patterns){
-  foreach($p in $patterns){
-    $rx = '^' + ($p -replace '\*','.*') + '$'
-    if($ref -match $rx){ return $true }
-  }
-  return $false
+function Write-Step($msg) { Write-Host "• $msg" -ForegroundColor Cyan }
+function Matches-Whitelist($ref, $patterns) {
+    foreach ($p in $patterns) {
+        $rx = '^' + ($p -replace '\*', '.*') + '$'
+        if ($ref -match $rx) { return $true }
+    }
+    return $false
 }
 
 # Вміст pre-push (bash, LF, ASCII)
@@ -62,42 +62,44 @@ do
 done
 
 exit 0
-"@ -replace "`r`n","`n"
+"@ -replace "`r`n", "`n"
 
 # Знайти всі git-репозиторії
 $repos = Get-ChildItem -Path $Root -Recurse -Directory -ErrorAction SilentlyContinue |
-  Where-Object { Test-Path (Join-Path $_.FullName '.git') }
+    Where-Object { Test-Path (Join-Path $_.FullName '.git') }
 
-if(-not $repos){ Write-Host "Репозиторії не знайдено в $Root" -ForegroundColor Yellow; exit 0 }
+if (-not $repos) { Write-Host "Репозиторії не знайдено в $Root" -ForegroundColor Yellow; exit 0 }
 
-foreach($repo in $repos){
-  $path = $repo.FullName
-  Write-Host "`n=== $path ===" -ForegroundColor Green
+foreach ($repo in $repos) {
+    $path = $repo.FullName
+    Write-Host "`n=== $path ===" -ForegroundColor Green
 
-  if($DryRun){
-    Write-Step "DRY-RUN: поставимо core.hooksPath=.githooks і створимо .githooks\pre-push"
-    continue
-  }
+    if ($DryRun) {
+        Write-Step "DRY-RUN: поставимо core.hooksPath=.githooks і створимо .githooks\pre-push"
+        continue
+    }
 
-  Push-Location $path
-  try{
-    # переконатися, що є гілка/історія (інакше git config зчитується, але нам просто потрібна структура)
-    $githooks = Join-Path $path '.githooks'
-    New-Item -ItemType Directory -Force $githooks | Out-Null
+    Push-Location $path
+    try {
+        # переконатися, що є гілка/історія (інакше git config зчитується, але нам просто потрібна структура)
+        $githooks = Join-Path $path '.githooks'
+        New-Item -ItemType Directory -Force $githooks | Out-Null
 
-    # записати хук (ASCII, LF)
-    $hookPath = Join-Path $githooks 'pre-push'
-    [System.IO.File]::WriteAllText($hookPath, $hookContent, [System.Text.Encoding]::ASCII)
+        # записати хук (ASCII, LF)
+        $hookPath = Join-Path $githooks 'pre-push'
+        [System.IO.File]::WriteAllText($hookPath, $hookContent, [System.Text.Encoding]::ASCII)
 
-    # встановити core.hooksPath
-    git config core.hooksPath .githooks
+        # встановити core.hooksPath
+        git config core.hooksPath .githooks
 
-    # показати підсумок
-    Write-Step "hooksPath -> $(git config core.hooksPath)"
-    Write-Step "pre-push -> .githooks\pre-push (len: $((Get-Item $hookPath).Length) bytes)"
-  } finally {
-    Pop-Location
-  }
+        # показати підсумок
+        Write-Step "hooksPath -> $(git config core.hooksPath)"
+        Write-Step "pre-push -> .githooks\pre-push (len: $((Get-Item $hookPath).Length) bytes)"
+    }
+    finally {
+        Pop-Location
+    }
 }
 
 Write-Host "`nГотово. Хук встановлено у всіх знайдених репозиторіях." -ForegroundColor Cyan
+

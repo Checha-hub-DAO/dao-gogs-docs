@@ -1,30 +1,31 @@
 # Utils.Core.psm1  (CHECHA)
-  Import-Module "D:\CHECHA_CORE\TOOLS\Checha.Reports\Checha.Reports.psm1" -Force -ErrorAction SilentlyContinue
+Import-Module "D:\CHECHA_CORE\TOOLS\Checha.Reports\Checha.Reports.psm1" -Force -ErrorAction SilentlyContinue
 
 
 function Get-KyivDate {
     param([datetime]$Base = (Get-Date))
-    $ids = @('FLE Standard Time','Europe/Kyiv')
-    foreach($id in $ids){
+    $ids = @('FLE Standard Time', 'Europe/Kyiv')
+    foreach ($id in $ids) {
         try {
             $tz = [System.TimeZoneInfo]::FindSystemTimeZoneById($id)
             return [System.TimeZoneInfo]::ConvertTime($Base, $tz)
-        } catch {}
+        }
+        catch {}
     }
     return $Base
 }
 
-function Info([string]$m){ Write-Host "[INFO] $m" -ForegroundColor Cyan }
-function Warn([string]$m){ Write-Host "[WARN] $m" -ForegroundColor Yellow }
-function Err ([string]$m){ Write-Host "[ERR]  $m" -ForegroundColor Red }
-function Die ([string]$m){ Err $m; throw $m }
+function Info([string]$m) { Write-Host "[INFO] $m" -ForegroundColor Cyan }
+function Warn([string]$m) { Write-Host "[WARN] $m" -ForegroundColor Yellow }
+function Err ([string]$m) { Write-Host "[ERR]  $m" -ForegroundColor Red }
+function Die ([string]$m) { Err $m; throw $m }
 
 Set-Alias _Info Info -ErrorAction SilentlyContinue
 Set-Alias _Warn Warn -ErrorAction SilentlyContinue
 Set-Alias _Err  Err  -ErrorAction SilentlyContinue
 Set-Alias _Die  Die  -ErrorAction SilentlyContinue
 
-function Start-Op([string]$Name){
+function Start-Op([string]$Name) {
     $t = [pscustomobject]@{
         Name  = $Name
         Start = (Get-KyivDate)
@@ -33,11 +34,11 @@ function Start-Op([string]$Name){
     return $t
 }
 
-function Stop-Op($Op){
+function Stop-Op($Op) {
     $end = Get-KyivDate
-    $dur = [timespan]::FromSeconds([math]::Round(($end - $Op.Start).TotalSeconds,2))
+    $dur = [timespan]::FromSeconds([math]::Round(($end - $Op.Start).TotalSeconds, 2))
     Info ("done : {0} (+{1})" -f $Op.Name, $dur)
-    [pscustomobject]@{ Name=$Op.Name; Start=$Op.Start; End=$end; Duration=$dur }
+    [pscustomobject]@{ Name = $Op.Name; Start = $Op.Start; End = $end; Duration = $dur }
 }
 
 function Write-AuditLog {
@@ -61,12 +62,12 @@ function Get-RepoSlug {
     if ($url -notmatch 'github\.com[:/](?<o>[^/]+)/(?<r>[^/\.]+)(?:\.git)?') {
         Die "remote 'origin' не github.com: $url"
     }
-    "{0}/{1}" -f $Matches['o'],$Matches['r']
+    "{0}/{1}" -f $Matches['o'], $Matches['r']
 }
 
 function Disable-GhPager { try { & gh config set pager cat *> $null } catch {} }
 function Invoke-Gh {
-    param([string[]]$Args,[switch]$ThrowOnError)
+    param([string[]]$Args, [switch]$ThrowOnError)
     Disable-GhPager
     $null = & gh @Args
     $code = $LASTEXITCODE
@@ -83,9 +84,9 @@ function Compute-WeekBlock {
     # Нормалізація в TZ Києва + опівніч
     $WeekEnd = (Get-KyivDate -Base $WeekEnd).Date
 
-    $startDay  = [math]::Floor(($WeekEnd.Day - 1) / 7) * 7 + 1
+    $startDay = [math]::Floor(($WeekEnd.Day - 1) / 7) * 7 + 1
     $WeekStart = Get-Date -Year $WeekEnd.Year -Month $WeekEnd.Month -Day $startDay -Hour 0 -Minute 0 -Second 0
-    $WeekEnd   = $WeekStart.AddDays(6).Date
+    $WeekEnd = $WeekStart.AddDays(6).Date
 
     $eom = (Get-Date -Year $WeekStart.Year -Month $WeekStart.Month -Day 1 -Hour 0 -Minute 0 -Second 0).AddMonths(1).AddDays(-1).Date
     if ($WeekEnd -gt $eom) { $WeekEnd = $eom }
@@ -97,3 +98,4 @@ function Compute-WeekBlock {
         Name  = 'WeeklyChecklist_{0}_to_{1}.md' -f $WeekStart.ToString('yyyy-MM-dd'), $WeekEnd.ToString('yyyy-MM-dd')
     }
 }
+

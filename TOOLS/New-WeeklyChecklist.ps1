@@ -29,20 +29,20 @@
 
 [CmdletBinding()]
 param(
-  [datetime]$WeekStart,
-  [datetime]$WeekEnd,
-  [string]  $RepoRoot = 'D:\CHECHA_CORE',
-  [switch]  $UpdateChecksums
+    [datetime]$WeekStart,
+    [datetime]$WeekEnd,
+    [string]  $RepoRoot = 'D:\CHECHA_CORE',
+    [switch]  $UpdateChecksums
 )
 
 # ── Вирахувати наступний календарний тиждень (Пн–Нд), якщо не задано вручну
 if (-not $WeekStart -or -not $WeekEnd) {
-  $now = Get-Date
-  $dow = [int]$now.DayOfWeek  # 0=Sun … 6=Sat
-  $offsetToMonday = switch ($dow) { 0 {-6} 1 {0} default {1 - $dow} }
-  $mondayThisWeek = ($now.Date).AddDays($offsetToMonday)
-  $WeekStart = $mondayThisWeek.AddDays(7)               # наступний понеділок
-  $WeekEnd   = $WeekStart.AddDays(6).Date.AddHours(23).AddMinutes(59).AddSeconds(59)
+    $now = Get-Date
+    $dow = [int]$now.DayOfWeek  # 0=Sun … 6=Sat
+    $offsetToMonday = switch ($dow) { 0 { -6 } 1 { 0 } default { 1 - $dow } }
+    $mondayThisWeek = ($now.Date).AddDays($offsetToMonday)
+    $WeekStart = $mondayThisWeek.AddDays(7)               # наступний понеділок
+    $WeekEnd = $WeekStart.AddDays(6).Date.AddHours(23).AddMinutes(59).AddSeconds(59)
 }
 
 $reportsDir = Join-Path $RepoRoot 'REPORTS'
@@ -86,26 +86,29 @@ $template = @"
 
 # ── Створити файл (не перетираємо, якщо вже існує)
 if (Test-Path -LiteralPath $outPath) {
-  Write-Host "[INFO] Вже існує: $outPath"
-} else {
-  $template | Set-Content -LiteralPath $outPath -Encoding UTF8
-  Write-Host "[OK] Створено: $outPath"
+    Write-Host "[INFO] Вже існує: $outPath"
+}
+else {
+    $template | Set-Content -LiteralPath $outPath -Encoding UTF8
+    Write-Host "[OK] Створено: $outPath"
 }
 
 # ── Опційне оновлення REPORTS\CHECKSUMS.txt
 if ($UpdateChecksums) {
-  $checks = Join-Path $reportsDir 'CHECKSUMS.txt'
-  $sha = (Get-FileHash -Algorithm SHA256 -LiteralPath $outPath).Hash
-  $rel = "REPORTS/$outName"
-  $line = "{0}  {1}" -f $sha, $rel
+    $checks = Join-Path $reportsDir 'CHECKSUMS.txt'
+    $sha = (Get-FileHash -Algorithm SHA256 -LiteralPath $outPath).Hash
+    $rel = "REPORTS/$outName"
+    $line = "{0}  {1}" -f $sha, $rel
 
-  if (Test-Path -LiteralPath $checks) {
-    # приберемо старі рядки для цього файлу (якщо відтворюєш)
-    $cur = Get-Content -LiteralPath $checks
-    $cur = $cur | Where-Object { $_ -notmatch [regex]::Escape($outName) }
-    $cur + $line | Set-Content -LiteralPath $checks -Encoding UTF8
-  } else {
-    $line | Set-Content -LiteralPath $checks -Encoding UTF8
-  }
-  Write-Host "[OK] CHECKSUMS оновлено: $checks"
+    if (Test-Path -LiteralPath $checks) {
+        # приберемо старі рядки для цього файлу (якщо відтворюєш)
+        $cur = Get-Content -LiteralPath $checks
+        $cur = $cur | Where-Object { $_ -notmatch [regex]::Escape($outName) }
+        $cur + $line | Set-Content -LiteralPath $checks -Encoding UTF8
+    }
+    else {
+        $line | Set-Content -LiteralPath $checks -Encoding UTF8
+    }
+    Write-Host "[OK] CHECKSUMS оновлено: $checks"
 }
+

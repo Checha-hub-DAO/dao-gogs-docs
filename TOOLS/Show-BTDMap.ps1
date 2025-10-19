@@ -6,12 +6,12 @@ function Show-BTDMap {
       Режими: (без параметрів) міні-ASCII, -Full, -Mermaid. Додатково: -Check, -RepoRoot, -OutFile, -NoColor.
     #>
 
-    [CmdletBinding(DefaultParameterSetName='AsciiMini')]
+    [CmdletBinding(DefaultParameterSetName = 'AsciiMini')]
     param(
-        [Parameter(ParameterSetName='AsciiFull')]
+        [Parameter(ParameterSetName = 'AsciiFull')]
         [switch]$Full,
 
-        [Parameter(ParameterSetName='Mermaid')]
+        [Parameter(ParameterSetName = 'Mermaid')]
         [switch]$Mermaid,
 
         [switch]$Check,
@@ -20,16 +20,20 @@ function Show-BTDMap {
         [switch]$NoColor
     )
 
-    function Test-Node { param([string]$Rel)
+    function Test-Node {
+        param([string]$Rel)
         Test-Path -LiteralPath (Join-Path -Path $RepoRoot -ChildPath $Rel)
     }
-    function Mark { param([string]$Label, [bool]$Exists)
+    function Mark {
+        param([string]$Label, [bool]$Exists)
         if ($Exists) { "$Label [OK]" } else { "$Label [MISSING]" }
     }
-    function MarkEmoji { param([string]$Label, [bool]$Exists)
+    function MarkEmoji {
+        param([string]$Label, [bool]$Exists)
         if ($Exists) { "$Label ✅" } else { "$Label ❌" }
     }
-    function OutText { param([string]$Text)
+    function OutText {
+        param([string]$Text)
         if ($OutFile) { $Text | Set-Content -LiteralPath $OutFile -Encoding UTF8; Write-Host "[OK] Saved to $OutFile" }
         else { if ($NoColor) { Write-Host $Text } else { Write-Host $Text -ForegroundColor Cyan } }
     }
@@ -45,10 +49,10 @@ function Show-BTDMap {
 
     if ($Mermaid) {
         $nINBOX = MarkEmoji '📥 INBOX\nВхідний буфер / Артефакти'              $exists.INBOX
-        $nC12   = MarkEmoji '📚 C12_KNOWLEDGE\nMD_INBOX / MD_AUDIT / ARCHIVE'  $exists.C12
-        $nC11   = MarkEmoji '📘 C11 — BTD 1.0\nMANIFEST / CHECKSUMS / INDEX'   $exists.C11
-        $nC03   = MarkEmoji '📑 C03_LOG\nЖурнал змін / AUDIT-логи'             $exists.C03
-        $nRPT   = MarkEmoji '📝 REPORTS\nДайджести / Чеклісти / Тести'         $exists.REPORTS
+        $nC12 = MarkEmoji '📚 C12_KNOWLEDGE\nMD_INBOX / MD_AUDIT / ARCHIVE'  $exists.C12
+        $nC11 = MarkEmoji '📘 C11 — BTD 1.0\nMANIFEST / CHECKSUMS / INDEX'   $exists.C11
+        $nC03 = MarkEmoji '📑 C03_LOG\nЖурнал змін / AUDIT-логи'             $exists.C03
+        $nRPT = MarkEmoji '📝 REPORTS\nДайджести / Чеклісти / Тести'         $exists.REPORTS
         $nTOOLS = MarkEmoji '⚙️ TOOLS\nСкрипти автоматизації'                  $exists.TOOLS
 
         $lines = @()
@@ -92,10 +96,10 @@ function Show-BTDMap {
 
     if ($Full) {
         $INBOX = Mark '📥 INBOX'             $exists.INBOX
-        $C12   = Mark '📚 C12 KNOWLEDGE'     $exists.C12
-        $C11   = Mark '📘 C11 — BTD 1.0'     $exists.C11
-        $C03   = Mark '📑 C03_LOG'           $exists.C03
-        $RPT   = Mark '📝 REPORTS'           $exists.REPORTS
+        $C12 = Mark '📚 C12 KNOWLEDGE'     $exists.C12
+        $C11 = Mark '📘 C11 — BTD 1.0'     $exists.C11
+        $C03 = Mark '📑 C03_LOG'           $exists.C03
+        $RPT = Mark '📝 REPORTS'           $exists.REPORTS
         $TOOLS = Mark '⚙ TOOLS'              $exists.TOOLS
 
         $l = @()
@@ -140,10 +144,10 @@ function Show-BTDMap {
 
     # Mini ASCII
     $INBOX = Mark 'INBOX'             $exists.INBOX
-    $C12   = Mark 'C12_KNOWLEDGE'     $exists.C12
-    $C11   = Mark 'C11 (BTD)'         $exists.C11
-    $RPT   = Mark 'REPORTS'           $exists.REPORTS
-    $C03   = Mark 'C03_LOG'           $exists.C03
+    $C12 = Mark 'C12_KNOWLEDGE'     $exists.C12
+    $C11 = Mark 'C11 (BTD)'         $exists.C11
+    $RPT = Mark 'REPORTS'           $exists.REPORTS
+    $C03 = Mark 'C03_LOG'           $exists.C03
     $TOOLS = Mark 'TOOLS'             $exists.TOOLS
 
     $m = @()
@@ -156,3 +160,4 @@ function Show-BTDMap {
 
     OutText -Text ($m -join "`r`n")
 }
+

@@ -1,0 +1,1727 @@
+param(
+  [switch]$RunDryPipeline = $true,
+  [int]$TailLines = 10,
+  [string]$OutputMarkdownPath = "D:\CHECHA_CORE\C07_ANALYTICS\INBOX_HEALTH.md"
+)
+
+$ErrorActionPreference = "Stop"
+
+# --- Константи
+$ROOT      = "D:\CHECHA_CORE\INBOX"
+$SCRIPTS   = Join-Path $ROOT "SCRIPTS"
+$SESSIONS  = Join-Path $ROOT "SESSIONS"
+$CFG       = Join-Path $ROOT "INBOX.config.json"
+$LOGDIR    = "D:\CHECHA_CORE\C03_LOG\INBOX"
+$ANALYTICS = "D:\CHECHA_CORE\C07_ANALYTICS"
+$TASK_LOG  = Join-Path $LOGDIR "INBOX_TASK_LOG.csv"
+$DISP_LOG  = Join-Path $LOGDIR "INBOX_DISPATCH_LOG.csv"
+$REPORT_MD = Join-Path $ANALYTICS "INBOX_REPORT.md"
+$TASKNAME  = "CHECHA_CORE-INBOX-Daily"
+
+# --- Акумулятори
+$results = New-Object System.Collections.Generic.List[object]
+$errors  = 0
+$consoleLines = New-Object System.Collections.Generic.List[string]
+
+function Add-Result($name, $ok, $msg) {
+  if (-not $ok) { $script:errors++ }
+  $status = if ($ok) { "OK" } else { "ERROR" }
+  $results.Add([pscustomobject]@{
+    Check   = $name
+    Status  = $status
+    Message = $msg
+  }) | Out-Null
+}
+
+function WH([string]$text, [ConsoleColor]$color = [ConsoleColor]::Gray) {
+  $consoleLines.Add($text) | Out-Null
+  Write-Host $text -ForegroundColor $color
+}
+
+# --- Заголовок
+WH "=== INBOX Health Check ===" 'Cyan'
+WH ((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))
+WH ""
+
+# 1) Базові теки/файли
+Add-Result "Path: INBOX"     (Test-Path -LiteralPath $ROOT)      $ROOT
+Add-Result "Path: SCRIPTS"   (Test-Path -LiteralPath $SCRIPTS)    $SCRIPTS
+Add-Result "Path: SESSIONS"  (Test-Path -LiteralPath $SESSIONS)   $SESSIONS
+Add-Result "Path: LOGDIR"    (Test-Path -LiteralPath $LOGDIR)     $LOGDIR
+Add-Result "Path: ANALYTICS" (Test-Path -LiteralPath $ANALYTICS)  $ANALYTICS
+Add-Result "File: CONFIG"    (Test-Path -LiteralPath $CFG)        $CFG
+
+# 2) Скрипти
+$ScriptsMustExist = @(
+  "Run-InboxDaily.ps1",
+  "Verify-INBOX.ps1",
+  "Dispatch-INBOX.ps1",
+  "Check-INBOX.ps1",
+  "Archive-INBOX.ps1",
+  "Rotate-INBOX-Logs.ps1",
+  "Health-INBOX.ps1"
+)
+foreach ($f in $ScriptsMustExist) {
+  $p = Join-Path $SCRIPTS $f
+  Add-Result ("Script: "+$f) (Test-Path -LiteralPath $p) $p
+}
+
+# 3) Конфіг — JSON-валідність + ключі
+try {
+  if (Test-Path -LiteralPath $CFG) {
+    $c = Get-Content -LiteralPath $CFG -Raw | ConvertFrom-Json
+    $need = @("InboxPath","SessionsPath","LogDir","ReportOut","DispatchRules")
+    $missing = $need | Where-Object { -not $c.PSObject.Properties.Name.Contains($_) }
+    if ($missing.Count -gt 0) { Add-Result "Config schema" $false ("Missing: " + ($missing -join ", ")) }
+    else { Add-Result "Config schema" $true "OK" }
+  }
+} catch {
+  Add-Result "Config JSON parse" $false $_.Exception.Message
+}
+
+# 4) Логи — існування + шапка
+$taskHeader = "DateTimeUTC,LocalTime,Step,Status,DurationSec,Message"
+$dispHeader = "DateTimeUTC,LocalTime,FileName,From,To,Action"
+function Test-Log($path,$header) {
+  if (-not (Test-Path -LiteralPath $path)) { return ,$false,"Missing" }
+  try {
+    $first = Get-Content -LiteralPath $path -First 1 -ErrorAction Stop
+    if ($first -eq $header) { return ,$true,"Header OK" } else { return ,$false,("Wrong header: "+$first) }
+  } catch { return ,$false,$_.Exception.Message }
+}
+$tOK,$tMsg = Test-Log $TASK_LOG $taskHeader
+Add-Result "Task log" $tOK $tMsg
+$dOK,$dMsg = Test-Log $DISP_LOG $dispHeader
+Add-Result "Dispatch log" $dOK $dMsg
+
+# 5) Останні сесійні ZIP
+try {
+  $lastZip = @(Get-ChildItem -LiteralPath $SESSIONS -Filter *.zip -ErrorAction SilentlyContinue |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 3)
+  if ($lastZip.Count -gt 0) {
+    $list = $lastZip | ForEach-Object { "{0} ({1} KB)" -f $_.Name, ([math]::Round($_.Length/1KB,1)) }
+    Add-Result "Sessions ZIP" $true ($list -join "; ")
+  } else {
+    Add-Result "Sessions ZIP" $false "No ZIP found"
+  }
+} catch {
+  Add-Result "Sessions ZIP" $false $_.Exception.Message
+}
+
+# 6) Планувальник
+try {
+  $schtasks = (Get-Command schtasks.exe -ErrorAction SilentlyContinue)
+  if ($schtasks) {
+    $null = schtasks /Query /TN $TASKNAME /FO LIST 2>$null
+    if ($LASTEXITCODE -eq 0) { Add-Result "ScheduledTask" $true ("Found: " + $TASKNAME) }
+    else { Add-Result "ScheduledTask" $false ("Not found: " + $TASKNAME) }
+  } else {
+    Add-Result "ScheduledTask" $true "schtasks.exe not available (skipped)"
+  }
+} catch {
+  Add-Result "ScheduledTask" $false $_.Exception.Message
+}
+
+# 7) Короткий DryRun пайплайна (опційно)
+if ($RunDryPipeline) {
+  try {
+    & "$SCRIPTS\Run-InboxDaily.ps1" -DryRun -Verbose *>$null
+    Add-Result "Pipeline DryRun" $true "OK"
+  } catch {
+    Add-Result "Pipeline DryRun" $false $_.Exception.Message
+  }
+}
+
+# 8) INBOX REPORT існує
+Add-Result "Analytics report" (Test-Path -LiteralPath $REPORT_MD) $REPORT_MD
+
+# --- Summary у консоль і у буфер
+WH ""
+WH "Summary:" 'Cyan'
+$tbl = $results | Sort-Object Check | Format-Table -Property Check,Status,Message -AutoSize | Out-String
+foreach ($line in ($tbl -split [Environment]::NewLine)) { if ($line.Trim()) { WH $line } }
+
+# --- Хвости логів
+WH ""
+WH ("Tail of " + $TASK_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $TASK_LOG) {
+  (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+WH ""
+WH ("Tail of " + $DISP_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $DISP_LOG) {
+  (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+# --- Markdown (replaced by auto-patch)
+try {
+  if ([string]::IsNullOrWhiteSpace($OutputMarkdownPath)) { throw "OutputMarkdownPath is empty." }
+
+  $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+
+  # Summary: простий цикл, без інлайн if
+  $summaryLines = @()
+  foreach ($r in $results) {
+    $icon = '❌'
+    if ($r.Status -eq 'OK') { $icon = '✅' }
+    $summaryLines += "- $icon **$($r.Check)** — $($r.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  # Totals
+  $ok  = ($results | Where-Object { param(
+  [switch]$RunDryPipeline = $true,
+  [int]$TailLines = 10,
+  [string]$OutputMarkdownPath = "D:\CHECHA_CORE\C07_ANALYTICS\INBOX_HEALTH.md"
+)
+
+$ErrorActionPreference = "Stop"
+
+# --- Константи
+$ROOT      = "D:\CHECHA_CORE\INBOX"
+$SCRIPTS   = Join-Path $ROOT "SCRIPTS"
+$SESSIONS  = Join-Path $ROOT "SESSIONS"
+$CFG       = Join-Path $ROOT "INBOX.config.json"
+$LOGDIR    = "D:\CHECHA_CORE\C03_LOG\INBOX"
+$ANALYTICS = "D:\CHECHA_CORE\C07_ANALYTICS"
+$TASK_LOG  = Join-Path $LOGDIR "INBOX_TASK_LOG.csv"
+$DISP_LOG  = Join-Path $LOGDIR "INBOX_DISPATCH_LOG.csv"
+$REPORT_MD = Join-Path $ANALYTICS "INBOX_REPORT.md"
+$TASKNAME  = "CHECHA_CORE-INBOX-Daily"
+
+# --- Акумулятори
+$results = New-Object System.Collections.Generic.List[object]
+$errors  = 0
+$consoleLines = New-Object System.Collections.Generic.List[string]
+
+function Add-Result($name, $ok, $msg) {
+  if (-not $ok) { $script:errors++ }
+  $status = if ($ok) { "OK" } else { "ERROR" }
+  $results.Add([pscustomobject]@{
+    Check   = $name
+    Status  = $status
+    Message = $msg
+  }) | Out-Null
+}
+
+function WH([string]$text, [ConsoleColor]$color = [ConsoleColor]::Gray) {
+  $consoleLines.Add($text) | Out-Null
+  Write-Host $text -ForegroundColor $color
+}
+
+# --- Заголовок
+WH "=== INBOX Health Check ===" 'Cyan'
+WH ((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))
+WH ""
+
+# 1) Базові теки/файли
+Add-Result "Path: INBOX"     (Test-Path -LiteralPath $ROOT)      $ROOT
+Add-Result "Path: SCRIPTS"   (Test-Path -LiteralPath $SCRIPTS)    $SCRIPTS
+Add-Result "Path: SESSIONS"  (Test-Path -LiteralPath $SESSIONS)   $SESSIONS
+Add-Result "Path: LOGDIR"    (Test-Path -LiteralPath $LOGDIR)     $LOGDIR
+Add-Result "Path: ANALYTICS" (Test-Path -LiteralPath $ANALYTICS)  $ANALYTICS
+Add-Result "File: CONFIG"    (Test-Path -LiteralPath $CFG)        $CFG
+
+# 2) Скрипти
+$ScriptsMustExist = @(
+  "Run-InboxDaily.ps1",
+  "Verify-INBOX.ps1",
+  "Dispatch-INBOX.ps1",
+  "Check-INBOX.ps1",
+  "Archive-INBOX.ps1",
+  "Rotate-INBOX-Logs.ps1",
+  "Health-INBOX.ps1"
+)
+foreach ($f in $ScriptsMustExist) {
+  $p = Join-Path $SCRIPTS $f
+  Add-Result ("Script: "+$f) (Test-Path -LiteralPath $p) $p
+}
+
+# 3) Конфіг — JSON-валідність + ключі
+try {
+  if (Test-Path -LiteralPath $CFG) {
+    $c = Get-Content -LiteralPath $CFG -Raw | ConvertFrom-Json
+    $need = @("InboxPath","SessionsPath","LogDir","ReportOut","DispatchRules")
+    $missing = $need | Where-Object { -not $c.PSObject.Properties.Name.Contains($_) }
+    if ($missing.Count -gt 0) { Add-Result "Config schema" $false ("Missing: " + ($missing -join ", ")) }
+    else { Add-Result "Config schema" $true "OK" }
+  }
+} catch {
+  Add-Result "Config JSON parse" $false $_.Exception.Message
+}
+
+# 4) Логи — існування + шапка
+$taskHeader = "DateTimeUTC,LocalTime,Step,Status,DurationSec,Message"
+$dispHeader = "DateTimeUTC,LocalTime,FileName,From,To,Action"
+function Test-Log($path,$header) {
+  if (-not (Test-Path -LiteralPath $path)) { return ,$false,"Missing" }
+  try {
+    $first = Get-Content -LiteralPath $path -First 1 -ErrorAction Stop
+    if ($first -eq $header) { return ,$true,"Header OK" } else { return ,$false,("Wrong header: "+$first) }
+  } catch { return ,$false,$_.Exception.Message }
+}
+$tOK,$tMsg = Test-Log $TASK_LOG $taskHeader
+Add-Result "Task log" $tOK $tMsg
+$dOK,$dMsg = Test-Log $DISP_LOG $dispHeader
+Add-Result "Dispatch log" $dOK $dMsg
+
+# 5) Останні сесійні ZIP
+try {
+  $lastZip = @(Get-ChildItem -LiteralPath $SESSIONS -Filter *.zip -ErrorAction SilentlyContinue |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 3)
+  if ($lastZip.Count -gt 0) {
+    $list = $lastZip | ForEach-Object { "{0} ({1} KB)" -f $_.Name, ([math]::Round($_.Length/1KB,1)) }
+    Add-Result "Sessions ZIP" $true ($list -join "; ")
+  } else {
+    Add-Result "Sessions ZIP" $false "No ZIP found"
+  }
+} catch {
+  Add-Result "Sessions ZIP" $false $_.Exception.Message
+}
+
+# 6) Планувальник
+try {
+  $schtasks = (Get-Command schtasks.exe -ErrorAction SilentlyContinue)
+  if ($schtasks) {
+    $null = schtasks /Query /TN $TASKNAME /FO LIST 2>$null
+    if ($LASTEXITCODE -eq 0) { Add-Result "ScheduledTask" $true ("Found: " + $TASKNAME) }
+    else { Add-Result "ScheduledTask" $false ("Not found: " + $TASKNAME) }
+  } else {
+    Add-Result "ScheduledTask" $true "schtasks.exe not available (skipped)"
+  }
+} catch {
+  Add-Result "ScheduledTask" $false $_.Exception.Message
+}
+
+# 7) Короткий DryRun пайплайна (опційно)
+if ($RunDryPipeline) {
+  try {
+    & "$SCRIPTS\Run-InboxDaily.ps1" -DryRun -Verbose *>$null
+    Add-Result "Pipeline DryRun" $true "OK"
+  } catch {
+    Add-Result "Pipeline DryRun" $false $_.Exception.Message
+  }
+}
+
+# 8) INBOX REPORT існує
+Add-Result "Analytics report" (Test-Path -LiteralPath $REPORT_MD) $REPORT_MD
+
+# --- Summary у консоль і у буфер
+WH ""
+WH "Summary:" 'Cyan'
+$tbl = $results | Sort-Object Check | Format-Table -Property Check,Status,Message -AutoSize | Out-String
+foreach ($line in ($tbl -split [Environment]::NewLine)) { if ($line.Trim()) { WH $line } }
+
+# --- Хвости логів
+WH ""
+WH ("Tail of " + $TASK_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $TASK_LOG) {
+  (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+WH ""
+WH ("Tail of " + $DISP_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $DISP_LOG) {
+  (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+# --- Markdown (акуратна генерація з іконками статусу та Totals)
+try {
+  if ([string]::IsNullOrWhiteSpace($OutputMarkdownPath)) { throw "OutputMarkdownPath is empty." }
+
+  $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+
+  # Summary lines з іконками ✅/❌ (без інлайн if)
+  $summaryLines = @()
+  foreach ($r in $results) {
+    $icon = '❌'
+    if ($r.Status -eq 'OK') { $icon = '✅' }
+    $summaryLines += "- $icon **$($r.Check)** — $($r.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  # Totals
+  $ok  = ($results | Where-Object { $_.Status -eq 'OK' }).Count
+  $err = ($results | Where-Object { $_.Status -eq 'ERROR' }).Count
+  $totalsLine = "**Totals — OK: $ok, ERROR: $err**"
+
+  # Хвости логів
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) {
+    $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String)
+  }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) {
+    $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String)
+  }
+
+  # Консольний буфер
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  # Формуємо markdown без here-string
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    $totalsLine
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) {
+    New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+  }
+
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+$ErrorActionPreference = "Stop"
+
+# --- Константи
+$ROOT      = "D:\CHECHA_CORE\INBOX"
+$SCRIPTS   = Join-Path $ROOT "SCRIPTS"
+$SESSIONS  = Join-Path $ROOT "SESSIONS"
+$CFG       = Join-Path $ROOT "INBOX.config.json"
+$LOGDIR    = "D:\CHECHA_CORE\C03_LOG\INBOX"
+$ANALYTICS = "D:\CHECHA_CORE\C07_ANALYTICS"
+$TASK_LOG  = Join-Path $LOGDIR "INBOX_TASK_LOG.csv"
+$DISP_LOG  = Join-Path $LOGDIR "INBOX_DISPATCH_LOG.csv"
+$REPORT_MD = Join-Path $ANALYTICS "INBOX_REPORT.md"
+$TASKNAME  = "CHECHA_CORE-INBOX-Daily"
+
+# --- Акумулятори
+$results = New-Object System.Collections.Generic.List[object]
+$errors  = 0
+$consoleLines = New-Object System.Collections.Generic.List[string]
+
+function Add-Result($name, $ok, $msg) {
+  if (-not $ok) { $script:errors++ }
+  $status = if ($ok) { "OK" } else { "ERROR" }
+  $results.Add([pscustomobject]@{
+    Check   = $name
+    Status  = $status
+    Message = $msg
+  }) | Out-Null
+}
+
+function WH([string]$text, [ConsoleColor]$color = [ConsoleColor]::Gray) {
+  $consoleLines.Add($text) | Out-Null
+  Write-Host $text -ForegroundColor $color
+}
+
+# --- Заголовок
+WH "=== INBOX Health Check ===" 'Cyan'
+WH ((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))
+WH ""
+
+# 1) Базові теки/файли
+Add-Result "Path: INBOX"     (Test-Path -LiteralPath $ROOT)      $ROOT
+Add-Result "Path: SCRIPTS"   (Test-Path -LiteralPath $SCRIPTS)    $SCRIPTS
+Add-Result "Path: SESSIONS"  (Test-Path -LiteralPath $SESSIONS)   $SESSIONS
+Add-Result "Path: LOGDIR"    (Test-Path -LiteralPath $LOGDIR)     $LOGDIR
+Add-Result "Path: ANALYTICS" (Test-Path -LiteralPath $ANALYTICS)  $ANALYTICS
+Add-Result "File: CONFIG"    (Test-Path -LiteralPath $CFG)        $CFG
+
+# 2) Скрипти
+$ScriptsMustExist = @(
+  "Run-InboxDaily.ps1",
+  "Verify-INBOX.ps1",
+  "Dispatch-INBOX.ps1",
+  "Check-INBOX.ps1",
+  "Archive-INBOX.ps1",
+  "Rotate-INBOX-Logs.ps1",
+  "Health-INBOX.ps1"
+)
+foreach ($f in $ScriptsMustExist) {
+  $p = Join-Path $SCRIPTS $f
+  Add-Result ("Script: "+$f) (Test-Path -LiteralPath $p) $p
+}
+
+# 3) Конфіг — JSON-валідність + ключі
+try {
+  if (Test-Path -LiteralPath $CFG) {
+    $c = Get-Content -LiteralPath $CFG -Raw | ConvertFrom-Json
+    $need = @("InboxPath","SessionsPath","LogDir","ReportOut","DispatchRules")
+    $missing = $need | Where-Object { -not $c.PSObject.Properties.Name.Contains($_) }
+    if ($missing.Count -gt 0) { Add-Result "Config schema" $false ("Missing: " + ($missing -join ", ")) }
+    else { Add-Result "Config schema" $true "OK" }
+  }
+} catch {
+  Add-Result "Config JSON parse" $false $_.Exception.Message
+}
+
+# 4) Логи — існування + шапка
+$taskHeader = "DateTimeUTC,LocalTime,Step,Status,DurationSec,Message"
+$dispHeader = "DateTimeUTC,LocalTime,FileName,From,To,Action"
+function Test-Log($path,$header) {
+  if (-not (Test-Path -LiteralPath $path)) { return ,$false,"Missing" }
+  try {
+    $first = Get-Content -LiteralPath $path -First 1 -ErrorAction Stop
+    if ($first -eq $header) { return ,$true,"Header OK" } else { return ,$false,("Wrong header: "+$first) }
+  } catch { return ,$false,$_.Exception.Message }
+}
+$tOK,$tMsg = Test-Log $TASK_LOG $taskHeader
+Add-Result "Task log" $tOK $tMsg
+$dOK,$dMsg = Test-Log $DISP_LOG $dispHeader
+Add-Result "Dispatch log" $dOK $dMsg
+
+# 5) Останні сесійні ZIP
+try {
+  $lastZip = @(Get-ChildItem -LiteralPath $SESSIONS -Filter *.zip -ErrorAction SilentlyContinue |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 3)
+  if ($lastZip.Count -gt 0) {
+    $list = $lastZip | ForEach-Object { "{0} ({1} KB)" -f $_.Name, ([math]::Round($_.Length/1KB,1)) }
+    Add-Result "Sessions ZIP" $true ($list -join "; ")
+  } else {
+    Add-Result "Sessions ZIP" $false "No ZIP found"
+  }
+} catch {
+  Add-Result "Sessions ZIP" $false $_.Exception.Message
+}
+
+# 6) Планувальник
+try {
+  $schtasks = (Get-Command schtasks.exe -ErrorAction SilentlyContinue)
+  if ($schtasks) {
+    $null = schtasks /Query /TN $TASKNAME /FO LIST 2>$null
+    if ($LASTEXITCODE -eq 0) { Add-Result "ScheduledTask" $true ("Found: " + $TASKNAME) }
+    else { Add-Result "ScheduledTask" $false ("Not found: " + $TASKNAME) }
+  } else {
+    Add-Result "ScheduledTask" $true "schtasks.exe not available (skipped)"
+  }
+} catch {
+  Add-Result "ScheduledTask" $false $_.Exception.Message
+}
+
+# 7) Короткий DryRun пайплайна (опційно)
+if ($RunDryPipeline) {
+  try {
+    & "$SCRIPTS\Run-InboxDaily.ps1" -DryRun -Verbose *>$null
+    Add-Result "Pipeline DryRun" $true "OK"
+  } catch {
+    Add-Result "Pipeline DryRun" $false $_.Exception.Message
+  }
+}
+
+# 8) INBOX REPORT існує
+Add-Result "Analytics report" (Test-Path -LiteralPath $REPORT_MD) $REPORT_MD
+
+# --- Summary у консоль і у буфер
+WH ""
+WH "Summary:" 'Cyan'
+$tbl = $results | Sort-Object Check | Format-Table -Property Check,Status,Message -AutoSize | Out-String
+foreach ($line in ($tbl -split [Environment]::NewLine)) { if ($line.Trim()) { WH $line } }
+
+# --- Хвости логів
+WH ""
+WH ("Tail of " + $TASK_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $TASK_LOG) {
+  (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+WH ""
+WH ("Tail of " + $DISP_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $DISP_LOG) {
+  (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+# --- Markdown
+try {
+  if ([string]::IsNullOrWhiteSpace($OutputMarkdownPath)) { throw "OutputMarkdownPath is empty." }
+
+  $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+  $summaryLines = @()
+foreach ($r in $results) {
+  $icon = '❌'
+  if ($r.Status -eq 'OK') { $icon = '✅' }
+  $summaryLines += "- $icon **$($r.Check)** — $($r.Message)"
+}; $__cond_status
+    "- **$($_.Check)** — `$(($s))`: $($_.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) { $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String) }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) { $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String) }
+
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+# --- Exit code
+if ($errors -gt 0) { WH ""; WH ("Health: ERROR (" + $errors + " issue(s))") 'Red'; exit 1 }
+else { WH ""; WH "Health: OK" 'Green'; exit 0 }
+ } else { 'ERROR' }
+    "- **$($_.Check)** — `$(($s))`: $($_.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) { $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String) }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) { $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String) }
+
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+# --- Exit code
+if ($errors -gt 0) { WH ""; WH ("Health: ERROR (" + $errors + " issue(s))") 'Red'; exit 1 }
+else { WH ""; WH "Health: OK" 'Green'; exit 0 }
+
+.Status -eq 'OK' }).Count
+  $err = ($results | Where-Object { param(
+  [switch]$RunDryPipeline = $true,
+  [int]$TailLines = 10,
+  [string]$OutputMarkdownPath = "D:\CHECHA_CORE\C07_ANALYTICS\INBOX_HEALTH.md"
+)
+
+$ErrorActionPreference = "Stop"
+
+# --- Константи
+$ROOT      = "D:\CHECHA_CORE\INBOX"
+$SCRIPTS   = Join-Path $ROOT "SCRIPTS"
+$SESSIONS  = Join-Path $ROOT "SESSIONS"
+$CFG       = Join-Path $ROOT "INBOX.config.json"
+$LOGDIR    = "D:\CHECHA_CORE\C03_LOG\INBOX"
+$ANALYTICS = "D:\CHECHA_CORE\C07_ANALYTICS"
+$TASK_LOG  = Join-Path $LOGDIR "INBOX_TASK_LOG.csv"
+$DISP_LOG  = Join-Path $LOGDIR "INBOX_DISPATCH_LOG.csv"
+$REPORT_MD = Join-Path $ANALYTICS "INBOX_REPORT.md"
+$TASKNAME  = "CHECHA_CORE-INBOX-Daily"
+
+# --- Акумулятори
+$results = New-Object System.Collections.Generic.List[object]
+$errors  = 0
+$consoleLines = New-Object System.Collections.Generic.List[string]
+
+function Add-Result($name, $ok, $msg) {
+  if (-not $ok) { $script:errors++ }
+  $status = if ($ok) { "OK" } else { "ERROR" }
+  $results.Add([pscustomobject]@{
+    Check   = $name
+    Status  = $status
+    Message = $msg
+  }) | Out-Null
+}
+
+function WH([string]$text, [ConsoleColor]$color = [ConsoleColor]::Gray) {
+  $consoleLines.Add($text) | Out-Null
+  Write-Host $text -ForegroundColor $color
+}
+
+# --- Заголовок
+WH "=== INBOX Health Check ===" 'Cyan'
+WH ((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))
+WH ""
+
+# 1) Базові теки/файли
+Add-Result "Path: INBOX"     (Test-Path -LiteralPath $ROOT)      $ROOT
+Add-Result "Path: SCRIPTS"   (Test-Path -LiteralPath $SCRIPTS)    $SCRIPTS
+Add-Result "Path: SESSIONS"  (Test-Path -LiteralPath $SESSIONS)   $SESSIONS
+Add-Result "Path: LOGDIR"    (Test-Path -LiteralPath $LOGDIR)     $LOGDIR
+Add-Result "Path: ANALYTICS" (Test-Path -LiteralPath $ANALYTICS)  $ANALYTICS
+Add-Result "File: CONFIG"    (Test-Path -LiteralPath $CFG)        $CFG
+
+# 2) Скрипти
+$ScriptsMustExist = @(
+  "Run-InboxDaily.ps1",
+  "Verify-INBOX.ps1",
+  "Dispatch-INBOX.ps1",
+  "Check-INBOX.ps1",
+  "Archive-INBOX.ps1",
+  "Rotate-INBOX-Logs.ps1",
+  "Health-INBOX.ps1"
+)
+foreach ($f in $ScriptsMustExist) {
+  $p = Join-Path $SCRIPTS $f
+  Add-Result ("Script: "+$f) (Test-Path -LiteralPath $p) $p
+}
+
+# 3) Конфіг — JSON-валідність + ключі
+try {
+  if (Test-Path -LiteralPath $CFG) {
+    $c = Get-Content -LiteralPath $CFG -Raw | ConvertFrom-Json
+    $need = @("InboxPath","SessionsPath","LogDir","ReportOut","DispatchRules")
+    $missing = $need | Where-Object { -not $c.PSObject.Properties.Name.Contains($_) }
+    if ($missing.Count -gt 0) { Add-Result "Config schema" $false ("Missing: " + ($missing -join ", ")) }
+    else { Add-Result "Config schema" $true "OK" }
+  }
+} catch {
+  Add-Result "Config JSON parse" $false $_.Exception.Message
+}
+
+# 4) Логи — існування + шапка
+$taskHeader = "DateTimeUTC,LocalTime,Step,Status,DurationSec,Message"
+$dispHeader = "DateTimeUTC,LocalTime,FileName,From,To,Action"
+function Test-Log($path,$header) {
+  if (-not (Test-Path -LiteralPath $path)) { return ,$false,"Missing" }
+  try {
+    $first = Get-Content -LiteralPath $path -First 1 -ErrorAction Stop
+    if ($first -eq $header) { return ,$true,"Header OK" } else { return ,$false,("Wrong header: "+$first) }
+  } catch { return ,$false,$_.Exception.Message }
+}
+$tOK,$tMsg = Test-Log $TASK_LOG $taskHeader
+Add-Result "Task log" $tOK $tMsg
+$dOK,$dMsg = Test-Log $DISP_LOG $dispHeader
+Add-Result "Dispatch log" $dOK $dMsg
+
+# 5) Останні сесійні ZIP
+try {
+  $lastZip = @(Get-ChildItem -LiteralPath $SESSIONS -Filter *.zip -ErrorAction SilentlyContinue |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 3)
+  if ($lastZip.Count -gt 0) {
+    $list = $lastZip | ForEach-Object { "{0} ({1} KB)" -f $_.Name, ([math]::Round($_.Length/1KB,1)) }
+    Add-Result "Sessions ZIP" $true ($list -join "; ")
+  } else {
+    Add-Result "Sessions ZIP" $false "No ZIP found"
+  }
+} catch {
+  Add-Result "Sessions ZIP" $false $_.Exception.Message
+}
+
+# 6) Планувальник
+try {
+  $schtasks = (Get-Command schtasks.exe -ErrorAction SilentlyContinue)
+  if ($schtasks) {
+    $null = schtasks /Query /TN $TASKNAME /FO LIST 2>$null
+    if ($LASTEXITCODE -eq 0) { Add-Result "ScheduledTask" $true ("Found: " + $TASKNAME) }
+    else { Add-Result "ScheduledTask" $false ("Not found: " + $TASKNAME) }
+  } else {
+    Add-Result "ScheduledTask" $true "schtasks.exe not available (skipped)"
+  }
+} catch {
+  Add-Result "ScheduledTask" $false $_.Exception.Message
+}
+
+# 7) Короткий DryRun пайплайна (опційно)
+if ($RunDryPipeline) {
+  try {
+    & "$SCRIPTS\Run-InboxDaily.ps1" -DryRun -Verbose *>$null
+    Add-Result "Pipeline DryRun" $true "OK"
+  } catch {
+    Add-Result "Pipeline DryRun" $false $_.Exception.Message
+  }
+}
+
+# 8) INBOX REPORT існує
+Add-Result "Analytics report" (Test-Path -LiteralPath $REPORT_MD) $REPORT_MD
+
+# --- Summary у консоль і у буфер
+WH ""
+WH "Summary:" 'Cyan'
+$tbl = $results | Sort-Object Check | Format-Table -Property Check,Status,Message -AutoSize | Out-String
+foreach ($line in ($tbl -split [Environment]::NewLine)) { if ($line.Trim()) { WH $line } }
+
+# --- Хвости логів
+WH ""
+WH ("Tail of " + $TASK_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $TASK_LOG) {
+  (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+WH ""
+WH ("Tail of " + $DISP_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $DISP_LOG) {
+  (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+# --- Markdown (акуратна генерація з іконками статусу та Totals)
+try {
+  if ([string]::IsNullOrWhiteSpace($OutputMarkdownPath)) { throw "OutputMarkdownPath is empty." }
+
+  $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+
+  # Summary lines з іконками ✅/❌ (без інлайн if)
+  $summaryLines = @()
+  foreach ($r in $results) {
+    $icon = '❌'
+    if ($r.Status -eq 'OK') { $icon = '✅' }
+    $summaryLines += "- $icon **$($r.Check)** — $($r.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  # Totals
+  $ok  = ($results | Where-Object { $_.Status -eq 'OK' }).Count
+  $err = ($results | Where-Object { $_.Status -eq 'ERROR' }).Count
+  $totalsLine = "**Totals — OK: $ok, ERROR: $err**"
+
+  # Хвости логів
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) {
+    $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String)
+  }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) {
+    $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String)
+  }
+
+  # Консольний буфер
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  # Формуємо markdown без here-string
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    $totalsLine
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) {
+    New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+  }
+
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+$ErrorActionPreference = "Stop"
+
+# --- Константи
+$ROOT      = "D:\CHECHA_CORE\INBOX"
+$SCRIPTS   = Join-Path $ROOT "SCRIPTS"
+$SESSIONS  = Join-Path $ROOT "SESSIONS"
+$CFG       = Join-Path $ROOT "INBOX.config.json"
+$LOGDIR    = "D:\CHECHA_CORE\C03_LOG\INBOX"
+$ANALYTICS = "D:\CHECHA_CORE\C07_ANALYTICS"
+$TASK_LOG  = Join-Path $LOGDIR "INBOX_TASK_LOG.csv"
+$DISP_LOG  = Join-Path $LOGDIR "INBOX_DISPATCH_LOG.csv"
+$REPORT_MD = Join-Path $ANALYTICS "INBOX_REPORT.md"
+$TASKNAME  = "CHECHA_CORE-INBOX-Daily"
+
+# --- Акумулятори
+$results = New-Object System.Collections.Generic.List[object]
+$errors  = 0
+$consoleLines = New-Object System.Collections.Generic.List[string]
+
+function Add-Result($name, $ok, $msg) {
+  if (-not $ok) { $script:errors++ }
+  $status = if ($ok) { "OK" } else { "ERROR" }
+  $results.Add([pscustomobject]@{
+    Check   = $name
+    Status  = $status
+    Message = $msg
+  }) | Out-Null
+}
+
+function WH([string]$text, [ConsoleColor]$color = [ConsoleColor]::Gray) {
+  $consoleLines.Add($text) | Out-Null
+  Write-Host $text -ForegroundColor $color
+}
+
+# --- Заголовок
+WH "=== INBOX Health Check ===" 'Cyan'
+WH ((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))
+WH ""
+
+# 1) Базові теки/файли
+Add-Result "Path: INBOX"     (Test-Path -LiteralPath $ROOT)      $ROOT
+Add-Result "Path: SCRIPTS"   (Test-Path -LiteralPath $SCRIPTS)    $SCRIPTS
+Add-Result "Path: SESSIONS"  (Test-Path -LiteralPath $SESSIONS)   $SESSIONS
+Add-Result "Path: LOGDIR"    (Test-Path -LiteralPath $LOGDIR)     $LOGDIR
+Add-Result "Path: ANALYTICS" (Test-Path -LiteralPath $ANALYTICS)  $ANALYTICS
+Add-Result "File: CONFIG"    (Test-Path -LiteralPath $CFG)        $CFG
+
+# 2) Скрипти
+$ScriptsMustExist = @(
+  "Run-InboxDaily.ps1",
+  "Verify-INBOX.ps1",
+  "Dispatch-INBOX.ps1",
+  "Check-INBOX.ps1",
+  "Archive-INBOX.ps1",
+  "Rotate-INBOX-Logs.ps1",
+  "Health-INBOX.ps1"
+)
+foreach ($f in $ScriptsMustExist) {
+  $p = Join-Path $SCRIPTS $f
+  Add-Result ("Script: "+$f) (Test-Path -LiteralPath $p) $p
+}
+
+# 3) Конфіг — JSON-валідність + ключі
+try {
+  if (Test-Path -LiteralPath $CFG) {
+    $c = Get-Content -LiteralPath $CFG -Raw | ConvertFrom-Json
+    $need = @("InboxPath","SessionsPath","LogDir","ReportOut","DispatchRules")
+    $missing = $need | Where-Object { -not $c.PSObject.Properties.Name.Contains($_) }
+    if ($missing.Count -gt 0) { Add-Result "Config schema" $false ("Missing: " + ($missing -join ", ")) }
+    else { Add-Result "Config schema" $true "OK" }
+  }
+} catch {
+  Add-Result "Config JSON parse" $false $_.Exception.Message
+}
+
+# 4) Логи — існування + шапка
+$taskHeader = "DateTimeUTC,LocalTime,Step,Status,DurationSec,Message"
+$dispHeader = "DateTimeUTC,LocalTime,FileName,From,To,Action"
+function Test-Log($path,$header) {
+  if (-not (Test-Path -LiteralPath $path)) { return ,$false,"Missing" }
+  try {
+    $first = Get-Content -LiteralPath $path -First 1 -ErrorAction Stop
+    if ($first -eq $header) { return ,$true,"Header OK" } else { return ,$false,("Wrong header: "+$first) }
+  } catch { return ,$false,$_.Exception.Message }
+}
+$tOK,$tMsg = Test-Log $TASK_LOG $taskHeader
+Add-Result "Task log" $tOK $tMsg
+$dOK,$dMsg = Test-Log $DISP_LOG $dispHeader
+Add-Result "Dispatch log" $dOK $dMsg
+
+# 5) Останні сесійні ZIP
+try {
+  $lastZip = @(Get-ChildItem -LiteralPath $SESSIONS -Filter *.zip -ErrorAction SilentlyContinue |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 3)
+  if ($lastZip.Count -gt 0) {
+    $list = $lastZip | ForEach-Object { "{0} ({1} KB)" -f $_.Name, ([math]::Round($_.Length/1KB,1)) }
+    Add-Result "Sessions ZIP" $true ($list -join "; ")
+  } else {
+    Add-Result "Sessions ZIP" $false "No ZIP found"
+  }
+} catch {
+  Add-Result "Sessions ZIP" $false $_.Exception.Message
+}
+
+# 6) Планувальник
+try {
+  $schtasks = (Get-Command schtasks.exe -ErrorAction SilentlyContinue)
+  if ($schtasks) {
+    $null = schtasks /Query /TN $TASKNAME /FO LIST 2>$null
+    if ($LASTEXITCODE -eq 0) { Add-Result "ScheduledTask" $true ("Found: " + $TASKNAME) }
+    else { Add-Result "ScheduledTask" $false ("Not found: " + $TASKNAME) }
+  } else {
+    Add-Result "ScheduledTask" $true "schtasks.exe not available (skipped)"
+  }
+} catch {
+  Add-Result "ScheduledTask" $false $_.Exception.Message
+}
+
+# 7) Короткий DryRun пайплайна (опційно)
+if ($RunDryPipeline) {
+  try {
+    & "$SCRIPTS\Run-InboxDaily.ps1" -DryRun -Verbose *>$null
+    Add-Result "Pipeline DryRun" $true "OK"
+  } catch {
+    Add-Result "Pipeline DryRun" $false $_.Exception.Message
+  }
+}
+
+# 8) INBOX REPORT існує
+Add-Result "Analytics report" (Test-Path -LiteralPath $REPORT_MD) $REPORT_MD
+
+# --- Summary у консоль і у буфер
+WH ""
+WH "Summary:" 'Cyan'
+$tbl = $results | Sort-Object Check | Format-Table -Property Check,Status,Message -AutoSize | Out-String
+foreach ($line in ($tbl -split [Environment]::NewLine)) { if ($line.Trim()) { WH $line } }
+
+# --- Хвости логів
+WH ""
+WH ("Tail of " + $TASK_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $TASK_LOG) {
+  (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+WH ""
+WH ("Tail of " + $DISP_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $DISP_LOG) {
+  (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+# --- Markdown
+try {
+  if ([string]::IsNullOrWhiteSpace($OutputMarkdownPath)) { throw "OutputMarkdownPath is empty." }
+
+  $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+  $summaryLines = @()
+foreach ($r in $results) {
+  $icon = '❌'
+  if ($r.Status -eq 'OK') { $icon = '✅' }
+  $summaryLines += "- $icon **$($r.Check)** — $($r.Message)"
+}; $__cond_status
+    "- **$($_.Check)** — `$(($s))`: $($_.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) { $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String) }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) { $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String) }
+
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+# --- Exit code
+if ($errors -gt 0) { WH ""; WH ("Health: ERROR (" + $errors + " issue(s))") 'Red'; exit 1 }
+else { WH ""; WH "Health: OK" 'Green'; exit 0 }
+ } else { 'ERROR' }
+    "- **$($_.Check)** — `$(($s))`: $($_.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) { $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String) }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) { $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String) }
+
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+# --- Exit code
+if ($errors -gt 0) { WH ""; WH ("Health: ERROR (" + $errors + " issue(s))") 'Red'; exit 1 }
+else { WH ""; WH "Health: OK" 'Green'; exit 0 }
+
+.Status -eq 'ERROR' }).Count
+  $totalsLine = "**Totals — OK: $ok, ERROR: $err**"
+
+  # Хвости логів
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) {
+    $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String)
+  }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) {
+    $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String)
+  }
+
+  # Консольний буфер
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  # Формуємо Markdown
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    $totalsLine
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) {
+    New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+  }
+
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + param(
+  [switch]$RunDryPipeline = $true,
+  [int]$TailLines = 10,
+  [string]$OutputMarkdownPath = "D:\CHECHA_CORE\C07_ANALYTICS\INBOX_HEALTH.md"
+)
+
+$ErrorActionPreference = "Stop"
+
+# --- Константи
+$ROOT      = "D:\CHECHA_CORE\INBOX"
+$SCRIPTS   = Join-Path $ROOT "SCRIPTS"
+$SESSIONS  = Join-Path $ROOT "SESSIONS"
+$CFG       = Join-Path $ROOT "INBOX.config.json"
+$LOGDIR    = "D:\CHECHA_CORE\C03_LOG\INBOX"
+$ANALYTICS = "D:\CHECHA_CORE\C07_ANALYTICS"
+$TASK_LOG  = Join-Path $LOGDIR "INBOX_TASK_LOG.csv"
+$DISP_LOG  = Join-Path $LOGDIR "INBOX_DISPATCH_LOG.csv"
+$REPORT_MD = Join-Path $ANALYTICS "INBOX_REPORT.md"
+$TASKNAME  = "CHECHA_CORE-INBOX-Daily"
+
+# --- Акумулятори
+$results = New-Object System.Collections.Generic.List[object]
+$errors  = 0
+$consoleLines = New-Object System.Collections.Generic.List[string]
+
+function Add-Result($name, $ok, $msg) {
+  if (-not $ok) { $script:errors++ }
+  $status = if ($ok) { "OK" } else { "ERROR" }
+  $results.Add([pscustomobject]@{
+    Check   = $name
+    Status  = $status
+    Message = $msg
+  }) | Out-Null
+}
+
+function WH([string]$text, [ConsoleColor]$color = [ConsoleColor]::Gray) {
+  $consoleLines.Add($text) | Out-Null
+  Write-Host $text -ForegroundColor $color
+}
+
+# --- Заголовок
+WH "=== INBOX Health Check ===" 'Cyan'
+WH ((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))
+WH ""
+
+# 1) Базові теки/файли
+Add-Result "Path: INBOX"     (Test-Path -LiteralPath $ROOT)      $ROOT
+Add-Result "Path: SCRIPTS"   (Test-Path -LiteralPath $SCRIPTS)    $SCRIPTS
+Add-Result "Path: SESSIONS"  (Test-Path -LiteralPath $SESSIONS)   $SESSIONS
+Add-Result "Path: LOGDIR"    (Test-Path -LiteralPath $LOGDIR)     $LOGDIR
+Add-Result "Path: ANALYTICS" (Test-Path -LiteralPath $ANALYTICS)  $ANALYTICS
+Add-Result "File: CONFIG"    (Test-Path -LiteralPath $CFG)        $CFG
+
+# 2) Скрипти
+$ScriptsMustExist = @(
+  "Run-InboxDaily.ps1",
+  "Verify-INBOX.ps1",
+  "Dispatch-INBOX.ps1",
+  "Check-INBOX.ps1",
+  "Archive-INBOX.ps1",
+  "Rotate-INBOX-Logs.ps1",
+  "Health-INBOX.ps1"
+)
+foreach ($f in $ScriptsMustExist) {
+  $p = Join-Path $SCRIPTS $f
+  Add-Result ("Script: "+$f) (Test-Path -LiteralPath $p) $p
+}
+
+# 3) Конфіг — JSON-валідність + ключі
+try {
+  if (Test-Path -LiteralPath $CFG) {
+    $c = Get-Content -LiteralPath $CFG -Raw | ConvertFrom-Json
+    $need = @("InboxPath","SessionsPath","LogDir","ReportOut","DispatchRules")
+    $missing = $need | Where-Object { -not $c.PSObject.Properties.Name.Contains($_) }
+    if ($missing.Count -gt 0) { Add-Result "Config schema" $false ("Missing: " + ($missing -join ", ")) }
+    else { Add-Result "Config schema" $true "OK" }
+  }
+} catch {
+  Add-Result "Config JSON parse" $false $_.Exception.Message
+}
+
+# 4) Логи — існування + шапка
+$taskHeader = "DateTimeUTC,LocalTime,Step,Status,DurationSec,Message"
+$dispHeader = "DateTimeUTC,LocalTime,FileName,From,To,Action"
+function Test-Log($path,$header) {
+  if (-not (Test-Path -LiteralPath $path)) { return ,$false,"Missing" }
+  try {
+    $first = Get-Content -LiteralPath $path -First 1 -ErrorAction Stop
+    if ($first -eq $header) { return ,$true,"Header OK" } else { return ,$false,("Wrong header: "+$first) }
+  } catch { return ,$false,$_.Exception.Message }
+}
+$tOK,$tMsg = Test-Log $TASK_LOG $taskHeader
+Add-Result "Task log" $tOK $tMsg
+$dOK,$dMsg = Test-Log $DISP_LOG $dispHeader
+Add-Result "Dispatch log" $dOK $dMsg
+
+# 5) Останні сесійні ZIP
+try {
+  $lastZip = @(Get-ChildItem -LiteralPath $SESSIONS -Filter *.zip -ErrorAction SilentlyContinue |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 3)
+  if ($lastZip.Count -gt 0) {
+    $list = $lastZip | ForEach-Object { "{0} ({1} KB)" -f $_.Name, ([math]::Round($_.Length/1KB,1)) }
+    Add-Result "Sessions ZIP" $true ($list -join "; ")
+  } else {
+    Add-Result "Sessions ZIP" $false "No ZIP found"
+  }
+} catch {
+  Add-Result "Sessions ZIP" $false $_.Exception.Message
+}
+
+# 6) Планувальник
+try {
+  $schtasks = (Get-Command schtasks.exe -ErrorAction SilentlyContinue)
+  if ($schtasks) {
+    $null = schtasks /Query /TN $TASKNAME /FO LIST 2>$null
+    if ($LASTEXITCODE -eq 0) { Add-Result "ScheduledTask" $true ("Found: " + $TASKNAME) }
+    else { Add-Result "ScheduledTask" $false ("Not found: " + $TASKNAME) }
+  } else {
+    Add-Result "ScheduledTask" $true "schtasks.exe not available (skipped)"
+  }
+} catch {
+  Add-Result "ScheduledTask" $false $_.Exception.Message
+}
+
+# 7) Короткий DryRun пайплайна (опційно)
+if ($RunDryPipeline) {
+  try {
+    & "$SCRIPTS\Run-InboxDaily.ps1" -DryRun -Verbose *>$null
+    Add-Result "Pipeline DryRun" $true "OK"
+  } catch {
+    Add-Result "Pipeline DryRun" $false $_.Exception.Message
+  }
+}
+
+# 8) INBOX REPORT існує
+Add-Result "Analytics report" (Test-Path -LiteralPath $REPORT_MD) $REPORT_MD
+
+# --- Summary у консоль і у буфер
+WH ""
+WH "Summary:" 'Cyan'
+$tbl = $results | Sort-Object Check | Format-Table -Property Check,Status,Message -AutoSize | Out-String
+foreach ($line in ($tbl -split [Environment]::NewLine)) { if ($line.Trim()) { WH $line } }
+
+# --- Хвости логів
+WH ""
+WH ("Tail of " + $TASK_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $TASK_LOG) {
+  (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+WH ""
+WH ("Tail of " + $DISP_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $DISP_LOG) {
+  (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+# --- Markdown (акуратна генерація з іконками статусу та Totals)
+try {
+  if ([string]::IsNullOrWhiteSpace($OutputMarkdownPath)) { throw "OutputMarkdownPath is empty." }
+
+  $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+
+  # Summary lines з іконками ✅/❌ (без інлайн if)
+  $summaryLines = @()
+  foreach ($r in $results) {
+    $icon = '❌'
+    if ($r.Status -eq 'OK') { $icon = '✅' }
+    $summaryLines += "- $icon **$($r.Check)** — $($r.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  # Totals
+  $ok  = ($results | Where-Object { $_.Status -eq 'OK' }).Count
+  $err = ($results | Where-Object { $_.Status -eq 'ERROR' }).Count
+  $totalsLine = "**Totals — OK: $ok, ERROR: $err**"
+
+  # Хвости логів
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) {
+    $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String)
+  }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) {
+    $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String)
+  }
+
+  # Консольний буфер
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  # Формуємо markdown без here-string
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    $totalsLine
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) {
+    New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+  }
+
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+$ErrorActionPreference = "Stop"
+
+# --- Константи
+$ROOT      = "D:\CHECHA_CORE\INBOX"
+$SCRIPTS   = Join-Path $ROOT "SCRIPTS"
+$SESSIONS  = Join-Path $ROOT "SESSIONS"
+$CFG       = Join-Path $ROOT "INBOX.config.json"
+$LOGDIR    = "D:\CHECHA_CORE\C03_LOG\INBOX"
+$ANALYTICS = "D:\CHECHA_CORE\C07_ANALYTICS"
+$TASK_LOG  = Join-Path $LOGDIR "INBOX_TASK_LOG.csv"
+$DISP_LOG  = Join-Path $LOGDIR "INBOX_DISPATCH_LOG.csv"
+$REPORT_MD = Join-Path $ANALYTICS "INBOX_REPORT.md"
+$TASKNAME  = "CHECHA_CORE-INBOX-Daily"
+
+# --- Акумулятори
+$results = New-Object System.Collections.Generic.List[object]
+$errors  = 0
+$consoleLines = New-Object System.Collections.Generic.List[string]
+
+function Add-Result($name, $ok, $msg) {
+  if (-not $ok) { $script:errors++ }
+  $status = if ($ok) { "OK" } else { "ERROR" }
+  $results.Add([pscustomobject]@{
+    Check   = $name
+    Status  = $status
+    Message = $msg
+  }) | Out-Null
+}
+
+function WH([string]$text, [ConsoleColor]$color = [ConsoleColor]::Gray) {
+  $consoleLines.Add($text) | Out-Null
+  Write-Host $text -ForegroundColor $color
+}
+
+# --- Заголовок
+WH "=== INBOX Health Check ===" 'Cyan'
+WH ((Get-Date).ToString("yyyy-MM-dd HH:mm:ss"))
+WH ""
+
+# 1) Базові теки/файли
+Add-Result "Path: INBOX"     (Test-Path -LiteralPath $ROOT)      $ROOT
+Add-Result "Path: SCRIPTS"   (Test-Path -LiteralPath $SCRIPTS)    $SCRIPTS
+Add-Result "Path: SESSIONS"  (Test-Path -LiteralPath $SESSIONS)   $SESSIONS
+Add-Result "Path: LOGDIR"    (Test-Path -LiteralPath $LOGDIR)     $LOGDIR
+Add-Result "Path: ANALYTICS" (Test-Path -LiteralPath $ANALYTICS)  $ANALYTICS
+Add-Result "File: CONFIG"    (Test-Path -LiteralPath $CFG)        $CFG
+
+# 2) Скрипти
+$ScriptsMustExist = @(
+  "Run-InboxDaily.ps1",
+  "Verify-INBOX.ps1",
+  "Dispatch-INBOX.ps1",
+  "Check-INBOX.ps1",
+  "Archive-INBOX.ps1",
+  "Rotate-INBOX-Logs.ps1",
+  "Health-INBOX.ps1"
+)
+foreach ($f in $ScriptsMustExist) {
+  $p = Join-Path $SCRIPTS $f
+  Add-Result ("Script: "+$f) (Test-Path -LiteralPath $p) $p
+}
+
+# 3) Конфіг — JSON-валідність + ключі
+try {
+  if (Test-Path -LiteralPath $CFG) {
+    $c = Get-Content -LiteralPath $CFG -Raw | ConvertFrom-Json
+    $need = @("InboxPath","SessionsPath","LogDir","ReportOut","DispatchRules")
+    $missing = $need | Where-Object { -not $c.PSObject.Properties.Name.Contains($_) }
+    if ($missing.Count -gt 0) { Add-Result "Config schema" $false ("Missing: " + ($missing -join ", ")) }
+    else { Add-Result "Config schema" $true "OK" }
+  }
+} catch {
+  Add-Result "Config JSON parse" $false $_.Exception.Message
+}
+
+# 4) Логи — існування + шапка
+$taskHeader = "DateTimeUTC,LocalTime,Step,Status,DurationSec,Message"
+$dispHeader = "DateTimeUTC,LocalTime,FileName,From,To,Action"
+function Test-Log($path,$header) {
+  if (-not (Test-Path -LiteralPath $path)) { return ,$false,"Missing" }
+  try {
+    $first = Get-Content -LiteralPath $path -First 1 -ErrorAction Stop
+    if ($first -eq $header) { return ,$true,"Header OK" } else { return ,$false,("Wrong header: "+$first) }
+  } catch { return ,$false,$_.Exception.Message }
+}
+$tOK,$tMsg = Test-Log $TASK_LOG $taskHeader
+Add-Result "Task log" $tOK $tMsg
+$dOK,$dMsg = Test-Log $DISP_LOG $dispHeader
+Add-Result "Dispatch log" $dOK $dMsg
+
+# 5) Останні сесійні ZIP
+try {
+  $lastZip = @(Get-ChildItem -LiteralPath $SESSIONS -Filter *.zip -ErrorAction SilentlyContinue |
+              Sort-Object LastWriteTime -Descending | Select-Object -First 3)
+  if ($lastZip.Count -gt 0) {
+    $list = $lastZip | ForEach-Object { "{0} ({1} KB)" -f $_.Name, ([math]::Round($_.Length/1KB,1)) }
+    Add-Result "Sessions ZIP" $true ($list -join "; ")
+  } else {
+    Add-Result "Sessions ZIP" $false "No ZIP found"
+  }
+} catch {
+  Add-Result "Sessions ZIP" $false $_.Exception.Message
+}
+
+# 6) Планувальник
+try {
+  $schtasks = (Get-Command schtasks.exe -ErrorAction SilentlyContinue)
+  if ($schtasks) {
+    $null = schtasks /Query /TN $TASKNAME /FO LIST 2>$null
+    if ($LASTEXITCODE -eq 0) { Add-Result "ScheduledTask" $true ("Found: " + $TASKNAME) }
+    else { Add-Result "ScheduledTask" $false ("Not found: " + $TASKNAME) }
+  } else {
+    Add-Result "ScheduledTask" $true "schtasks.exe not available (skipped)"
+  }
+} catch {
+  Add-Result "ScheduledTask" $false $_.Exception.Message
+}
+
+# 7) Короткий DryRun пайплайна (опційно)
+if ($RunDryPipeline) {
+  try {
+    & "$SCRIPTS\Run-InboxDaily.ps1" -DryRun -Verbose *>$null
+    Add-Result "Pipeline DryRun" $true "OK"
+  } catch {
+    Add-Result "Pipeline DryRun" $false $_.Exception.Message
+  }
+}
+
+# 8) INBOX REPORT існує
+Add-Result "Analytics report" (Test-Path -LiteralPath $REPORT_MD) $REPORT_MD
+
+# --- Summary у консоль і у буфер
+WH ""
+WH "Summary:" 'Cyan'
+$tbl = $results | Sort-Object Check | Format-Table -Property Check,Status,Message -AutoSize | Out-String
+foreach ($line in ($tbl -split [Environment]::NewLine)) { if ($line.Trim()) { WH $line } }
+
+# --- Хвости логів
+WH ""
+WH ("Tail of " + $TASK_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $TASK_LOG) {
+  (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+WH ""
+WH ("Tail of " + $DISP_LOG) 'DarkCyan'
+if (Test-Path -LiteralPath $DISP_LOG) {
+  (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines) | ForEach-Object { WH $_ }
+} else { WH "(missing)" }
+
+# --- Markdown
+try {
+  if ([string]::IsNullOrWhiteSpace($OutputMarkdownPath)) { throw "OutputMarkdownPath is empty." }
+
+  $ts = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+  $summaryLines = @()
+foreach ($r in $results) {
+  $icon = '❌'
+  if ($r.Status -eq 'OK') { $icon = '✅' }
+  $summaryLines += "- $icon **$($r.Check)** — $($r.Message)"
+}; $__cond_status
+    "- **$($_.Check)** — `$(($s))`: $($_.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) { $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String) }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) { $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String) }
+
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+# --- Exit code
+if ($errors -gt 0) { WH ""; WH ("Health: ERROR (" + $errors + " issue(s))") 'Red'; exit 1 }
+else { WH ""; WH "Health: OK" 'Green'; exit 0 }
+ } else { 'ERROR' }
+    "- **$($_.Check)** — `$(($s))`: $($_.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) { $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String) }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) { $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String) }
+
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+# --- Exit code
+if ($errors -gt 0) { WH ""; WH ("Health: ERROR (" + $errors + " issue(s))") 'Red'; exit 1 }
+else { WH ""; WH "Health: OK" 'Green'; exit 0 }
+
+.Exception.Message) 'Red'
+}
+# --- End Markdown
+# --- Exit code
+if ($errors -gt 0) { WH ""; WH ("Health: ERROR (" + $errors + " issue(s))") 'Red'; exit 1 }
+else { WH ""; WH "Health: OK" 'Green'; exit 0 }
+ } else { 'ERROR' }
+    "- **$($_.Check)** — `$(($s))`: $($_.Message)"
+  }
+  $summaryMd = $summaryLines -join [Environment]::NewLine
+
+  $tailTask = "(missing)"
+  if (Test-Path -LiteralPath $TASK_LOG) { $tailTask = (Get-Content -LiteralPath $TASK_LOG -Tail $TailLines | Out-String) }
+  $tailDisp = "(missing)"
+  if (Test-Path -LiteralPath $DISP_LOG) { $tailDisp = (Get-Content -LiteralPath $DISP_LOG -Tail $TailLines | Out-String) }
+
+  $consoleText = ($consoleLines -join [Environment]::NewLine)
+
+  $mdLines = @(
+    "# INBOX Health Report"
+    "Date: $ts"
+    ""
+    "## Summary"
+    $summaryMd
+    ""
+    "## Console output"
+    "~~~"
+    $consoleText.TrimEnd()
+    "~~~"
+    ""
+    "## Logs tail ($TailLines lines)"
+    "### INBOX_TASK_LOG.csv"
+    "~~~"
+    $tailTask.TrimEnd()
+    "~~~"
+    ""
+    "### INBOX_DISPATCH_LOG.csv"
+    "~~~"
+    $tailDisp.TrimEnd()
+    "~~~"
+  )
+
+  $outDir = Split-Path -Parent $OutputMarkdownPath
+  if ($outDir -and -not (Test-Path -LiteralPath $outDir)) { New-Item -ItemType Directory -Force -Path $outDir | Out-Null }
+  ($mdLines -join [Environment]::NewLine) | Set-Content -LiteralPath $OutputMarkdownPath -Encoding UTF8
+  WH ("Markdown saved: " + $OutputMarkdownPath) 'DarkGray'
+} catch {
+  WH ("Markdown save error: " + $_.Exception.Message) 'Red'
+}
+
+# --- Exit code
+if ($errors -gt 0) { WH ""; WH ("Health: ERROR (" + $errors + " issue(s))") 'Red'; exit 1 }
+else { WH ""; WH "Health: OK" 'Green'; exit 0 }
+
+
+
+

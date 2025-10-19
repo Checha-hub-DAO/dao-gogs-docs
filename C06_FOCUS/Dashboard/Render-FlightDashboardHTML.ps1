@@ -1,15 +1,15 @@
 [CmdletBinding()]
 param(
-  [string]$Root = "D:\CHECHA_CORE",
-  [string]$OutHtml = "D:\CHECHA_CORE\C06_FOCUS\Flight_Dashboard_2.0.html"
+    [string]$Root = "D:\CHECHA_CORE",
+    [string]$OutHtml = "D:\CHECHA_CORE\C06_FOCUS\Flight_Dashboard_2.0.html"
 )
 
 $ReflexDir = Join-Path $Root "C07_ANALYTICS\Reflex"
 $latestJson = Get-ChildItem -LiteralPath $ReflexDir -Filter "ReflexReport_*.json" -ErrorAction SilentlyContinue |
-  Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    Sort-Object LastWriteTime -Descending | Select-Object -First 1
 if (-not $latestJson) {
-  Write-Host "[WARN] Не знайдено ReflexReport JSON."
-  exit 0
+    Write-Host "[WARN] Не знайдено ReflexReport JSON."
+    exit 0
 }
 
 $data = Get-Content -LiteralPath $latestJson.FullName -Raw
@@ -129,7 +129,9 @@ $html = @"
 "@
 
 # Вбудовуємо JSON у HTML і зберігаємо
-$html = $html -replace '\$data\$', [Regex]::Escape($data) -replace '\\/','/'
+$html = $html -replace '\$data\$', [Regex]::Escape($data) -replace '\\/', '/'
 Set-Content -LiteralPath $OutHtml -Value $html -Encoding UTF8
 
 Write-Host "[OK] Згенеровано: $OutHtml (дані: $($latestJson.Name))"
+
+

@@ -1,0 +1,108 @@
+<# =======================================================================
+  CheCha_Copy-Reports.ps1 (v1.1)
+  Копіює згенеровані звіти у архів з датою + логування + (опц.) ZIP.
+======================================================================= #>
+
+[CmdletBinding()]
+param(
+  [string[]] $SourcePaths = @(
+    "D:\CHECHA_CORE\EXPORTS",
+    "D:\CHECHA_CORE\REPORTS\_staging",
+    "$env:USERPROFILE\Downloads"
+  ),
+  [string] $DestRoot = "D:\CHECHA_CORE\REPORTS",
+  [string] $NamePrefix = "CheCha_Report",
+  [string] $DateStamp = (Get-Date -Format 'yyyy-MM-dd'),
+  [int]    $StagingKeepDays = 0,
+  [switch] $MakeZip = $false
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+# ---- 0) Підготовка каталогу призначення та лог-файла -------------------
+if (-not (Test-Path $DestRoot)) {
+  New-Item -ItemType Directory -Force -Path $DestRoot | Out-Null
+}
+
+$script:logPath = Join-Path $DestRoot "REPORTS_COPY.log"
+if (-not (Test-Path $script:logPath)) {
+  New-Item -ItemType File -Force -Path $script:logPath | Out-Null
+}
+
+$destDay = Join-Path $DestRoot $DateStamp
+New-Item -ItemType Directory -Force -Path $destDay | Out-Null
+
+function Write-Log([string]$msg) {
+  if ([string]::IsNullOrWhiteSpace($script:logPath)) {
+    $script:logPath = Join-Path $env:TEMP "REPORTS_COPY.log"
+    if (-not (Test-Path $script:logPath)) {
+      New-Item -ItemType File -Force -Path $script:logPath | Out-Null
+    }
+  }
+  $line = "[{0}] {1}" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $msg
+  Add-Content -Path $script:logPath -Value $line
+  Write-Host $line
+}
+
+Write-Log "▶️ START CheCha_Copy-Reports.ps1 (Date=$DateStamp)"
+
+# ---- 1) Налаштування цільових файлів -----------------------------------
+$targets = @(
+  @{ pattern = 'CheCha_Report_Digest.pdf';   out = "$NamePrefix`_$DateStamp.pdf" },
+  @{ pattern = 'CheCha_Report_Digest.png';   out = "$NamePrefix`_$DateStamp.png" },
+  @{ pattern = 'CheCha_Report_Compact.png';  out = "$NamePrefix`_${DateStamp}_compact.png" }
+)
+
+# ---- 2) Пошук і копіювання ---------------------------------------------
+foreach ($t in $targets) {
+  $candidates = @()
+
+  foreach ($sp in $SourcePaths) {
+    if ([string]::IsNullOrWhiteSpace($sp)) { continue }
+    if (-not (Test-Path $sp)) {
+      Write-Log "ℹ️ Пропущено (нема шляху): $sp"
+      continue
+    }
+    $found = Get-ChildItem -Path $sp -Filter $t.pattern -File -ErrorAction SilentlyContinue
+    if ($found) { $candidates += $found }
+  }
+
+  if (-not $candidates) {
+    Write-Log "⚠️ Не знайдено файл: $($t.pattern)"
+    continue
+  }
+
+  $best = $candidates | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+  $destFile = Join-Path $destDay $t.out
+  Copy-Item -Path $best.FullName -Destination $destFile -Force
+  Write-Log "✅ Скопійовано: $($best.FullName) → $destFile (mtime=$($best.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')))"
+}
+
+# ---- 3) (Опц.) Прибирання у _staging -----------------------------------
+if ($StagingKeepDays -gt 0) {
+  foreach ($sp in $SourcePaths) {
+    if ($sp -like "*\_staging" -and (Test-Path $sp)) {
+      $threshold = (Get-Date).AddDays(-$StagingKeepDays)
+      $old = Get-ChildItem $sp -File | Where-Object { $_.LastWriteTime -lt $threshold }
+      $count = ($old | Measure-Object).Count
+      if ($count -gt 0) {
+        $old | Remove-Item -Force
+        Write-Log "🧹 Прибрано у _staging: $count файлів старіше $StagingKeepDays дн."
+      } else {
+        Write-Log "🧹 _staging: немає старих файлів для прибирання."
+      }
+    }
+  }
+}
+
+# ---- 4) (Опц.) ZIP архів дня -------------------------------------------
+if ($MakeZip) {
+  $zipPath = Join-Path $DestRoot ("{0}.zip" -f (Split-Path $destDay -Leaf))
+  if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+  Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
+  [System.IO.Compression.ZipFile]::CreateFromDirectory($destDay, $zipPath)
+  Write-Log "📦 Створено ZIP: $zipPath"
+}
+
+Write-Log "🏁 Завершено копіювання у: $destDay"

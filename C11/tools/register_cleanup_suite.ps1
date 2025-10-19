@@ -26,41 +26,41 @@
   pwsh -NoProfile -File .\Register-CleanupSuite.ps1 -Root 'D:\\CHECHA_CORE' -Day SUN -Hour 21 -Minute 30 -VerifyArchives
 #>
 [CmdletBinding()]
-Param(
-  [string]$Root = 'D:\\CHECHA_CORE',
-  [ValidateSet('MON','TUE','WED','THU','FRI','SAT','SUN')]
-  [string]$Day = 'SUN',
-  [int]$Hour = 21,
-  [int]$Minute = 10,
-  [switch]$NormalizeNames,
-  [switch]$VerifyArchives
+param(
+    [string]$Root = 'D:\\CHECHA_CORE',
+    [ValidateSet('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN')]
+    [string]$Day = 'SUN',
+    [int]$Hour = 21,
+    [int]$Minute = 10,
+    [switch]$NormalizeNames,
+    [switch]$VerifyArchives
 )
 
 $ErrorActionPreference = 'Stop'
 
 # Шляхи
-$toolsDir   = Join-Path $Root 'C11\\tools'
-$logDir     = Join-Path $Root 'C03\\LOG'
-$cleanupV2  = Join-Path $toolsDir 'Cleanup-C11-Tools_v2.ps1'
-$health     = Join-Path $toolsDir 'Check-C11-ToolsHealth.ps1'
-$wrapper    = Join-Path $toolsDir 'Run-CleanupSuite.ps1'
-$pwsh       = 'C:\\Program Files\\PowerShell\\7\\pwsh.exe'
-$taskName   = '\\Checha\\CleanupSuite-Weekly'
+$toolsDir = Join-Path $Root 'C11\\tools'
+$logDir = Join-Path $Root 'C03\\LOG'
+$cleanupV2 = Join-Path $toolsDir 'Cleanup-C11-Tools_v2.ps1'
+$health = Join-Path $toolsDir 'Check-C11-ToolsHealth.ps1'
+$wrapper = Join-Path $toolsDir 'Run-CleanupSuite.ps1'
+$pwsh = 'C:\\Program Files\\PowerShell\\7\\pwsh.exe'
+$taskName = '\\Checha\\CleanupSuite-Weekly'
 
 # Перевірки
-foreach($p in @($toolsDir,$logDir)){ if(-not (Test-Path $p)){ New-Item -ItemType Directory -Path $p | Out-Null } }
-if(-not (Test-Path $cleanupV2)){ throw "Не знайдено cleanup v2: $cleanupV2" }
-if(-not (Test-Path $health)){ throw "Не знайдено health-checker: $health" }
-if(-not (Test-Path $pwsh)){ throw "Не знайдено PowerShell 7: $pwsh" }
+foreach ($p in @($toolsDir, $logDir)) { if (-not (Test-Path $p)) { New-Item -ItemType Directory -Path $p | Out-Null } }
+if (-not (Test-Path $cleanupV2)) { throw "Не знайдено cleanup v2: $cleanupV2" }
+if (-not (Test-Path $health)) { throw "Не знайдено health-checker: $health" }
+if (-not (Test-Path $pwsh)) { throw "Не знайдено PowerShell 7: $pwsh" }
 
 # Формуємо аргументи для виклику cleanup v2
-$cleanupArgs = @('-NoProfile','-ExecutionPolicy','Bypass','-File',"`"$cleanupV2`"",'-Root',"`"$Root`"")
-if($NormalizeNames){ $cleanupArgs += '-NormalizeNames'; $cleanupArgs += '-Confirm:$false' }
-if($VerifyArchives){ $cleanupArgs += '-VerifyArchives' }
+$cleanupArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$cleanupV2`"", '-Root', "`"$Root`"")
+if ($NormalizeNames) { $cleanupArgs += '-NormalizeNames'; $cleanupArgs += '-Confirm:$false' }
+if ($VerifyArchives) { $cleanupArgs += '-VerifyArchives' }
 $cleanupCmd = "$pwsh " + ($cleanupArgs -join ' ')
 
 # Health виклик
-$healthArgs = @('-NoProfile','-ExecutionPolicy','Bypass','-File',"`"$health`"",'-Root',"`"$Root`"")
+$healthArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$health`"", '-Root', "`"$Root`"")
 $healthCmd = "$pwsh " + ($healthArgs -join ' ')
 
 # Тіло wrapper-скрипта
@@ -101,11 +101,13 @@ $taskArgs = "-NoProfile -ExecutionPolicy Bypass -File `"$wrapper`""
 # Перереєстрація задачі
 try { schtasks /Delete /TN $taskName /F | Out-Null } catch {}
 
-$time = "{0:D2}:{1:D2}" -f $Hour,$Minute
-$create = @('/Create','/SC','WEEKLY','/D',$Day,'/TN',$taskName,'/TR','"' + $pwsh + ' ' + $taskArgs + '"','/ST',$time,'/RL','LIMITED','/F')
+$time = "{0:D2}:{1:D2}" -f $Hour, $Minute
+$create = @('/Create', '/SC', 'WEEKLY', '/D', $Day, '/TN', $taskName, '/TR', '"' + $pwsh + ' ' + $taskArgs + '"', '/ST', $time, '/RL', 'LIMITED', '/F')
 
 $s = Start-Process -FilePath schtasks.exe -ArgumentList $create -Wait -PassThru
-if($s.ExitCode -ne 0){ throw "Помилка створення задачі, exit=$($s.ExitCode)" }
+if ($s.ExitCode -ne 0) { throw "Помилка створення задачі, exit=$($s.ExitCode)" }
 
 Write-Host "✅ Зареєстровано: $taskName ($Day $time)" -ForegroundColor Green
 schtasks /Query /TN $taskName /V /FO LIST | Out-Host
+
+

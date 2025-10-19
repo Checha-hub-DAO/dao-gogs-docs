@@ -1,10 +1,10 @@
 #Requires -Version 5.1
-[CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
-Param(
-  [Parameter(Mandatory=$true)][string]$BaseDir,
-  [Parameter(Mandatory=$true)][string]$NewReleasePath,
-  [Parameter(Mandatory=$true)][string]$Version,
-  [Parameter()][string[]]$ModulesToAdd
+[CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
+param(
+    [Parameter(Mandatory = $true)][string]$BaseDir,
+    [Parameter(Mandatory = $true)][string]$NewReleasePath,
+    [Parameter(Mandatory = $true)][string]$Version,
+    [Parameter()][string[]]$ModulesToAdd
 )
 
 Set-StrictMode -Version Latest
@@ -18,3 +18,5 @@ Write-Host "ModulesToAdd:   $($ModulesToAdd -join ', ')"
 
 # Успішний вихід — щоб перевірити, що файл парситься і запускається
 exit 0
+
+

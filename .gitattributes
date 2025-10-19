@@ -1,2 +1,30 @@
-*.md  text eol=lf
-*.ps1 text eol=lf
+# Normalize line endings and mark file types
+# Text (default): auto-normalize
+* text=auto
+
+# Force CRLF for PowerShell and Markdown (Windows-friendly)
+*.ps1  text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+*.md   text eol=crlf
+*.json text eol=crlf
+*.yml  text eol=crlf
+*.yaml text eol=crlf
+
+# Keep LF for shell scripts
+*.sh   text eol=lf
+
+# Treat these as binary (no EOL conversions, no diffs)
+*.zip  binary
+*.7z   binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.exe  binary
+*.dll  binary
+*.pfx  binary
+*.crt  binary
+*.key  binary

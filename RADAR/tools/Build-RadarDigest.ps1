@@ -35,126 +35,127 @@
 
 [CmdletBinding()]
 param(
-  [string]$RepoRoot = "D:\CHECHA_CORE",
-  [string]$CsvPath,
-  [string]$OutDir,
-  [string]$From,
-  [string]$To,
-  [int]$TopN = 25,
-  [string]$Lang,
-  [double]$MinScore = 0,
-  [switch]$OpenWhenDone
+    [string]$RepoRoot = "D:\CHECHA_CORE",
+    [string]$CsvPath,
+    [string]$OutDir,
+    [string]$From,
+    [string]$To,
+    [int]$TopN = 25,
+    [string]$Lang,
+    [double]$MinScore = 0,
+    [switch]$OpenWhenDone
 )
 
 #region Helpers
 function Write-Log {
-  param([string]$Message,[string]$Level="INFO")
-  $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
-  Write-Host "[$Level] $ts $Message"
+    param([string]$Message, [string]$Level = "INFO")
+    $ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+    Write-Host "[$Level] $ts $Message"
 }
-function Ensure-Dir([string]$path){
-  if(-not $path){ return }
-  if(!(Test-Path -LiteralPath $path)){ New-Item -ItemType Directory -Path $path -Force | Out-Null }
+function Ensure-Dir([string]$path) {
+    if (-not $path) { return }
+    if (!(Test-Path -LiteralPath $path)) { New-Item -ItemType Directory -Path $path -Force | Out-Null }
 }
-function Parse-Date([string]$s, [datetime]$fallback){
-  if([string]::IsNullOrWhiteSpace($s)){ return $fallback }
-  try{
-    # підтримує ISO/yyy-MM-dd
-    return [datetime]::Parse($s, $([System.Globalization.CultureInfo]::InvariantCulture))
-  }catch{
-    return $fallback
-  }
+function Parse-Date([string]$s, [datetime]$fallback) {
+    if ([string]::IsNullOrWhiteSpace($s)) { return $fallback }
+    try {
+        # підтримує ISO/yyy-MM-dd
+        return [datetime]::Parse($s, $([System.Globalization.CultureInfo]::InvariantCulture))
+    }
+    catch {
+        return $fallback
+    }
 }
 #endregion Helpers
 
 try {
-  # 0) Шляхи за замовчуванням
-  if([string]::IsNullOrWhiteSpace($CsvPath)){ $CsvPath = Join-Path $RepoRoot 'RADAR\INDEX\artifacts.csv' }
-  if([string]::IsNullOrWhiteSpace($OutDir)){  $OutDir  = Join-Path $RepoRoot 'RADAR\REPORTS' }
+    # 0) Шляхи за замовчуванням
+    if ([string]::IsNullOrWhiteSpace($CsvPath)) { $CsvPath = Join-Path $RepoRoot 'RADAR\INDEX\artifacts.csv' }
+    if ([string]::IsNullOrWhiteSpace($OutDir)) { $OutDir = Join-Path $RepoRoot 'RADAR\REPORTS' }
 
-  if(!(Test-Path -LiteralPath $CsvPath)){ throw "Індекс не знайдено: $CsvPath" }
-  Ensure-Dir $OutDir
+    if (!(Test-Path -LiteralPath $CsvPath)) { throw "Індекс не знайдено: $CsvPath" }
+    Ensure-Dir $OutDir
 
-  # 1) Діапазон дат
-  $now = Get-Date
-  $fromDt = Parse-Date $From ($now.AddDays(-7))
-  $toDt   = Parse-Date $To   $now
+    # 1) Діапазон дат
+    $now = Get-Date
+    $fromDt = Parse-Date $From ($now.AddDays(-7))
+    $toDt = Parse-Date $To   $now
 
-  Write-Log "CSV: $CsvPath"
-  Write-Log "Діапазон: $($fromDt.ToString('yyyy-MM-dd HH:mm')) → $($toDt.ToString('yyyy-MM-dd HH:mm'))"
-  if($Lang){ Write-Log "Фільтр мови: $Lang" }
-  Write-Log "Поріг RadarScore: $MinScore; TopN=$TopN"
+    Write-Log "CSV: $CsvPath"
+    Write-Log "Діапазон: $($fromDt.ToString('yyyy-MM-dd HH:mm')) → $($toDt.ToString('yyyy-MM-dd HH:mm'))"
+    if ($Lang) { Write-Log "Фільтр мови: $Lang" }
+    Write-Log "Поріг RadarScore: $MinScore; TopN=$TopN"
 
-  # 2) Читання CSV (UTF-8)
-  $rows = Import-Csv -LiteralPath $CsvPath
-  if(-not $rows -or $rows.Count -eq 0){
-    throw "В індексі відсутні записи."
-  }
-
-  # Перетворення типів
-  $artifacts = foreach($r in $rows){
-    # безпечне парсення дат і чисел
-    $ts = $null
-    $score = $null
-    $tox = $null
-    $sent = $null
-    [datetime]::TryParse($r.timestamp, [ref]$ts)    | Out-Null
-    [double]  ::TryParse( ($r.RadarScore  -replace ',','.'), [ref]$score) | Out-Null
-    [double]  ::TryParse( ($r.toxicity_score -replace ',','.'), [ref]$tox) | Out-Null
-    [double]  ::TryParse( ($r.sentiment_score -replace ',','.'), [ref]$sent)| Out-Null
-
-    [pscustomobject]@{
-      id        = $r.id
-      timestamp = if($ts){ $ts } else { $null }
-      source    = $r.source
-      author    = $r.author
-      lang      = $r.lang
-      type      = $r.type
-      title     = $r.title
-      summary   = $r.summary
-      confidence= $r.confidence
-      sha256    = $r.sha256
-      filepath  = $r.filepath
-      tags      = $r.tags
-      entities  = $r.entities
-      sentiment = $sent
-      toxicity  = $tox
-      provenance= $r.provenance
-      RadarScore= $score
+    # 2) Читання CSV (UTF-8)
+    $rows = Import-Csv -LiteralPath $CsvPath
+    if (-not $rows -or $rows.Count -eq 0) {
+        throw "В індексі відсутні записи."
     }
-  }
 
-  # 3) Фільтрація за часом/мовою/порогом
-  $filtered = $artifacts | Where-Object {
-    $_.timestamp -ge $fromDt -and $_.timestamp -le $toDt -and
-    ($Lang ? ($_.lang -eq $Lang) : $true) -and
-    ($_.RadarScore -ge $MinScore)
-  }
+    # Перетворення типів
+    $artifacts = foreach ($r in $rows) {
+        # безпечне парсення дат і чисел
+        $ts = $null
+        $score = $null
+        $tox = $null
+        $sent = $null
+        [datetime]::TryParse($r.timestamp, [ref]$ts)    | Out-Null
+        [double]  ::TryParse( ($r.RadarScore -replace ',', '.'), [ref]$score) | Out-Null
+        [double]  ::TryParse( ($r.toxicity_score -replace ',', '.'), [ref]$tox) | Out-Null
+        [double]  ::TryParse( ($r.sentiment_score -replace ',', '.'), [ref]$sent) | Out-Null
 
-  if(-not $filtered -or $filtered.Count -eq 0){
-    Write-Log "За вказаний період немає записів, що проходять фільтр." "WARN"
-  }
+        [pscustomobject]@{
+            id         = $r.id
+            timestamp  = if ($ts) { $ts } else { $null }
+            source     = $r.source
+            author     = $r.author
+            lang       = $r.lang
+            type       = $r.type
+            title      = $r.title
+            summary    = $r.summary
+            confidence = $r.confidence
+            sha256     = $r.sha256
+            filepath   = $r.filepath
+            tags       = $r.tags
+            entities   = $r.entities
+            sentiment  = $sent
+            toxicity   = $tox
+            provenance = $r.provenance
+            RadarScore = $score
+        }
+    }
 
-  # 4) Сортування за RadarScore і вибір TopN
-  $top = $filtered | Sort-Object RadarScore -Descending | Select-Object -First $TopN
+    # 3) Фільтрація за часом/мовою/порогом
+    $filtered = $artifacts | Where-Object {
+        $_.timestamp -ge $fromDt -and $_.timestamp -le $toDt -and
+        ($Lang ? ($_.lang -eq $Lang) : $true) -and
+        ($_.RadarScore -ge $MinScore)
+    }
 
-  # 5) Агрегати
-  $countAll   = $filtered.Count
-  $avgScore   = if($filtered){ [Math]::Round(($filtered | Measure-Object -Property RadarScore -Average).Average, 3) } else { 0 }
-  $avgToxic   = if($filtered){ [Math]::Round(($filtered | Where-Object { $_.toxicity -ne $null } | Measure-Object -Property toxicity -Average).Average, 3) } else { 0 }
-  $bySource   = $filtered | Group-Object source | Sort-Object Count -Descending | Select-Object -First 10
-  $byTag      = $filtered | ForEach-Object {
-                  if($_.tags){
-                    $_.tags -split '[,;]+' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-                  }
-                } | Group-Object | Sort-Object Count -Descending | Select-Object -First 15
+    if (-not $filtered -or $filtered.Count -eq 0) {
+        Write-Log "За вказаний період немає записів, що проходять фільтр." "WARN"
+    }
 
-  # 6) Побудова HTML
-  $stamp = (Get-Date).ToString('yyyy-MM-dd_HHmmss')
-  $rangeTag = "{0}_to_{1}" -f $fromDt.ToString('yyyy-MM-dd'), $toDt.ToString('yyyy-MM-dd')
-  $outFile = Join-Path $OutDir ("RadarDigest_{0}_{1}.html" -f $rangeTag, $stamp)
+    # 4) Сортування за RadarScore і вибір TopN
+    $top = $filtered | Sort-Object RadarScore -Descending | Select-Object -First $TopN
 
-  $htmlHeader = @"
+    # 5) Агрегати
+    $countAll = $filtered.Count
+    $avgScore = if ($filtered) { [Math]::Round(($filtered | Measure-Object -Property RadarScore -Average).Average, 3) } else { 0 }
+    $avgToxic = if ($filtered) { [Math]::Round(($filtered | Where-Object { $_.toxicity -ne $null } | Measure-Object -Property toxicity -Average).Average, 3) } else { 0 }
+    $bySource = $filtered | Group-Object source | Sort-Object Count -Descending | Select-Object -First 10
+    $byTag = $filtered | ForEach-Object {
+        if ($_.tags) {
+            $_.tags -split '[,;]+' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+        }
+    } | Group-Object | Sort-Object Count -Descending | Select-Object -First 15
+
+    # 6) Побудова HTML
+    $stamp = (Get-Date).ToString('yyyy-MM-dd_HHmmss')
+    $rangeTag = "{0}_to_{1}" -f $fromDt.ToString('yyyy-MM-dd'), $toDt.ToString('yyyy-MM-dd')
+    $outFile = Join-Path $OutDir ("RadarDigest_{0}_{1}.html" -f $rangeTag, $stamp)
+
+    $htmlHeader = @"
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -189,72 +190,76 @@ try {
 </div>
 "@
 
-  $htmlTop = @()
-  $htmlTop += '<div class="section"><h2>Топ артефактів</h2>'
-  $htmlTop += '<table><thead><tr><th>#</th><th>Час</th><th>Заголовок</th><th>Джерело</th><th>Автор</th><th>Теги</th><th>Score</th></tr></thead><tbody>'
-  $i = 0
-  foreach($a in $top){
-    $i++
-    $scoreClass = if($a.RadarScore -ge 0.8){'hi'} elseif($a.RadarScore -ge 0.5){'mid'} else {'low'}
-    $tagsHtml = if($a.tags){
-      (($a.tags -split '[,;]+' | ForEach-Object{ $_.Trim() } | Where-Object {$_}) | ForEach-Object { '<span class="badge">'+[System.Web.HttpUtility]::HtmlEncode($_)+'</span>' }) -join ' '
-    } else { '' }
-    $title = if([string]::IsNullOrWhiteSpace($a.title)){ '(без назви)' } else { [System.Web.HttpUtility]::HtmlEncode($a.title) }
-    $sum   = if([string]::IsNullOrWhiteSpace($a.summary)){ '' } else { '<div class="small">'+[System.Web.HttpUtility]::HtmlEncode($a.summary)+'</div>' }
-    $src   = [System.Web.HttpUtility]::HtmlEncode($a.source)
-    $aut   = [System.Web.HttpUtility]::HtmlEncode($a.author)
-    $ts    = if($a.timestamp){ $a.timestamp.ToString('yyyy-MM-dd HH:mm') } else { '' }
-    $fp    = if($a.filepath){ [System.Web.HttpUtility]::HtmlEncode($a.filepath) } else { '' }
-    $sha   = if($a.sha256){ $a.sha256.Substring(0,[Math]::Min(12,$a.sha256.Length)) } else { '' }
+    $htmlTop = @()
+    $htmlTop += '<div class="section"><h2>Топ артефактів</h2>'
+    $htmlTop += '<table><thead><tr><th>#</th><th>Час</th><th>Заголовок</th><th>Джерело</th><th>Автор</th><th>Теги</th><th>Score</th></tr></thead><tbody>'
+    $i = 0
+    foreach ($a in $top) {
+        $i++
+        $scoreClass = if ($a.RadarScore -ge 0.8) { 'hi' } elseif ($a.RadarScore -ge 0.5) { 'mid' } else { 'low' }
+        $tagsHtml = if ($a.tags) {
+            (($a.tags -split '[,;]+' | ForEach-Object { $_.Trim() } | Where-Object { $_ }) | ForEach-Object { '<span class="badge">' + [System.Web.HttpUtility]::HtmlEncode($_) + '</span>' }) -join ' '
+        }
+        else { '' }
+        $title = if ([string]::IsNullOrWhiteSpace($a.title)) { '(без назви)' } else { [System.Web.HttpUtility]::HtmlEncode($a.title) }
+        $sum = if ([string]::IsNullOrWhiteSpace($a.summary)) { '' } else { '<div class="small">' + [System.Web.HttpUtility]::HtmlEncode($a.summary) + '</div>' }
+        $src = [System.Web.HttpUtility]::HtmlEncode($a.source)
+        $aut = [System.Web.HttpUtility]::HtmlEncode($a.author)
+        $ts = if ($a.timestamp) { $a.timestamp.ToString('yyyy-MM-dd HH:mm') } else { '' }
+        $fp = if ($a.filepath) { [System.Web.HttpUtility]::HtmlEncode($a.filepath) } else { '' }
+        $sha = if ($a.sha256) { $a.sha256.Substring(0, [Math]::Min(12, $a.sha256.Length)) } else { '' }
 
-    $titleCell = if($fp){
-      "<b>$title</b>$sum<div class='small'>SHA: $sha · <code>$fp</code></div>"
-    } else { "<b>$title</b>$sum" }
+        $titleCell = if ($fp) {
+            "<b>$title</b>$sum<div class='small'>SHA: $sha · <code>$fp</code></div>"
+        }
+        else { "<b>$title</b>$sum" }
 
-    $htmlTop += "<tr><td>$i</td><td>$ts</td><td>$titleCell</td><td>$src</td><td>$aut</td><td>$tagsHtml</td><td class='score $scoreClass'>$($a.RadarScore)</td></tr>"
-  }
-  $htmlTop += '</tbody></table></div>'
+        $htmlTop += "<tr><td>$i</td><td>$ts</td><td>$titleCell</td><td>$src</td><td>$aut</td><td>$tagsHtml</td><td class='score $scoreClass'>$($a.RadarScore)</td></tr>"
+    }
+    $htmlTop += '</tbody></table></div>'
 
-  $htmlSrc = @()
-  $htmlSrc += '<div class="section"><h2>Джерела (топ-10)</h2><table><thead><tr><th>Джерело</th><th>К-сть</th></tr></thead><tbody>'
-  foreach($g in $bySource){
-    $name = [System.Web.HttpUtility]::HtmlEncode($g.Name)
-    $htmlSrc += "<tr><td>$name</td><td>$($g.Count)</td></tr>"
-  }
-  $htmlSrc += '</tbody></table></div>'
+    $htmlSrc = @()
+    $htmlSrc += '<div class="section"><h2>Джерела (топ-10)</h2><table><thead><tr><th>Джерело</th><th>К-сть</th></tr></thead><tbody>'
+    foreach ($g in $bySource) {
+        $name = [System.Web.HttpUtility]::HtmlEncode($g.Name)
+        $htmlSrc += "<tr><td>$name</td><td>$($g.Count)</td></tr>"
+    }
+    $htmlSrc += '</tbody></table></div>'
 
-  $htmlTags = @()
-  $htmlTags += '<div class="section"><h2>Теги (топ-15)</h2><table><thead><tr><th>Тег</th><th>К-сть</th></tr></thead><tbody>'
-  foreach($g in $byTag){
-    $name = [System.Web.HttpUtility]::HtmlEncode($g.Name)
-    $htmlTags += "<tr><td>$name</td><td>$($g.Count)</td></tr>"
-  }
-  $htmlTags += '</tbody></table></div>'
+    $htmlTags = @()
+    $htmlTags += '<div class="section"><h2>Теги (топ-15)</h2><table><thead><tr><th>Тег</th><th>К-сть</th></tr></thead><tbody>'
+    foreach ($g in $byTag) {
+        $name = [System.Web.HttpUtility]::HtmlEncode($g.Name)
+        $htmlTags += "<tr><td>$name</td><td>$($g.Count)</td></tr>"
+    }
+    $htmlTags += '</tbody></table></div>'
 
-  $htmlFooter = @"
+    $htmlFooter = @"
 </body></html>
 "@
 
-  $content = $htmlHeader + ($htmlTop -join "`n") + ($htmlSrc -join "`n") + ($htmlTags -join "`n") + $htmlFooter
+    $content = $htmlHeader + ($htmlTop -join "`n") + ($htmlSrc -join "`n") + ($htmlTags -join "`n") + $htmlFooter
 
-  # 7) Запис (UTF-8 BOM)
-  $utf8Bom = New-Object System.Text.UTF8Encoding($true)
-  [System.IO.File]::WriteAllText($outFile, $content, $utf8Bom)
+    # 7) Запис (UTF-8 BOM)
+    $utf8Bom = New-Object System.Text.UTF8Encoding($true)
+    [System.IO.File]::WriteAllText($outFile, $content, $utf8Bom)
 
-  Write-Log "HTML збережено: $outFile"
-  if($OpenWhenDone){ Invoke-Item -LiteralPath $outFile }
+    Write-Log "HTML збережено: $outFile"
+    if ($OpenWhenDone) { Invoke-Item -LiteralPath $outFile }
 
-  # 8) Лог у C03_LOG
-  $logDir = Join-Path $RepoRoot 'C03_LOG'
-  Ensure-Dir $logDir
-  Add-Content -Path (Join-Path $logDir 'RADAR_DIGEST_LOG.md') -Encoding UTF8 `
+    # 8) Лог у C03_LOG
+    $logDir = Join-Path $RepoRoot 'C03_LOG'
+    Ensure-Dir $logDir
+    Add-Content -Path (Join-Path $logDir 'RADAR_DIGEST_LOG.md') -Encoding UTF8 `
     ("- [{0}] Digest: {1} | Range: {2} → {3} | Count={4} | AvgScore={5}" -f `
-      (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $outFile, `
-      $fromDt.ToString('yyyy-MM-dd'), $toDt.ToString('yyyy-MM-dd'), $countAll, $avgScore)
+        (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), $outFile, `
+            $fromDt.ToString('yyyy-MM-dd'), $toDt.ToString('yyyy-MM-dd'), $countAll, $avgScore)
 
-  exit 0
+    exit 0
 }
 catch {
-  Write-Log $_.Exception.Message "ERR"
-  exit 1
+    Write-Log $_.Exception.Message "ERR"
+    exit 1
 }
+
+

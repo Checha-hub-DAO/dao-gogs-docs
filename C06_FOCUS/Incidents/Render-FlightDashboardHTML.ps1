@@ -1,14 +1,14 @@
 [CmdletBinding()]
 param(
-  [string]$Root = "D:\CHECHA_CORE",
-  [string]$OutHtml = "D:\CHECHA_CORE\C06_FOCUS\Flight_Dashboard_2.0.html"
+    [string]$Root = "D:\CHECHA_CORE",
+    [string]$OutHtml = "D:\CHECHA_CORE\C06_FOCUS\Flight_Dashboard_2.0.html"
 )
 
 $ReflexDir = Join-Path $Root "C07_ANALYTICS\Reflex"
-$IncCsv    = Join-Path $Root "C06_FOCUS\Incidents\Incident_Register.csv"
+$IncCsv = Join-Path $Root "C06_FOCUS\Incidents\Incident_Register.csv"
 
 $latestJson = Get-ChildItem -LiteralPath $ReflexDir -Filter "ReflexReport_*.json" -ErrorAction SilentlyContinue |
-  Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    Sort-Object LastWriteTime -Descending | Select-Object -First 1
 if (-not $latestJson) { Write-Host "[WARN] Не знайдено ReflexReport JSON."; exit 0 }
 
 # Дані Reflex JSON
@@ -17,22 +17,23 @@ $reflexData = Get-Content -LiteralPath $latestJson.FullName -Raw
 # REG: KPI за останні 7 днів із реєстру інцидентів (ERROR-випадки)
 $reg = @()
 if (Test-Path -LiteralPath $IncCsv) {
-  try {
-    $reg = Import-Csv -LiteralPath $IncCsv
-  } catch { Write-Host "[WARN] Не вдалось прочитати Incident_Register.csv: $($_.Exception.Message)" }
+    try {
+        $reg = Import-Csv -LiteralPath $IncCsv
+    }
+    catch { Write-Host "[WARN] Не вдалось прочитати Incident_Register.csv: $($_.Exception.Message)" }
 }
 
 $now = Get-Date
 $from = $now.AddDays(-7)
 $errors7 = 0
 if ($reg.Count -gt 0) {
-  foreach($r in $reg){
-    # Очікується формат "YYYY-MM-DD HH:mm" у полі Date (див. генератор)
-    $d = $null
-    if ([datetime]::TryParse($r.Date, [ref]$d)) {
-      if ($d -ge $from -and $d -le $now) { $errors7++ }
+    foreach ($r in $reg) {
+        # Очікується формат "YYYY-MM-DD HH:mm" у полі Date (див. генератор)
+        $d = $null
+        if ([datetime]::TryParse($r.Date, [ref]$d)) {
+            if ($d -ge $from -and $d -le $now) { $errors7++ }
+        }
     }
-  }
 }
 
 # Побудова HTML
@@ -179,7 +180,9 @@ $html = @"
 "@
 
 # Вставляємо дані
-$html = $html -replace '\$reflex\$', [Regex]::Escape($reflexData) -replace '\\/','/'
+$html = $html -replace '\$reflex\$', [Regex]::Escape($reflexData) -replace '\\/', '/'
 Set-Content -LiteralPath $OutHtml -Value $html -Encoding UTF8
 
 Write-Host "[OK] Згенеровано: $OutHtml (дані: $($latestJson.Name))"
+
+

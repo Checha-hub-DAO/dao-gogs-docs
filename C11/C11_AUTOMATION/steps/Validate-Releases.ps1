@@ -1,6 +1,6 @@
 param(
-  [string]$Root = "D:\CHECHA_CORE",
-  [switch]$All
+    [string]$Root = "D:\CHECHA_CORE",
+    [switch]$All
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
@@ -16,4 +16,6 @@ if ($LASTEXITCODE -ne 0) { $ok = $false }
 # (за потреби сюди додаси інші модулі/перевірки)
 
 if ($ok) { Write-Host "Validate-Releases: OK"; exit 0 }
-else     { Write-Host "Validate-Releases: FAIL"; exit 1 }
+else { Write-Host "Validate-Releases: FAIL"; exit 1 }
+
+

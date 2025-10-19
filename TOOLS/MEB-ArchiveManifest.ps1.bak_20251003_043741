@@ -1,0 +1,80 @@
+# MEB-ArchiveManifest.ps1
+# -----------------------
+# Призначення: сформувати CSV-маніфест усіх ZIP у MEB\05_PACKS та MEB\99_ARCHIVE.
+# Параметри:
+#   -Base        : базова тека MEB (за замовч. D:\CHECHA_CORE\MEB)
+#   -OutCsv      : шлях до CSV-виводу (за замовч. <Base>\MEB_Zip_Manifest.csv)
+#   -AutoLog     : якщо true — викликає MEB-TimelineLogger_v1.1.ps1 для маніфесту
+#   -LoggerPath  : шлях до логгера (за замовч. D:\CHECHA_CORE\TOOLS\MEB-TimelineLogger_v1.1.ps1)
+#   -Description : опис для логгера (за замовч. "Інвентар ZIP (PACKS + ARCHIVE)")
+
+[CmdletBinding()]
+param(
+  [Parameter(Mandatory=$false)][string]$Base       = "D:\CHECHA_CORE\MEB",
+  [Parameter(Mandatory=$false)][string]$OutCsv     = "",
+  [Parameter(Mandatory=$false)][bool]  $AutoLog    = $true,
+  [Parameter(Mandatory=$false)][string]$LoggerPath = "D:\CHECHA_CORE\TOOLS\MEB-TimelineLogger_v1.1.ps1",
+  [Parameter(Mandatory=$false)][string]$Description= "Інвентар ZIP (PACKS + ARCHIVE)"
+)
+
+if ([string]::IsNullOrWhiteSpace($OutCsv)) {
+  $OutCsv = Join-Path $Base "MEB_Zip_Manifest.csv"
+}
+
+$packs   = Join-Path -Path $Base -ChildPath "05_PACKS"
+$archive = Join-Path -Path $Base -ChildPath "99_ARCHIVE"
+$packs   = Join-Path -Path $Base -ChildPath "05_PACKS"
+$versions = Join-Path -Path $Base -ChildPath "99_ARCHIVE\VERSIONS"
+$targets = @($packs, $versions)
+
+# Переконаймось, що базова тека існує
+foreach ($t in $targets) {
+  if (-not (Test-Path $t)) {
+    New-Item -ItemType Directory -Force -Path $t | Out-Null
+  }
+}
+
+$rows = foreach ($t in $targets) {
+  Get-ChildItem $t -Recurse -File -Filter *.zip -ErrorAction SilentlyContinue | ForEach-Object {
+    $hash = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()
+    [pscustomobject]@{
+      Name         = $_.Name
+      Path         = $_.FullName
+      Size_Bytes   = $_.Length
+      LastWrite    = $_.LastWriteTime
+      SHA256       = $hash
+      FolderGroup  = (Split-Path $_.DirectoryName -Leaf)
+    }
+  }
+}
+
+$dir = Split-Path -Parent $OutCsv
+if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Force -Path $dir | Out-Null }
+
+$rows | Sort-Object FolderGroup, Name | Export-Csv -NoTypeInformation -Encoding UTF8 $OutCsv
+
+Write-Host "[OK] Manifest saved:" $OutCsv
+Write-Host ("[Stats] Total ZIPs: {0}" -f ($rows | Measure-Object).Count)
+
+# (Опційно) швидкий зведений підрахунок по групах
+$groups = $rows | Group-Object FolderGroup | Select-Object Name,Count
+$groups | Format-Table -Auto | Out-String | Write-Host
+
+# AutoLog
+if ($AutoLog) {
+  if (-not (Test-Path $LoggerPath)) {
+    Write-Warning "Logger not found: $LoggerPath"
+  } elseif (-not (Test-Path $OutCsv)) {
+    Write-Warning "Manifest not found to log: $OutCsv"
+  } else {
+    try {
+      pwsh -NoProfile -ExecutionPolicy Bypass -File $LoggerPath -Path $OutCsv -Description $Description | Out-Null
+      Write-Host  -SkipIfSHAExists:$true"[AutoLog] Logged manifest to TIMELINE & LOG."
+    } catch {
+      Write-Warning "AutoLog failed: $($_.Exception.Message)"
+    }
+  }
+}
+
+
+

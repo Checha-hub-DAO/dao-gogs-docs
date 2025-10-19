@@ -1,0 +1,73 @@
+# INBOX Panel — 2025-10-04 18:27:10
+
+* [INBOX Quick Start](../C12_KNOWLEDGE/MD_INBOX/INBOX_Quick_Start.md)
+
+### Короткий стан (з Health)
+
+### Потік (перші кроки)
+
+# public\_flow
+
+* Build artifacts
+* Run Self-check
+* Update Panel (C06\_FOCUS)
+* Archive \& Sync
+
+*Повні версії: health.md, public\_flow.md, manifest.csv у C12\_KNOWLEDGE\\MD\_INBOX.
+
+# === Quick Start link (idempotent) ===*
+
+*$quickStartRel = "../C12\_KNOWLEDGE/MD\_INBOX/INBOX\_Quick\_Start.md"*
+
+*$quickStartLine = "- \[INBOX Quick Start]($quickStartRel)"*
+
+
+
+*# якщо секція посилань ще не створена — створимо*
+
+*if (-not ($panel -match '^### Швидкі посилання$')) {*
+
+    *$panel += "### Швидкі посилання"*
+
+    *$panel += $quickStartLine*
+
+*} else {*
+
+    *# секція є: гарантуємо наявність лінка, не дублюємо*
+
+    *if (-not ($panel -match \[regex]::Escape($quickStartLine))) {*
+
+        *$panel += $quickStartLine*
+
+    *}*
+
+*}*
+
+
+
+*# (опційно) додаткові корисні лінки, теж ідемпотентно*
+
+*$links = @(*
+
+    *"- \[Повний health](../C12\_KNOWLEDGE/MD\_INBOX/health.md)",*
+
+    *"- \[Потік public\_flow](../C12\_KNOWLEDGE/MD\_INBOX/public\_flow.md)",*
+
+    *"- \[Інвентар manifest.csv](../C12\_KNOWLEDGE/MD\_INBOX/manifest.csv)"*
+
+*)*
+
+*foreach ($ln in $links) {*
+
+    *if (-not ($panel -match \[regex]::Escape($ln))) {*
+
+        *$panel += $ln*
+
+    *}*
+
+*}*
+
+*# === /Quick Start link ===*
+
+
+

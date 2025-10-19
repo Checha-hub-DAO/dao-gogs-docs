@@ -1,36 +1,36 @@
 param(
-  [string]$Root = "D:\LeaderIntel",
-  [string]$Name = "LeaderIntel"
+    [string]$Root = "D:\LeaderIntel",
+    [string]$Name = "LeaderIntel"
 )
 
-$ErrorActionPreference='Stop'; Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'; Set-StrictMode -Version Latest
 $base = Join-Path $Root "pkg\$Name"
 
 # 0) Папки
 $dirs = @(
-  "$base\scripts",
-  "$base\rules",
-  "$base\reports",
-  "$base\data",
-  "$base\docs"
+    "$base\scripts",
+    "$base\rules",
+    "$base\reports",
+    "$base\data",
+    "$base\docs"
 )
 $dirs | ForEach-Object { New-Item -ItemType Directory -Force -Path $_ | Out-Null }
 
 # 1) Скрипти (копіюємо наявні, якщо є; інакше кладемо заглушки)
 $src = @{
-  "Run-LeaderIntelPipeline.ps1" = "D:\Scripts\Run-LeaderIntelPipeline.ps1";
-  "Apply-IntelFilters.ps1"      = "D:\Scripts\Apply-IntelFilters.ps1";
-  "Check-IntelBeacons.ps1"      = "D:\Scripts\Check-IntelBeacons.ps1";
-  "Export-DigestHtml.ps1"       = "D:\Scripts\Export-DigestHtml.ps1";
-  "Render-ToxicRadar.ps1"       = "D:\Scripts\Render-ToxicRadar.ps1";
-  "Set-IntelProfile.ps1"        = "D:\Scripts\Set-IntelProfile.ps1"
+    "Run-LeaderIntelPipeline.ps1" = "D:\Scripts\Run-LeaderIntelPipeline.ps1";
+    "Apply-IntelFilters.ps1"      = "D:\Scripts\Apply-IntelFilters.ps1";
+    "Check-IntelBeacons.ps1"      = "D:\Scripts\Check-IntelBeacons.ps1";
+    "Export-DigestHtml.ps1"       = "D:\Scripts\Export-DigestHtml.ps1";
+    "Render-ToxicRadar.ps1"       = "D:\Scripts\Render-ToxicRadar.ps1";
+    "Set-IntelProfile.ps1"        = "D:\Scripts\Set-IntelProfile.ps1"
 }
-foreach($k in $src.Keys){
-  $dst = Join-Path "$base\scripts" $k
-  if (Test-Path $src[$k]) { Copy-Item $src[$k] $dst -Force }
-  elseif (-not (Test-Path $dst)) {
-    "# placeholder for $k" | Set-Content -Encoding UTF8 $dst
-  }
+foreach ($k in $src.Keys) {
+    $dst = Join-Path "$base\scripts" $k
+    if (Test-Path $src[$k]) { Copy-Item $src[$k] $dst -Force }
+    elseif (-not (Test-Path $dst)) {
+        "# placeholder for $k" | Set-Content -Encoding UTF8 $dst
+    }
 }
 
 # 2) Конфіги правил (soft/hard + beacons)
@@ -175,3 +175,5 @@ foreach($k in $src.Keys){
 '@ | Set-Content -Encoding UTF8 "$base\docs\ANALYSIS.md"
 
 Write-Host "[OK] Skeleton created at: $base"
+
+

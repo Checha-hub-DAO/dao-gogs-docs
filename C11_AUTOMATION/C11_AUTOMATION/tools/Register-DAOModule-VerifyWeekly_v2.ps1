@@ -18,34 +18,34 @@
 #>
 [CmdletBinding()]
 param(
-  [string]$Root = "D:\CHECHA_CORE",
-  [string[]]$Modules = @('G35','G37','G43'),
-  [ValidateRange(0,23)][int]$Hour = 9,
-  [ValidateRange(0,59)][int]$Minute = 0,
-  [ValidateSet('MON','TUE','WED','THU','FRI','SAT','SUN')][string]$Day = 'SUN',
-  [switch]$UseRegisterScheduledTask
+    [string]$Root = "D:\CHECHA_CORE",
+    [string[]]$Modules = @('G35', 'G37', 'G43'),
+    [ValidateRange(0, 23)][int]$Hour = 9,
+    [ValidateRange(0, 59)][int]$Minute = 0,
+    [ValidateSet('MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN')][string]$Day = 'SUN',
+    [switch]$UseRegisterScheduledTask
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-function New-DirIfMissing([string]$Path){
-  if (-not (Test-Path -LiteralPath $Path)){
-    New-Item -ItemType Directory -Path $Path | Out-Null
-  }
+function New-DirIfMissing([string]$Path) {
+    if (-not (Test-Path -LiteralPath $Path)) {
+        New-Item -ItemType Directory -Path $Path | Out-Null
+    }
 }
 
 # Normalize modules to comma-separated for CLI passing
-if ($Modules.Count -eq 1 -and $Modules[0] -match ','){
-  $Modules = $Modules[0].Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+if ($Modules.Count -eq 1 -and $Modules[0] -match ',') {
+    $Modules = $Modules[0].Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
 }
 $modulesArg = ($Modules -join ',')
 
 # Paths
 $toolsAuto = Join-Path $Root "C11\C11_AUTOMATION\tools"
-$tools     = Join-Path $Root "C11\tools"
+$tools = Join-Path $Root "C11\tools"
 $runnerDst = Join-Path $toolsAuto "Run-DAOModule-VerifyWeekly.ps1"
-$taskName  = "\Checha\DAOModule-VerifyWeekly"
+$taskName = "\Checha\DAOModule-VerifyWeekly"
 
 # Ensure dirs
 New-DirIfMissing $toolsAuto
@@ -53,7 +53,7 @@ New-DirIfMissing $tools
 
 # Ensure runner exists (ми не перезаписуємо, якщо вже є — очікуємо, що ти вручну поклав v3)
 if (-not (Test-Path -LiteralPath $runnerDst)) {
-  @'
+    @'
 param(
   [string]$Root = "D:\CHECHA_CORE",
   [string[]]$Modules
@@ -134,7 +134,7 @@ foreach($line in $summaryLines){ Write-CoreLog -File $coreLog -Message $line -Le
 # PowerShell 7 path
 $pwsh = (Get-Command pwsh -ErrorAction SilentlyContinue)?.Source
 if (-not $pwsh) {
-  $pwsh = "C:\Program Files\PowerShell\7\pwsh.exe"
+    $pwsh = "C:\Program Files\PowerShell\7\pwsh.exe"
 }
 
 # Build time string HH:MM
@@ -149,26 +149,30 @@ Write-Host "  pwsh: $pwsh"
 
 # Remove old task if exists
 if ($UseRegisterScheduledTask) {
-  try { Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue } catch {}
-  $act = New-ScheduledTaskAction -Execute $pwsh -Argument ("-NoProfile -ExecutionPolicy Bypass -File `"{0}`" -Root `"{1}`" -Modules `"{2}`"" -f $runnerDst, $Root, $modulesArg)
-  $trg = New-ScheduledTaskTrigger -Weekly -DaysOfWeek $Day -At ([datetime]::ParseExact($time,'HH:mm',$null))
-  $folder = "\Checha"
-  try {
-    $null = Register-ScheduledTask -TaskName ($taskName -replace '^\\Checha\\','') -Action $act -Trigger $trg -Description "Weekly DAO module verify" -TaskPath $folder
-  } catch { throw $_ }
-} else {
-  # schtasks.exe path registration
-  $args = @(
-    "/Create","/F",
-    "/SC","WEEKLY",
-    "/D",$Day,
-    "/TN",$taskName,
-    "/TR", ("`"{0}`" -NoProfile -ExecutionPolicy Bypass -File `"{1}`" -Root `"{2}`" -Modules `"{3}`"" -f $pwsh, $runnerDst, $Root, $modulesArg),
-    "/ST",$time
-  )
-  $proc = Start-Process -FilePath schtasks.exe -ArgumentList $args -NoNewWindow -Wait -PassThru
-  if ($proc.ExitCode -ne 0) { throw "schtasks.exe повернув код $($proc.ExitCode)" }
+    try { Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue } catch {}
+    $act = New-ScheduledTaskAction -Execute $pwsh -Argument ("-NoProfile -ExecutionPolicy Bypass -File `"{0}`" -Root `"{1}`" -Modules `"{2}`"" -f $runnerDst, $Root, $modulesArg)
+    $trg = New-ScheduledTaskTrigger -Weekly -DaysOfWeek $Day -At ([datetime]::ParseExact($time, 'HH:mm', $null))
+    $folder = "\Checha"
+    try {
+        $null = Register-ScheduledTask -TaskName ($taskName -replace '^\\Checha\\', '') -Action $act -Trigger $trg -Description "Weekly DAO module verify" -TaskPath $folder
+    }
+    catch { throw $_ }
+}
+else {
+    # schtasks.exe path registration
+    $args = @(
+        "/Create", "/F",
+        "/SC", "WEEKLY",
+        "/D", $Day,
+        "/TN", $taskName,
+        "/TR", ("`"{0}`" -NoProfile -ExecutionPolicy Bypass -File `"{1}`" -Root `"{2}`" -Modules `"{3}`"" -f $pwsh, $runnerDst, $Root, $modulesArg),
+        "/ST", $time
+    )
+    $proc = Start-Process -FilePath schtasks.exe -ArgumentList $args -NoNewWindow -Wait -PassThru
+    if ($proc.ExitCode -ne 0) { throw "schtasks.exe повернув код $($proc.ExitCode)" }
 }
 
 Write-Host "✅ Зареєстровано. Перевірити статус:"
 Write-Host "  schtasks /Query /TN $taskName /V /FO LIST"
+
+

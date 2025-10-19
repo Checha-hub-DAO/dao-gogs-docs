@@ -2,7 +2,7 @@
 # Скрипт перевірки відповідності файлів у Officer Package до MANIFEST.md
 
 param(
-  [string]$RootDir = "."
+    [string]$RootDir = "."
 )
 
 $manifestPath = Join-Path $RootDir "MANIFEST.md"
@@ -11,7 +11,7 @@ if (-not (Test-Path $manifestPath)) {
     exit 1
 }
 
-$lines = Get-Content $manifestPath | Where-Object {$_ -match "^\|"}
+$lines = Get-Content $manifestPath | Where-Object { $_ -match "^\|" }
 $errors = 0
 
 foreach ($line in $lines) {
@@ -33,7 +33,8 @@ foreach ($line in $lines) {
         if ($actHash -ne $hash -or $actSize -ne $size) {
             Write-Host "[FAIL] $file невідповідність (очікувалось {size=$size;hash=$hash})" -ForegroundColor Red
             $errors++
-        } else {
+        }
+        else {
             Write-Host "[OK]   $file" -ForegroundColor Green
         }
     }
@@ -42,7 +43,10 @@ foreach ($line in $lines) {
 if ($errors -eq 0) {
     Write-Host "`nПеревірка пройдена успішно ✅" -ForegroundColor Green
     exit 0
-} else {
+}
+else {
     Write-Host "`nВиявлено помилки: $errors ⚠️" -ForegroundColor Red
     exit 2
 }
+
+

@@ -26,40 +26,41 @@
 #>
 [CmdletBinding()]
 param(
-  [Parameter(Mandatory)][string]$Title,
-  [Parameter(Mandatory)][string]$Message,
-  [string]$AppId   = 'CheCha',
-  [ValidateSet('info','warning','error')][string]$Severity = 'info',
-  [ValidateSet('short','long')][string]$Duration = 'short',
-  [switch]$Silent,
-  [string]$IconPath
+    [Parameter(Mandatory)][string]$Title,
+    [Parameter(Mandatory)][string]$Message,
+    [string]$AppId = 'CheCha',
+    [ValidateSet('info', 'warning', 'error')][string]$Severity = 'info',
+    [ValidateSet('short', 'long')][string]$Duration = 'short',
+    [switch]$Silent,
+    [string]$IconPath
 )
 
 function Use-BurntToast {
-  try {
-    if (Get-Module -ListAvailable -Name BurntToast) {
-      Import-Module BurntToast -ErrorAction Stop
-      return $true
+    try {
+        if (Get-Module -ListAvailable -Name BurntToast) {
+            Import-Module BurntToast -ErrorAction Stop
+            return $true
+        }
     }
-  } catch { }
-  return $false
+    catch { }
+    return $false
 }
 
 if (Use-BurntToast) {
-  # Мапа звуків/іконок для BurntToast
-  $sound = switch ($Severity) {
-    'error'   { 'Default' }     # BurntToast має окремі пресети, але Default достатньо
-    'warning' { 'Default' }
-    default   { 'Default' }
-  }
-  $splat = @{
-    Text       = @($Title, $Message)
-    AppId      = $AppId
-    Silent     = [bool]$Silent
-  }
-  if ($IconPath -and (Test-Path -LiteralPath $IconPath)) { $splat['AppLogo'] = $IconPath }
-  New-BurntToastNotification @splat | Out-Null
-  return
+    # Мапа звуків/іконок для BurntToast
+    $sound = switch ($Severity) {
+        'error' { 'Default' }     # BurntToast має окремі пресети, але Default достатньо
+        'warning' { 'Default' }
+        default { 'Default' }
+    }
+    $splat = @{
+        Text   = @($Title, $Message)
+        AppId  = $AppId
+        Silent = [bool]$Silent
+    }
+    if ($IconPath -and (Test-Path -LiteralPath $IconPath)) { $splat['AppLogo'] = $IconPath }
+    New-BurntToastNotification @splat | Out-Null
+    return
 }
 
 # ---- Без BurntToast: нативний шлях через WinRT API ----
@@ -83,20 +84,21 @@ $xml = @"
 
 # Додаємо звук/тишу
 if (-not $Silent) {
-  $soundSrc = switch ($Severity) {
-    'error'   { 'ms-winsoundevent:Notification.Looping.Alarm2' }
-    'warning' { 'ms-winsoundevent:Notification.Reminder' }
-    default   { 'ms-winsoundevent:Notification.Default' }
-  }
-  $xml = $xml -replace '</toast>', "<audio src=""$soundSrc""/><\/toast>"
-} else {
-  $xml = $xml -replace '</toast>', '<audio silent="true"/></toast>'
+    $soundSrc = switch ($Severity) {
+        'error' { 'ms-winsoundevent:Notification.Looping.Alarm2' }
+        'warning' { 'ms-winsoundevent:Notification.Reminder' }
+        default { 'ms-winsoundevent:Notification.Default' }
+    }
+    $xml = $xml -replace '</toast>', "<audio src=""$soundSrc""/><\/toast>"
+}
+else {
+    $xml = $xml -replace '</toast>', '<audio silent="true"/></toast>'
 }
 
 # Іконка (AppLogoOverride)
 if ($IconPath -and (Test-Path -LiteralPath $IconPath)) {
-  $iconEsc = $IconPath -replace '&','&amp;' -replace '<','&lt;' -replace '>','&gt;' -replace '"','&quot;'
-  $xml = $xml -replace '<binding template="ToastGeneric">', "<binding template=""ToastGeneric""><image placement=""appLogoOverride"" src=""$iconEsc""/>"
+    $iconEsc = $IconPath -replace '&', '&amp;' -replace '<', '&lt;' -replace '>', '&gt;' -replace '"', '&quot;'
+    $xml = $xml -replace '<binding template="ToastGeneric">', "<binding template=""ToastGeneric""><image placement=""appLogoOverride"" src=""$iconEsc""/>"
 }
 
 # Завантаження XML
@@ -111,3 +113,4 @@ $notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNoti
 
 # Відправляємо тост
 $notifier.Show($toast)
+

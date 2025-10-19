@@ -1,10 +1,10 @@
 param(
-  [string]$RepoRoot = "D:\CHECHA_CORE",
-  [string]$Branch   = "reports",
-  [switch]$OpenWeb
+    [string]$RepoRoot = "D:\CHECHA_CORE",
+    [string]$Branch = "reports",
+    [switch]$OpenWeb
 )
 
-function Die($msg){ Write-Host "[ERR] $msg" -ForegroundColor Red; exit 1 }
+function Die($msg) { Write-Host "[ERR] $msg" -ForegroundColor Red; exit 1 }
 
 # 0) Перевіримо, що repo існує
 if (!(Test-Path -LiteralPath $RepoRoot)) { Die "RepoRoot не знайдено: $RepoRoot" }
@@ -17,8 +17,8 @@ if ($LASTEXITCODE -ne 0) { Die "Тека не є git-репозиторієм: $
 # 2) Перемкнемося/створимо гілку, якщо потрібно
 $cur = git rev-parse --abbrev-ref HEAD
 if ($cur -ne $Branch) {
-  git show-ref --verify --quiet "refs/heads/$Branch"
-  if ($LASTEXITCODE -eq 0) { git checkout $Branch } else { git checkout -b $Branch }
+    git show-ref --verify --quiet "refs/heads/$Branch"
+    if ($LASTEXITCODE -eq 0) { git checkout $Branch } else { git checkout -b $Branch }
 }
 
 # 3) Гарантуємо наявність C11
@@ -88,10 +88,11 @@ Write-Host "[OK] Оновлено C11\README.md" -ForegroundColor Green
 git add -f .\C11\README.md
 git diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {
-  git commit -m "docs(C11): add/update CHECHA ship README"
-  Write-Host "[OK] Commit створено." -ForegroundColor Green
-} else {
-  Write-Host "[INFO] Змін для коміту немає." -ForegroundColor Yellow
+    git commit -m "docs(C11): add/update CHECHA ship README"
+    Write-Host "[OK] Commit створено." -ForegroundColor Green
+}
+else {
+    Write-Host "[INFO] Змін для коміту немає." -ForegroundColor Yellow
 }
 
 # 7) Пуш
@@ -104,5 +105,6 @@ git status
 
 # 9) Відкрити GitHub
 if ($OpenWeb) {
-  try { gh browse } catch { Write-Host "[WARN] gh недоступний або не налаштований." -ForegroundColor Yellow }
+    try { gh browse } catch { Write-Host "[WARN] gh недоступний або не налаштований." -ForegroundColor Yellow }
 }
+

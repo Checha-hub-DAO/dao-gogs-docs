@@ -1,44 +1,45 @@
 [CmdletBinding()]
 param(
-  [string]$ReportsRoot = "D:\CHECHA_CORE\REPORTS",
-  [string]$ArchiveRel  = "ARCHIVE",
-  [string]$IndexFile   = "ARCHIVE_INDEX.md",
-  [switch]$ComputeHash,         # Додати SHA-256 поруч із кожним ZIP
-  [switch]$RelativeLinks,       # Посилання на файли відносно $ReportsRoot
-  [switch]$GitAdd,              # Зробити git add REPORTS/ARCHIVE_INDEX.md
-  [switch]$DryRun               # Показати, що буде записано, без збереження
+    [string]$ReportsRoot = "D:\CHECHA_CORE\REPORTS",
+    [string]$ArchiveRel = "ARCHIVE",
+    [string]$IndexFile = "ARCHIVE_INDEX.md",
+    [switch]$ComputeHash,         # Додати SHA-256 поруч із кожним ZIP
+    [switch]$RelativeLinks,       # Посилання на файли відносно $ReportsRoot
+    [switch]$GitAdd,              # Зробити git add REPORTS/ARCHIVE_INDEX.md
+    [switch]$DryRun               # Показати, що буде записано, без збереження
 )
 
-function Fail($m){ Write-Error $m; exit 1 }
-function HashSHA256([string]$Path){
-  try {
-    $h = Get-FileHash -LiteralPath $Path -Algorithm SHA256
-    return $h.Hash
-  } catch { return $null }
+function Fail($m) { Write-Error $m; exit 1 }
+function HashSHA256([string]$Path) {
+    try {
+        $h = Get-FileHash -LiteralPath $Path -Algorithm SHA256
+        return $h.Hash
+    }
+    catch { return $null }
 }
 
 # 1) Шляхи
 $archivePath = Join-Path $ReportsRoot $ArchiveRel
-$indexPath   = Join-Path $ReportsRoot $IndexFile
+$indexPath = Join-Path $ReportsRoot $IndexFile
 
 if (-not (Test-Path -LiteralPath $archivePath)) {
-  Fail "Папку архівів не знайдено: $archivePath"
+    Fail "Папку архівів не знайдено: $archivePath"
 }
 
 # 2) Збір ZIP-файлів
 $zips = Get-ChildItem -LiteralPath $archivePath -Recurse -File -Include *.zip |
-        Sort-Object FullName
+    Sort-Object FullName
 
 if (-not $zips) {
-  Write-Warning "ZIP-файлів не знайдено у $archivePath"
+    Write-Warning "ZIP-файлів не знайдено у $archivePath"
 }
 
 # 3) Групування за роком (спробуємо витягнути рік з імені; якщо ні — беремо LastWriteTime.Year)
-function Get-YearFromNameOrTime($fi){
-  $name = $fi.Name
-  $m = [regex]::Match($name, '\b(20\d{2})[-_\.]')
-  if ($m.Success) { return [int]$m.Groups[1].Value }
-  return $fi.LastWriteTime.Year
+function Get-YearFromNameOrTime($fi) {
+    $name = $fi.Name
+    $m = [regex]::Match($name, '\b(20\d{2})[-_\.]')
+    if ($m.Success) { return [int]$m.Groups[1].Value }
+    return $fi.LastWriteTime.Year
 }
 
 $grouped = $zips | Group-Object { Get-YearFromNameOrTime $_ } | Sort-Object Name
@@ -65,20 +66,21 @@ $lines += "## 📑 Індекс архівів"
 $lines += ""
 
 foreach ($g in $grouped) {
-  $year = $g.Name
-  $lines += "### $year"
-  foreach ($fi in ($g.Group | Sort-Object Name)) {
-    $relPath = if ($RelativeLinks) {
-      # Відносно $ReportsRoot
-      [IO.Path]::GetRelativePath($ReportsRoot, $fi.FullName) -replace '\\','/'
-    } else {
-      $fi.FullName
-    }
-    $display = $fi.Name
-    if ($ComputeHash) {
-      $sha = HashSHA256 $fi.FullName
-      if ($sha) {
-        $lines += "- [$display]($relPath) — `SHA256:$($sha.Substring(0,12))…`"
+    $year = $g.Name
+    $lines += "### $year"
+    foreach ($fi in ($g.Group | Sort-Object Name)) {
+        $relPath = if ($RelativeLinks) {
+            # Відносно $ReportsRoot
+            [IO.Path]::GetRelativePath($ReportsRoot, $fi.FullName) -replace '\\', '/'
+        }
+        else {
+            $fi.FullName
+        }
+        $display = $fi.Name
+        if ($ComputeHash) {
+            $sha = HashSHA256 $fi.FullName
+            if ($sha) {
+                $lines += "- [$display]($relPath) — `SHA256:$($sha.Substring(0,12))…`"
       } else {
         $lines += "- [$display]($relPath)"
       }
@@ -120,3 +122,4 @@ if ($DryRun) {
     else { Write-Warning "git add завершився з помилкою (перевір доступ/робочу теку)." }
   }
 }
+

@@ -10,14 +10,14 @@
 #>
 
 # --- Налаштування ---
-$BaseDir        = 'D:\CHECHA_CORE\C11\SHIELD4_ODESA'
-$Version        = 'v2.6'
+$BaseDir = 'D:\CHECHA_CORE\C11\SHIELD4_ODESA'
+$Version = 'v2.6'
 $NewReleasePath = 'C:\Users\serge\Downloads\SHIELD4_ODESA_UltimatePack_v2.6.zip'
 
 # Модулі для включення
 $mods = @(
-  'C:\Users\serge\Downloads\SHIELD4_ODESA_MegaPack_v1.0.zip',
-  'C:\Users\serge\Downloads\SHIELD4_ODESA_MegaVisualPack_v1.0.zip'
+    'C:\Users\serge\Downloads\SHIELD4_ODESA_MegaPack_v1.0.zip',
+    'C:\Users\serge\Downloads\SHIELD4_ODESA_MegaVisualPack_v1.0.zip'
 )
 
 # Додатково: якщо є нотатки
@@ -25,14 +25,14 @@ $mods = @(
 
 # --- Запуск (спершу симуляція) ---
 & "$BaseDir\..\tools\Manage_Shield4_Release.ps1" `
-  -BaseDir $BaseDir `
-  -NewReleasePath $NewReleasePath `
-  -Version $Version `
-  -ModulesToAdd $mods `
-  -AutoPickPrintBook `
-  -SkipMissing `
-  -ExtractZip `
-  -Verbose -WhatIf
+    -BaseDir $BaseDir `
+    -NewReleasePath $NewReleasePath `
+    -Version $Version `
+    -ModulesToAdd $mods `
+    -AutoPickPrintBook `
+    -SkipMissing `
+    -ExtractZip `
+    -Verbose -WhatIf
 
 # --- Бойовий запуск (розкоментуй, коли все ок) ---
 # & "$BaseDir\..\tools\Manage_Shield4_Release.ps1" `
@@ -44,3 +44,5 @@ $mods = @(
 #   -SkipMissing `
 #   -ExtractZip `
 #   -Verbose
+
+

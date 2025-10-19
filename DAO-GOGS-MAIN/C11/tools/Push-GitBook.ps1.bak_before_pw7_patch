@@ -1,0 +1,162 @@
+<#
+.SYNOPSIS
+  Push локального Markdown/ZIP у GitBook через офіційний API.
+
+.DESCRIPTION
+  Режими:
+    - PageImport  : імпорт Markdown/ZIP у конкретну сторінку (за шляхом).
+    - SpaceImport : імпорт ZIP у цілий простір (space).
+  Якщо -File вказує на локальний шлях, скрипт публікує файл у публічний Gist (через `gh gist create`)
+  і використовує RAW-URL для GitBook API. Якщо передано -NoGist, тоді -File має бути HTTPS-URL.
+
+.REQUIREMENTS
+  - PowerShell 7+
+  - gh (GitHub CLI) для автозаливки у Gist: https://cli.github.com/
+  - ENV:
+      GITBOOK_TOKEN    (Bearer token, ASCII, без <>)
+      GITBOOK_SPACE_ID (UUID простору, ASCII, без <>)
+      GITBOOK_PAGE_PATH (для PageImport), напр. g46-1-podilsk-infohub/readme
+#>
+
+param(
+  [ValidateSet("PageImport","SpaceImport")] [string]$Mode = "PageImport",
+  [string]$SpaceId  = $env:GITBOOK_SPACE_ID,
+  [string]$PagePath = $env:GITBOOK_PAGE_PATH,   # потрібно для PageImport
+  [string]$File,                                 # шлях до .md або .zip; якщо не задано — README.md / автопошук ZIP
+  [string]$Message = "GitBook push",
+  [switch]$NoGist                              # не вантажити у Gist; очікується HTTPS-URL у -File
+)
+
+$ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+
+function Ok($m){   Write-Host "✔ $m" -ForegroundColor Green }
+function Info($m){ Write-Host "• $m" -ForegroundColor Cyan }
+function Fail($m){ Write-Host "✖ $m" -ForegroundColor Red; exit 1 }
+
+# --- 0) Перевірки ENV + ASCII ---
+if (-not $env:GITBOOK_TOKEN) { Fail "ENV GITBOOK_TOKEN відсутній" }
+if (-not $SpaceId)          { Fail "SpaceId не заданий (ENV GITBOOK_SPACE_ID або -SpaceId)" }
+
+$bad = @()
+foreach ($kv in @(
+  @{name='GITBOOK_TOKEN';    val=$env:GITBOOK_TOKEN},
+  @{name='GITBOOK_SPACE_ID'; val=$SpaceId},
+  @{name='GITBOOK_PAGE_PATH';val=$PagePath}
+)) {
+  if ($kv.val -and (-not ($kv.val -cmatch '^[\u0000-\u007F]+$') -or $kv.val -match '[<>]')) { $bad += $kv.name }
+}
+if ($bad.Count) { Fail ("Невалідні значення (не-ASCII/плейсхолдер): " + ($bad -join ', ')) }
+
+# --- 1) База API ---
+$Base    = "https://api.gitbook.com/v1"
+$Headers = @{
+  Authorization = "Bearer $($env:GITBOOK_TOKEN)"
+  Accept        = "application/json"
+  "Content-Type"= "application/json"
+}
+
+# --- 2) Допоміжні ---
+function New-PublicGistAndGetRawUrl([string]$LocalPath, [string]$Kind) {
+  try { gh --version *> $null } catch { Fail "Не знайдено GitHub CLI (gh). Встанови: https://cli.github.com/" }
+  if (-not (Test-Path -LiteralPath $LocalPath)) { Fail "Файл не знайдено: $LocalPath" }
+
+  Info "Завантажую файл у публічний Gist → $LocalPath"
+  # Без --title (сумісність); -- перед шляхом гарантує, що gh сприйме значення як файл
+  $gistOutput = & gh gist create -p -d "GitBook import ($Kind)" -- "$LocalPath" 2>$null
+  if (-not $gistOutput) { Fail "Не вдалося створити Gist (gh нічого не повернув). Запусти 'gh auth status'." }
+
+  $joined = ($gistOutput -join "`n")
+  $match  = [regex]::Match($joined, 'https?://\S+')
+  if (-not $match.Success) { Fail "Не вдалося визначити URL Gist із виводу: $joined" }
+
+  $gistUrl = $match.Value.TrimEnd('/')
+  $raw     = "$gistUrl/raw"
+  Ok "Gist OK → $raw"
+  return $raw
+}
+
+function Get-ImportUrlFromFile([string]$PathOrUrl, [ValidateSet('markdown','zip')]$Expected) {
+  if ($PathOrUrl -match '^(https)://') { return $PathOrUrl } # Вже HTTPS
+  if ($NoGist) { Fail "Передано -NoGist: -File має бути HTTPS-URL. Отримано локальний шлях: $PathOrUrl" }
+
+  $ext = ([IO.Path]::GetExtension($PathOrUrl) ?? '').ToLowerInvariant()
+  if ($Expected -eq 'zip' -and $ext -ne '.zip') { Fail "Очікував ZIP, отримав: $ext" }
+  if ($Expected -eq 'markdown' -and $ext -notin @('.md','.markdown')) { Info "Попередження: формат не .md; буде інтерпретовано як markdown." }
+
+  return (New-PublicGistAndGetRawUrl -LocalPath $PathOrUrl -Kind $Expected)
+}
+
+# Якщо -File не задано — автопідбір
+if (-not $File) {
+  if ($Mode -eq 'PageImport') {
+    $File = "README.md"
+    if (-not (Test-Path -LiteralPath $File)) { Fail "Не задано -File і не знайдено README.md у поточній теці." }
+  } else {
+    # SpaceImport: шукаємо найсвіжіший ZIP у типовому Release для G46.1 (відносно скрипта; за потреби адаптуй)
+    $rel = Join-Path (Split-Path -Parent $PSCommandPath) "..\..\G-CATALOG\G\G46 Інформаційний щит Поділля\G46.1 Podilsk.InfoHub\Archive\Release"
+    $relp = Resolve-Path $rel -ErrorAction SilentlyContinue
+    if ($relp) {
+      $zip = Get-ChildItem -LiteralPath $relp -Filter *.zip -File -Recurse | Sort-Object LastWriteTime -Desc | Select-Object -First 1
+      if ($zip) { $File = $zip.FullName }
+    }
+    if (-not $File) { Fail "Не вказано -File і не знайдено ZIP у стандартній теці релізів." }
+  }
+}
+
+try {
+  switch ($Mode) {
+    'PageImport' {
+      if (-not $PagePath) { Fail "Для PageImport потрібен PagePath (ENV GITBOOK_PAGE_PATH або -PagePath)" }
+
+      # 1) Resolve pageId (ВАЖЛИВО: кодування шляху)
+      $encPath = [uri]::EscapeDataString($PagePath)
+      $resolveUrl = "$Base/spaces/$SpaceId/content/path/$encPath"
+      Info "Resolve pageId: $PagePath"
+      $res = Invoke-RestMethod -Method GET -Uri $resolveUrl -Headers $Headers
+      $pageId = $res.id
+      if (-not $pageId) { Fail "Не знайдено сторінку за шляхом: $PagePath" }
+
+      # 2) Підготувати джерело (markdown/zip) → HTTPS URL
+      $ext    = ([IO.Path]::GetExtension($File) ?? '').ToLowerInvariant()
+      $source = if ($ext -eq '.zip') { 'zip' } else { 'markdown' }
+      $url    = Get-ImportUrlFromFile -PathOrUrl $File -Expected $source
+
+      # 3) POST імпорт
+      $importUrl = "$Base/spaces/$SpaceId/content/page/$pageId/import"
+      $body = @{ url = $url; source = $source; message = $Message } | ConvertTo-Json -Compress
+      Info "PageImport → $importUrl"
+      $resp = Invoke-RestMethod -Method POST -Uri $importUrl -Headers $Headers -Body $body
+      Ok "PageImport OK"
+      exit 0
+    }
+
+    'SpaceImport' {
+      # Очікуємо ZIP
+      $url = Get-ImportUrlFromFile -PathOrUrl $File -Expected 'zip'
+      $importUrl = "$Base/spaces/$SpaceId/content/import"
+      $body = @{ url = $url; source = 'zip'; message = $Message } | ConvertTo-Json -Compress
+      Info "SpaceImport → $importUrl"
+      $resp = Invoke-RestMethod -Method POST -Uri $importUrl -Headers $Headers -Body $body
+      Ok "SpaceImport OK"
+      exit 0
+    }
+
+    default { Fail "Невідомий Mode: $Mode" }
+  }
+}
+catch {
+  # Виведемо максимально інформативно тіло відповіді (якщо є)
+  if ($_.Exception.Response) {
+    try {
+      $sr = New-Object System.IO.StreamReader($_.Exception.Response.Content.ReadAsStringAsync().Result)
+      $respBody = $sr.ReadToEnd()
+      $code = [int]$_.Exception.Response.StatusCode
+      Fail "HTTP ${code}: $respBody"
+    } catch {
+      Fail "Помилка: $($_.Exception.Message)"
+    }
+  } else {
+    Fail "Помилка: $($_.Exception.Message)"
+  }
+}

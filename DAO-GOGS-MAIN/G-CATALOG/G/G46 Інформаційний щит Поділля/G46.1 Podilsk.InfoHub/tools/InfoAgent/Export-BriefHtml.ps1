@@ -1,15 +1,15 @@
-﻿param(
-  [Parameter(Mandatory=$true)][string]$Root,
-  [string]$IntelDir = (Join-Path $Root "archive\\intel"),
-  [string]$OutDir   = (Join-Path $Root "content\\intel"),
-  [string]$Title    = "Podilsk.InfoHub — Daily Brief"
+param(
+    [Parameter(Mandatory = $true)][string]$Root,
+    [string]$IntelDir = (Join-Path $Root "archive\\intel"),
+    [string]$OutDir = (Join-Path $Root "content\\intel"),
+    [string]$Title = "Podilsk.InfoHub — Daily Brief"
 )
-$ErrorActionPreference="Stop"
+$ErrorActionPreference = "Stop"
 
-function Html([string]$s){
-  if($null -eq $s){ return "" }
-  $s = $s -replace '&','&amp;' -replace '<','&lt;' -replace '>','&gt;' -replace '"','&quot;'
-  return $s
+function Html([string]$s) {
+    if ($null -eq $s) { return "" }
+    $s = $s -replace '&', '&amp;' -replace '<', '&lt;' -replace '>', '&gt;' -replace '"', '&quot;'
+    return $s
 }
 
 $rawPath = Join-Path $IntelDir "raw-latest.jsonl"
@@ -17,23 +17,23 @@ $becPath = Join-Path $IntelDir "beacons-latest.json"
 $day = (Get-Date).ToString("yyyy-MM-dd")
 
 $raw = @()
-if(Test-Path $rawPath){
-  Get-Content $rawPath | % { if($_){ try{ $raw += ($_ | ConvertFrom-Json) } catch{} } }
+if (Test-Path $rawPath) {
+    Get-Content $rawPath | % { if ($_) { try { $raw += ($_ | ConvertFrom-Json) } catch {} } }
 }
 $beacons = @()
-if(Test-Path $becPath){
-  try{ $beacons = Get-Content -Raw $becPath | ConvertFrom-Json } catch { $beacons=@() }
+if (Test-Path $becPath) {
+    try { $beacons = Get-Content -Raw $becPath | ConvertFrom-Json } catch { $beacons = @() }
 }
-if($beacons -and -not ($beacons -is [System.Collections.IEnumerable])){ $beacons=@($beacons) }
+if ($beacons -and -not ($beacons -is [System.Collections.IEnumerable])) { $beacons = @($beacons) }
 
-$beacons = $beacons | %{
-  $b=$_
-  $examples=@()
-  if($b.PSObject.Properties.Name -contains 'TopExamples'){
-    $v=$b.TopExamples
-    if($v -is [System.Collections.IEnumerable] -and -not ($v -is [string])){ $examples=@($v) } else { $examples=@($v) }
-  }
-  [pscustomobject]@{ Id=$b.Id; Severity=$b.Severity; Count=$b.Count; SinceUtc=$b.SinceUtc; WindowH=$b.WindowH; TopExamples=$examples }
+$beacons = $beacons | % {
+    $b = $_
+    $examples = @()
+    if ($b.PSObject.Properties.Name -contains 'TopExamples') {
+        $v = $b.TopExamples
+        if ($v -is [System.Collections.IEnumerable] -and -not ($v -is [string])) { $examples = @($v) } else { $examples = @($v) }
+    }
+    [pscustomobject]@{ Id = $b.Id; Severity = $b.Severity; Count = $b.Count; SinceUtc = $b.SinceUtc; WindowH = $b.WindowH; TopExamples = $examples }
 }
 
 $null = New-Item -ItemType Directory -Force -Path $OutDir
@@ -64,40 +64,42 @@ a:hover{text-decoration:underline}
 "@
 
 $secBeacons = "<h2>Маяки</h2>"
-if($beacons.Count -gt 0){
-  foreach($b in $beacons){
-    $sev = ("" + $b.Severity).ToLower()
-    $secBeacons += "<div class=""card""><div><strong>" + (Html $b.Id) + "</strong><span class=""badge $sev"">" + (Html $b.Severity) + "</span></div>"
-    $secBeacons += "<div class=""meta"">count: $($b.Count) • since: " + (Html $b.SinceUtc) + "</div>"
-    if($b.TopExamples -and $b.TopExamples.Count -gt 0){
-      $secBeacons += "<ul>"
-      foreach($ex in ($b.TopExamples | Select-Object -First 5)){
-        $t = Html $ex.Title
-        $u = Html $ex.Url
-        $s = Html $ex.Score
-        $secBeacons += "<li><a href=""$u"">$t</a> <span class=""meta"">(score: $s)</span></li>"
-      }
-      $secBeacons += "</ul>"
+if ($beacons.Count -gt 0) {
+    foreach ($b in $beacons) {
+        $sev = ("" + $b.Severity).ToLower()
+        $secBeacons += "<div class=""card""><div><strong>" + (Html $b.Id) + "</strong><span class=""badge $sev"">" + (Html $b.Severity) + "</span></div>"
+        $secBeacons += "<div class=""meta"">count: $($b.Count) • since: " + (Html $b.SinceUtc) + "</div>"
+        if ($b.TopExamples -and $b.TopExamples.Count -gt 0) {
+            $secBeacons += "<ul>"
+            foreach ($ex in ($b.TopExamples | Select-Object -First 5)) {
+                $t = Html $ex.Title
+                $u = Html $ex.Url
+                $s = Html $ex.Score
+                $secBeacons += "<li><a href=""$u"">$t</a> <span class=""meta"">(score: $s)</span></li>"
+            }
+            $secBeacons += "</ul>"
+        }
+        $secBeacons += "</div>"
     }
-    $secBeacons += "</div>"
-  }
-} else {
-  $secBeacons += "<div class=""card""><em>Маяків у вікні не виявлено.</em></div>"
+}
+else {
+    $secBeacons += "<div class=""card""><em>Маяків у вікні не виявлено.</em></div>"
 }
 
 $secRaw = "<h2>Події (raw, топ 10)</h2>"
-if($raw.Count -gt 0){
-  $top = $raw | Sort-Object Score -Descending | Select-Object -First 10
-  foreach($it in $top){
-    $t = Html $it.Title; $u = Html $it.Url
-    $pub = Html $it.Published
-    $topics = if($it.Topics){ Html (($it.Topics -join ", ")) } else { "-" }
-    $places = if($it.Places){ Html (($it.Places -join ", ")) } else { "-" }
-    $s = Html $it.Score
-    $secRaw += "<div class=""card""><a href=""$u""><strong>$t</strong></a><div class=""meta"">$pub • topics: $topics • places: $places • score: $s</div></div>"
-  }
-} else {
-  $secRaw += "<div class=""card""><em>Подій не зібрано.</em></div>"
+if ($raw.Count -gt 0) {
+    $top = $raw | Sort-Object Score -Descending | Select-Object -First 10
+    foreach ($it in $top) {
+        $t = Html $it.Title; $u = Html $it.Url
+        $pub = Html $it.Published
+        $topics = if ($it.Topics) { Html (($it.Topics -join ", ")) } else { "-" }
+        $places = if ($it.Places) { Html (($it.Places -join ", ")) } else { "-" }
+        $s = Html $it.Score
+        $secRaw += "<div class=""card""><a href=""$u""><strong>$t</strong></a><div class=""meta"">$pub • topics: $topics • places: $places • score: $s</div></div>"
+    }
+}
+else {
+    $secRaw += "<div class=""card""><em>Подій не зібрано.</em></div>"
 }
 
 $foot = "</body></html>"
@@ -105,7 +107,7 @@ $foot = "</body></html>"
 # write
 $doc = $head + $secBeacons + $secRaw + $foot
 $enc = New-Object System.Text.UTF8Encoding($true)
-[IO.File]::WriteAllText($htmlDay,   $doc, $enc)
+[IO.File]::WriteAllText($htmlDay, $doc, $enc)
 Copy-Item -LiteralPath $htmlDay -Destination $htmlLatest -Force
 
 Write-Host "[ OK ] HTML brief:" -ForegroundColor Green

@@ -29,76 +29,76 @@
 #>
 
 [CmdletBinding(SupportsShouldProcess)]
-Param(
-  [Parameter()][string]$Root = "D:\CHECHA_CORE",
-  [Parameter()][string]$ZipPath
+param(
+    [Parameter()][string]$Root = "D:\CHECHA_CORE",
+    [Parameter()][string]$ZipPath
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-function New-DirIfMissing([string]$Path){
-  if (-not (Test-Path -LiteralPath $Path)){
-    New-Item -ItemType Directory -Path $Path | Out-Null
-  }
+function New-DirIfMissing([string]$Path) {
+    if (-not (Test-Path -LiteralPath $Path)) {
+        New-Item -ItemType Directory -Path $Path | Out-Null
+    }
 }
 
 function Add-LineOnce {
-  param(
-    [Parameter(Mandatory)][string]$File,
-    [Parameter(Mandatory)][string]$Line
-  )
-  if (-not (Test-Path -LiteralPath $File)){
-    New-Item -ItemType File -Path $File -Force | Out-Null
-    # UTF-8 BOM для GitBook/Markdown сумісності
-    Set-Content -LiteralPath $File -Value "" -Encoding UTF8
-  }
-  $content = Get-Content -LiteralPath $File -ErrorAction Stop
-  if ($content -notcontains $Line){
-    Add-Content -LiteralPath $File -Value $Line
-  }
+    param(
+        [Parameter(Mandatory)][string]$File,
+        [Parameter(Mandatory)][string]$Line
+    )
+    if (-not (Test-Path -LiteralPath $File)) {
+        New-Item -ItemType File -Path $File -Force | Out-Null
+        # UTF-8 BOM для GitBook/Markdown сумісності
+        Set-Content -LiteralPath $File -Value "" -Encoding UTF8
+    }
+    $content = Get-Content -LiteralPath $File -ErrorAction Stop
+    if ($content -notcontains $Line) {
+        Add-Content -LiteralPath $File -Value $Line
+    }
 }
 
 function Write-CoreLog {
-  param(
-    [Parameter(Mandatory)][string]$Root,
-    [Parameter(Mandatory)][string]$Message
-  )
-  $logDir = Join-Path $Root "C03\LOG"
-  $log    = Join-Path $logDir "LOG.md"
-  New-DirIfMissing $logDir
-  $stamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-  Add-LineOnce -File $log -Line "# CORE LOG"  # заголовок лише якщо файл порожній
-  Add-Content -LiteralPath $log -Value "$stamp [INFO] $Message"
+    param(
+        [Parameter(Mandatory)][string]$Root,
+        [Parameter(Mandatory)][string]$Message
+    )
+    $logDir = Join-Path $Root "C03\LOG"
+    $log = Join-Path $logDir "LOG.md"
+    New-DirIfMissing $logDir
+    $stamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    Add-LineOnce -File $log -Line "# CORE LOG"  # заголовок лише якщо файл порожній
+    Add-Content -LiteralPath $log -Value "$stamp [INFO] $Message"
 }
 
 # --- Шляхи за замовчуванням
-if (-not $ZipPath){
-  $ZipPath = Join-Path $Root "C12\Vault\DAO\DAO-G35_v1.0.zip"
+if (-not $ZipPath) {
+    $ZipPath = Join-Path $Root "C12\Vault\DAO\DAO-G35_v1.0.zip"
 }
-$destDir   = Join-Path $Root "C12\Vault\DAO\G35"
+$destDir = Join-Path $Root "C12\Vault\DAO\G35"
 $indexFile = Join-Path $Root "C12\INDEX.md"
-$archDir   = Join-Path $Root "C05\ARCHIVE"
-$checks    = Join-Path $archDir "CHECKSUMS.txt"
+$archDir = Join-Path $Root "C05\ARCHIVE"
+$checks = Join-Path $archDir "CHECKSUMS.txt"
 
 Write-Host "🔧 Integrate-DAO-G35 | Root = $Root"
 Write-Host "📦 ZIP            | $ZipPath"
 Write-Host "📁 Dest           | $destDir"
 
 # 1) Перевірки
-if (-not (Test-Path -LiteralPath $ZipPath)){
-  throw "ZIP не знайдено: $ZipPath"
+if (-not (Test-Path -LiteralPath $ZipPath)) {
+    throw "ZIP не знайдено: $ZipPath"
 }
 New-DirIfMissing (Split-Path -Parent $destDir)
 New-DirIfMissing $archDir
 
 # 2) Розпаковка
-if ($PSCmdlet.ShouldProcess($destDir, "Expand-Archive (force overwrite)")){
-  if (Test-Path -LiteralPath $destDir){
-    Remove-Item -LiteralPath $destDir -Recurse -Force
-  }
-  Expand-Archive -Path $ZipPath -DestinationPath $destDir -Force
-  Write-Host "✅ Розпаковано до: $destDir"
+if ($PSCmdlet.ShouldProcess($destDir, "Expand-Archive (force overwrite)")) {
+    if (Test-Path -LiteralPath $destDir) {
+        Remove-Item -LiteralPath $destDir -Recurse -Force
+    }
+    Expand-Archive -Path $ZipPath -DestinationPath $destDir -Force
+    Write-Host "✅ Розпаковано до: $destDir"
 }
 
 # 3) Оновлення INDEX (посилання на README G35)
@@ -127,3 +127,4 @@ if (-not $exists) {
 
 Write-Host "🔐 CHECKSUMS оновлено: $checks"
 Write-Host "🎉 Готово."
+

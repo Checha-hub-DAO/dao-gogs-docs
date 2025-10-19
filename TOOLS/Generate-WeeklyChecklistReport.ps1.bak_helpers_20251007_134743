@@ -1,0 +1,202 @@
+﻿# Import Checha utils
+$utilsPath = Join-Path $PSScriptRoot 'lib\Checha.Utils.psm1'
+if (Test-Path $utilsPath) {
+  Import-Module $utilsPath -Force -DisableNameChecking
+} else {
+  throw "Utils module not found: $utilsPath"
+}
+<#
+Сумує CHECKLIST_YYYY-MM-DD.md за тиждень і формує WEEKLY_CHECKLIST_YYYY-Www.md
+Джерело: D:\CHECHA_CORE\C06_FOCUS
+Додає: секцію рефлексії, carry-over з останнього дня, мікро-KPI (avg/day, share DONE, median, best/worst, DONE-streak)
+#>
+param(
+  [string]$FocusDir = "D:\CHECHA_CORE\C06_FOCUS",
+  [switch]$WriteRestoreLog = $true,
+  [string]$RestoreLogPath = "D:\CHECHA_CORE\C06_FOCUS\FOCUS_RestoreLog.md",
+
+  # Кінець тижня (дата)
+  
+  # Вмикає додавання шаблону рефлексії
+  [switch]$IncludeReflection = $true,
+
+  # Спробувати витягнути топ-невиконані пункти з останнього дня (до N)
+  [int]$CarryOverTop = 5
+)
+$ErrorActionPreference = "Stop"
+
+function Get-ChecklistStats {
+  param([string]$Path)
+  
+  
+  # Порахувати чекбокси
+  $total = 0; $done = 0; $todo = 0
+  foreach ($l in $lines) {
+    if ($l -match '^\s*-\s*\[\s*\S?\s*\]\s+') {
+      $total++
+      if ($l -match '^\s*-\s*\[\s*x\s*\]\s+') { $done++ } else { $todo++ }
+    }
+  }
+  $pct = if ($total -gt 0) { [math]::Round(($done*100.0)/$total,1) } else { 0 }
+
+  # Невиконані пункти (для CarryOver)
+  $openItems = @()
+  foreach ($l in $lines) {
+    if ($l -match '^\s*-\s*\[\s\]\s+(.+)$') { $openItems += $Matches[1].Trim() }
+  }
+
+  # Витягнемо дату з назви
+  $file = Split-Path $Path -Leaf
+  $dateStr = $null
+  if ($file -match 'CHECKLIST_(\d{4})-(\d{2})-(\d{2})\.md') {
+    $dateStr = "{0}-{1}-{2}" -f $Matches[1],$Matches[2],$Matches[3]
+  }
+
+  return [pscustomobject]@{
+    File      = $file
+    DateStr   = $dateStr
+    Status    = $status
+    Total     = $total
+    Done      = $done
+    Todo      = $todo
+    Pct       = $pct
+    OpenItems = $openItems
+    RawLines  = $lines
+  }
+}
+
+function Get-Median {
+  param([double[]]$values)
+  
+
+# Підібрати файли за маскою та датою в назві
+$files = Get-ChildItem $FocusDir -Filter "CHECKLIST_*.md" -File |
+         Where-Object {
+           if ($_ -match 'CHECKLIST_(\d{4})-(\d{2})-(\d{2})\.md') {
+            $d = Get-Date ("$($Matches[1])-$($Matches[2])-$($Matches[3])")
+            ($d -ge $start) -and ($d -le $end)
+           } else { $false }
+         } | Sort-Object Name
+
+$rows = @()
+foreach ($f in $files) { $rows += Get-ChecklistStats -Path $f.FullName }
+
+# Підсумки
+$daysCount = $rows.Count
+$sumTotal  = ($rows | Measure-Object -Property Total -Sum).Sum
+$sumDone   = ($rows | Measure-Object -Property Done  -Sum).Sum
+$sumTodo   = ($rows | Measure-Object -Property Todo  -Sum).Sum
+$avgPct    = if ($daysCount -gt 0) { [math]::Round(($rows | Measure-Object -Property Pct -Average).Average, 1) } else { 0 }
+
+# --- МІКРО-KPI ---
+$avgItemsPerDay = if ($daysCount -gt 0) { [math]::Round($sumTotal / $daysCount, 1) } else { 0 }
+$doneDays       = ($rows | Where-Object { $_.Status -eq 'DONE' }).Count
+$doneSharePct   = if ($daysCount -gt 0) { [math]::Round(($doneDays*100.0)/$daysCount,1) } else { 0 }
+$medianPct      = Get-Median ($rows | ForEach-Object { [double]$_.Pct })
+# best/worst
+$best = $null; $worst = $null
+if ($rows.Count -gt 0) {
+  $best  = $rows | Sort-Object Pct -Descending | Select-Object -First 1
+  $worst = $rows | Sort-Object Pct | Select-Object -First 1
+}
+# DONE-streak (поточний, від кінця тижня назад)
+$streak = 0
+for ($d=$end; $d -ge $start; $d=$d.AddDays(-1)) {
+  $hit = $rows | Where-Object { $_.DateStr -eq $d.ToString('yyyy-MM-dd') } | Select-Object -First 1
+  if ($null -ne $hit -and $hit.Status -eq 'DONE') { $streak++ } else { break }
+}
+
+# Назва файлу за ISO-тижнем
+$iso = [System.Globalization.ISOWeek]::GetWeekOfYear($end)
+$year= $end.Year
+$weeklyPath = Join-Path $FocusDir ("WEEKLY_CHECKLIST_{0}-W{1:00}.md" -f $year, $iso)
+$bakRoot = Join-Path $FocusDir '.bak'
+
+# Markdown-таблиця по днях
+$lines = @()
+$lines += "# Тижневий звіт чек-листів ($($start.ToString('yyyy-MM-dd')) → $($end.ToString('yyyy-MM-dd')))"
+$lines += ""
+$lines += "| Дата | Файл | Статус | Всього | Виконано | Залишилось | Прогрес |"
+$lines += "|---|---|---|---:|---:|---:|---:|"
+
+for ($d=$start; $d -le $end; $d=$d.AddDays(1)) {
+  $key = $rows | Where-Object { $_.DateStr -eq $d.ToString('yyyy-MM-dd') } | Select-Object -First 1
+  if ($null -ne $key) {
+    $lines += "| {0} | `{1}` | {2} | {3} | {4} | {5} | {6}% |" -f `
+      $d.ToString('yyyy-MM-dd'), $key.File, $key.Status, $key.Total, $key.Done, $key.Todo, $key.Pct
+  } else {
+    $lines += "| {0} | — | — | 0 | 0 | 0 | 0% |" -f $d.ToString('yyyy-MM-dd')
+  }
+}
+
+$lines += ""
+$lines += "## Підсумки тижня"
+$lines += "- Днів у звіті: **$daysCount**"
+$lines += "- Сума пунктів: **$sumTotal**"
+$lines += "- Виконано всього: **$sumDone**"
+$lines += "- Залишилось всього: **$sumTodo**"
+$lines += "- Середній прогрес за день: **$avgPct%**"
+$lines += ""
+
+# --- МІКРО-KPI БЛОК ---
+$lines += "## 📌 Мікро-KPI"
+$lines += "| Показник | Значення |"
+$lines += "|---|---:|"
+$lines += ("| Середня кількість пунктів/день | {0} |" -f $avgItemsPerDay)
+$lines += ("| Частка днів зі статусом DONE | {0}% ({1}/{2}) |" -f $doneSharePct, $doneDays, $daysCount)
+$lines += ("| Медіана прогресу | {0}% |" -f $medianPct)
+if ($best)  { $lines += ("| Найкращий день | {0} — {1}% |" -f $best.DateStr,  $best.Pct) }
+if ($worst) { $lines += ("| Найгірший день | {0} — {1}% |" -f $worst.DateStr, $worst.Pct) }
+$lines += ("| Поточний DONE-стрік (днів підряд від кінця) | {0} |" -f $streak)
+$lines += ""
+
+# ✨ Рефлексія (шаблон)
+if ($IncludeReflection) {
+  $lastDay = $rows | Sort-Object DateStr -Descending | Select-Object -First 1
+  $carry = @()
+  if ($lastDay -and $lastDay.OpenItems.Count -gt 0) {
+    $carry = $lastDay.OpenItems | Select-Object -First $CarryOverTop
+  }
+
+  $lines += "## 🪞 Рефлексія тижня (шаблон)"
+  $lines += "- **Що спрацювало добре:**"
+  $lines += "  - …"
+  $lines += "- **Що завадило/гальмувало:**"
+  $lines += "  - …"
+  $lines += "- **Головний фокус наступного тижня:**"
+  if ($carry.Count -gt 0) {
+    $lines += "  - (чернетка з невиконаних):"
+    foreach ($c in $carry) { $lines += ("    - {0}" -f $c) }
+  } else {
+    $lines += "  - …"
+  }
+  $lines += "- **Ризики / блокери:**"
+  $lines += "  - …"
+  $lines += ""
+}
+
+$lines += "---"
+$lines += "С.Ч."
+
+# Запис звіту
+$lines | Set-Content -Path $weeklyPath -Encoding utf8BOM
+Write-Host "✅ WEEKLY REPORT: $weeklyPath"
+
+# Лог у RestoreLog
+if ($WriteRestoreLog) {
+  $stamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+  if (-not (Test-Path $RestoreLogPath)) {
+    "# Restore Log ($($end.ToString('yyyy-MM-dd')))`n" | Set-Content -Path $RestoreLogPath -Encoding utf8BOM
+  }
+  $line = "- [$stamp] Weekly report: $(Split-Path $weeklyPath -Leaf) | Days={0} | Total={1} | Done={2} | Todo={3} | AvgPct={4}% | DoneShare={5}% | Median={6}% | Streak={7}" -f `
+          $daysCount, $sumTotal, $sumDone, $sumTodo, $avgPct, $doneSharePct, $medianPct, $streak
+  Add-Content -Path $RestoreLogPath -Value $line -Encoding utf8BOM
+  Write-Host "🧭 RestoreLog оновлено"
+}
+
+
+
+
+
+
+

@@ -1,0 +1,57 @@
+﻿# Import Checha utils
+$utilsPath = Join-Path $PSScriptRoot 'lib\Checha.Utils.psm1'
+if (Test-Path $utilsPath) {
+  Import-Module $utilsPath -Force -DisableNameChecking
+} else {
+  throw "Utils module not found: $utilsPath"
+}
+# Кінець тижня (дата)
+  
+  # Вмикає додавання шаблону рефлексії
+  [switch]$IncludeReflection = $true,
+
+  # Спробувати витягнути топ-невиконані пункти з останнього дня (до N)
+  [int]$CarryOverTop = 5
+)
+$ErrorActionPreference = "Stop"
+
+function Get-ChecklistStats {
+  param([string]$Path)
+  
+  
+  # Порахувати чекбокси
+  $total = 0; $done = 0; $todo = 0
+  foreach ($l in $lines) {
+    if ($l -match '^\s*-\s*\[\s*\S?\s*\]\s+') {
+      $total++
+      if ($l -match '^\s*-\s*\[\s*x\s*\]\s+') { $done++ } else { $todo++ }
+    }
+  }
+  $pct = if ($total -gt 0) { [math]::Round(($done*100.0)/$total,1) } else { 0 }
+
+  # Невиконані пункти (для CarryOver)
+  $openItems = @()
+  foreach ($l in $lines) {
+    if ($l -match '^\s*-\s*\[\s\]\s+(.+)$') { $openItems += $Matches[1].Trim() }
+  }
+
+  # Витягнемо дату з назви
+  $file = Split-Path $Path -Leaf
+  $dateStr = $null
+  if ($file -match 'CHECKLIST_(\d{4})-(\d{2})-(\d{2})\.md') {
+    $dateStr = "{0}-{1}-{2}" -f $Matches[1],$Matches[2],$Matches[3]
+  }
+
+  return [pscustomobject]@{
+    File      = $file
+    DateStr   = $dateStr
+    Status    = $status
+    Total     = $total
+    Done      = $done
+    Todo      = $todo
+    Pct       = $pct
+    OpenItems = $openItems
+    RawLines  = $lines
+  }
+}
+

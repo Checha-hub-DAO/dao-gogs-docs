@@ -1,0 +1,252 @@
+[CmdletBinding(SupportsShouldProcess=$true, ConfirmImpact='Medium')]
+)]
+  [string]$BaseDir,
+
+  [Parameter(Mandatory=$true)]
+  [string]$NewReleasePath,
+
+  [Parameter(Mandatory=$true)]
+  [string]$Version,
+
+  [Parameter(Mandatory=$false)]
+  [string[]]$ModulesToAdd,
+
+  [switch]$WhatIf,
+  [switch]$Verbose
+)
+<#
+.SYNOPSIS
+  Керує збиранням релізів SHIELD4 (ODESA): staging → перевірки → упаковка → ZIP.
+
+.DESCRIPTION
+  Скрипт створює тимчасову staging-теку всередині $BaseDir, копіює туди
+  модулі, генерує VERSION.txt та CHECKSUMS.txt, після чого пакує реліз
+  у $NewReleasePath. Підтримує -WhatIf (Dry-Run) та -Verbose.
+
+.PARAMETER BaseDir
+  Робоча база релізу (наприклад D:\CHECHA_CORE\C11\SHIELD4_ODESA).
+
+.PARAMETER NewReleasePath
+  Повний шлях для вихідного ZIP-файлу релізу.
+
+.PARAMETER Version
+  Версія релізу (наприклад "v2.6").
+
+.PARAMETER ModulesToAdd
+  Список файлів (zip/pdf/ін.) для включення в реліз.
+  Може бути масивом: @("C:\a.zip","C:\b.zip") або
+  одним рядком із комами: "C:\a.zip,C:\b.zip".
+
+.PARAMETER WhatIf
+  Dry-Run: показує кроки без змін у ФС.
+
+.PARAMETER Verbose
+  Докладний вивід.
+
+.EXAMPLE
+  # Масив:
+  -ModulesToAdd @("C:\a.zip","C:\b.zip","C:\c.pdf")
+
+.EXAMPLE
+  # Рядок із комами:
+  -ModulesToAdd "C:\a.zip,C:\b.zip,C:\c.pdf"
+
+.EXAMPLE
+  # Dry-Run:
+  -ModulesToAdd @("C:\a.zip","C:\b.zip") -WhatIf
+#>
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+# -------------------------------
+# Helpers
+# -------------------------------
+function Write-Log {
+  )
+  $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+  $line = "{0} [{1}] {2}" -f $ts, $Level.ToUpper(), $Message
+  Write-Host $line
+  return $line
+}
+
+function Ensure-Dir {
+  )
+  if (-not (Test-Path -LiteralPath $Path)) {
+    if ($PSCmdlet.ShouldProcess($Path, "Create directory")) {
+      New-Item -ItemType Directory -Path $Path | Out-Null
+    }
+  }
+}
+
+function Get-FileSha256 {
+  )
+  if ($PSVersionTable.PSVersion.Major -ge 6) {
+    (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash
+  } else {
+    (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash
+  }
+}
+
+function Safe-Copy {
+  )
+  $dest = Join-Path $DestinationDirectory (Split-Path $Source -Leaf)
+  if ($PSCmdlet.ShouldProcess($dest, "Copy from $Source")) {
+    Copy-Item -LiteralPath $Source -Destination $dest -Force
+  }
+  return $dest
+}
+
+function Write-Checksums {
+  )
+  $checksumPath = Join-Path $TargetDir $OutFile
+  $files = Get-ChildItem -LiteralPath $TargetDir -File -Recurse | Sort-Object FullName
+  $lines = foreach($f in $files) {
+    $hash = Get-FileSha256 -Path $f.FullName
+    "{0} *{1}" -f $hash, ($f.FullName.Substring($TargetDir.Length).TrimStart('\','/'))
+  }
+  if ($PSCmdlet.ShouldProcess($checksumPath, "Write checksums")) {
+    Set-Content -LiteralPath $checksumPath -Value $lines -Encoding UTF8
+  }
+  return $checksumPath
+}
+
+function Normalize-Modules {
+  )
+  if (-not $Mods -or $Mods.Count -eq 0) { return @() }
+  # Якщо один елемент із комами – розбиваємо
+  if ($Mods.Count -eq 1 -and ($Mods[0] -match ',')) {
+    return $Mods[0].Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+  }
+  return $Mods
+}
+
+# -------------------------------
+# Banner
+# -------------------------------
+Write-Host "=== Manage SHIELD4 Release v2 (fixed2) ==="
+Write-Host "BaseDir:        $BaseDir"
+Write-Host "NewReleasePath: $NewReleasePath"
+Write-Host "Version:        $Version"
+
+# -------------------------------
+# Вхідні перевірки
+# -------------------------------
+try {
+  if (-not (Test-Path -LiteralPath $BaseDir)) {
+    Write-Log "BaseDir не існує: $BaseDir" "ERROR" | Out-Null
+    exit 1
+  }
+
+  $ModulesToAdd = Normalize-Modules -Mods $ModulesToAdd
+  if ($ModulesToAdd -and $ModulesToAdd.Count -gt 0) {
+    foreach ($m in $ModulesToAdd) {
+      if (-not (Test-Path -LiteralPath $m)) {
+        Write-Log "Файл модуля не знайдено: $m" "ERROR" | Out-Null
+        exit 1
+      } else {
+        Write-Verbose "Модуль OK: $m"
+      }
+    }
+  } else {
+    Write-Verbose "ModulesToAdd порожній — реліз буде без додаткових модулів."
+  }
+
+  $newZipDir = Split-Path -Path $NewReleasePath -Parent
+  if ([string]::IsNullOrWhiteSpace($newZipDir)) {
+    Write-Log "Некоректний шлях до ZIP: $NewReleasePath" "ERROR" | Out-Null
+    exit 1
+  }
+}
+catch {
+  Write-Log "Помилка валідації: $($_.Exception.Message)" "ERROR" | Out-Null
+  exit 1
+}
+
+# -------------------------------
+# Підготовка staging
+# -------------------------------
+$stagingRoot = Join-Path $BaseDir "_staging"
+$stagingDir  = Join-Path $stagingRoot $Version
+$modulesDir  = Join-Path $stagingDir "modules"
+
+try {
+  Ensure-Dir -Path $stagingRoot
+  # Очистити/створити папку версії
+  if (Test-Path -LiteralPath $stagingDir) {
+    if ($PSCmdlet.ShouldProcess($stagingDir, "Remove existing staging")) {
+      Remove-Item -LiteralPath $stagingDir -Recurse -Force
+    }
+  }
+  Ensure-Dir -Path $stagingDir
+  Ensure-Dir -Path $modulesDir
+
+  # VERSION.txt
+  $versionFile = Join-Path $stagingDir "VERSION.txt"
+  $versionInfo = @(
+    "Product: SHIELD4_ODESA"
+    "Version: $Version"
+    ("BuildDate: " + (Get-Date).ToString("yyyy-MM-dd HH:mm:ss K"))
+  )
+  if ($PSCmdlet.ShouldProcess($versionFile, "Write VERSION.txt")) {
+    Set-Content -LiteralPath $versionFile -Value $versionInfo -Encoding UTF8
+  }
+
+  # Копіювати модулі
+  $copied = @()
+  foreach($m in $ModulesToAdd){
+    $dest = Safe-Copy -Source $m -DestinationDirectory $modulesDir
+    $copied += $dest
+    Write-Verbose "Скопійовано → $dest"
+  }
+
+  # CHECKSUMS.txt для всього staging
+  $checksums = Write-Checksums -TargetDir $stagingDir -OutFile "CHECKSUMS.txt"
+  Write-Verbose "CHECKSUMS: $checksums"
+
+  # Забезпечити директорію для ZIP
+  Ensure-Dir -Path $newZipDir
+
+  # Упаковка у ZIP
+  if (Test-Path -LiteralPath $NewReleasePath) {
+    if ($PSCmdlet.ShouldProcess($NewReleasePath, "Remove existing ZIP")) {
+      Remove-Item -LiteralPath $NewReleasePath -Force
+    }
+  }
+
+  $zipTemp = Join-Path $stagingRoot ("tmp_" + [IO.Path]::GetFileName($NewReleasePath))
+  if (Test-Path -LiteralPath $zipTemp) {
+    if ($PSCmdlet.ShouldProcess($zipTemp, "Remove existing temp ZIP")) {
+      Remove-Item -LiteralPath $zipTemp -Force
+    }
+  }
+
+  if ($PSCmdlet.ShouldProcess($stagingDir, "Compress to ZIP -> $zipTemp")) {
+    Compress-Archive -LiteralPath (Join-Path $stagingDir '*') -DestinationPath $zipTemp -Force
+  }
+
+  # Переміщення у кінцеве місце
+  if ($PSCmdlet.ShouldProcess($NewReleasePath, "Move ZIP from tmp")) {
+    Move-Item -LiteralPath $zipTemp -Destination $NewReleasePath -Force
+  }
+
+  # Додатковий SHA для zip
+  $zipSha = Get-FileSha256 -Path $NewReleasePath
+  Write-Log ("ZIP готово: {0}  SHA256={1}" -f $NewReleasePath, $zipSha) | Out-Null
+
+  exit 0
+}
+catch {
+  Write-Log "Помилка збірки: $($_.Exception.Message)" "ERROR" | Out-Null
+  exit 2
+}
+finally {
+  # За бажанням: НЕ видаляти staging, щоб можна було рев’юнути
+  # Закоментуй наступне, якщо хочеш зберегти staging:
+  # if (Test-Path -LiteralPath $stagingDir) {
+  #   if ($PSCmdlet.ShouldProcess($stagingDir, "Clean staging")) {
+  #     Remove-Item -LiteralPath $stagingDir -Recurse -Force
+  #   }
+  # }
+}
+

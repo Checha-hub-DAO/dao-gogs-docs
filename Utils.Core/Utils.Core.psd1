@@ -8,13 +8,14 @@
     PowerShellVersion = '5.1'
     Description       = 'CHECHA_CORE: утиліти ядра (TZ Europe/Kyiv, логери, git/gh, аудит)'
     FunctionsToExport = @(
-        'Get-KyivDate','Info','Warn','Err','Die',
-        'Start-Op','Stop-Op','Write-AuditLog',
-        'Ensure-GitRepo','Get-RepoSlug',
-        'Disable-GhPager','Invoke-Gh',
+        'Get-KyivDate', 'Info', 'Warn', 'Err', 'Die',
+        'Start-Op', 'Stop-Op', 'Write-AuditLog',
+        'Ensure-GitRepo', 'Get-RepoSlug',
+        'Disable-GhPager', 'Invoke-Gh',
         'Compute-WeekBlock'
     )
     CmdletsToExport   = @()
-    AliasesToExport   = @('_Info','_Warn','_Err','_Die')
-    PrivateData       = @{ PSData = @{ Tags = @('CHECHA','Core','Utils') } }
+    AliasesToExport   = @('_Info', '_Warn', '_Err', '_Die')
+    PrivateData       = @{ PSData = @{ Tags = @('CHECHA', 'Core', 'Utils') } }
 }
+

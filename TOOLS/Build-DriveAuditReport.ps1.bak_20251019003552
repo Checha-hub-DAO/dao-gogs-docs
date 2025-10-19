@@ -1,0 +1,201 @@
+<# ======================================================================
+Build-DriveAuditReport.ps1  ·  v1.4_webstatus  (2025-10-18)
+Ключ: точні стани веб-доступності (OK / AUTH / 404 / ERR / NA)
+====================================================================== #>
+
+[CmdletBinding()]
+param(
+  [string]$MapPath    = "D:\CHECHA_CORE\C03_LOG\reports\Drive_Map.csv",
+  [string]$OutDir     = "D:\CHECHA_CORE\C03_LOG\reports",
+  [string]$OwnerEmail = "dao.gogs.ua@gmail.com",
+  [switch]$CheckWeb,
+  [string]$ReportName = "Drive_Audit_Report",
+  [string]$RcloneRemote
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+function Info([string]$m){ Write-Host "[INFO] $m" -ForegroundColor Cyan }
+function Warn([string]$m){ Write-Host "[WARN] $m" -ForegroundColor Yellow }
+function Err ([string]$m){ Write-Host "[ERR ] $m" -ForegroundColor Red }
+
+# Helpers (без .Count)
+function Seq([object]$x){ $x | ForEach-Object { $_ } }
+function CountOf([object]$x){ (Seq $x | Measure-Object).Count }
+function Get-DateStamp { (Get-Date -Format 'yyyy-MM-dd') }
+function Get-FileSha256([string]$p){ if(Test-Path -LiteralPath $p){ (Get-FileHash -Algorithm SHA256 -LiteralPath $p).Hash } }
+
+function Get-DriveIdFromUrl([string]$url){
+  if([string]::IsNullOrWhiteSpace($url)){ return $null }
+  if($url -match "/folders/([^/?#]+)")   { return $Matches[1] }
+  if($url -match "/file/d/([^/?#]+)")    { return $Matches[1] }
+  if($url -match "(?:\?|&)id=([^&#]+)")  { return $Matches[1] }
+  return $null
+}
+
+# Нова перевірка веб-стану: HEAD → fallback GET bytes=0-0, з ловлею AUTH/404
+function Test-DriveUrlStatus([string]$url){
+  if([string]::IsNullOrWhiteSpace($url)){ return 'NA' }
+  try{
+    $resp = Invoke-WebRequest -Uri $url -Method Head -MaximumRedirection 5 -UseBasicParsing -TimeoutSec 10 -ErrorAction Stop
+    $code = [int]$resp.StatusCode
+    if($code -ge 200 -and $code -lt 300){ return 'OK' }
+    if($code -ge 300 -and $code -lt 400){
+      $loc = ($resp.Headers['Location'] | Select-Object -First 1)
+      if($loc -match 'accounts\.google\.com|signin|ServiceLogin'){ return 'AUTH' }
+      return 'OK'
+    }
+    if($code -in 401,403){ return 'AUTH' }
+    if($code -eq 404){ return 'HTTP404' }
+  } catch {
+    try{
+      $headers = @{ Range = 'bytes=0-0' }
+      $resp2 = Invoke-WebRequest -Uri $url -Method Get -Headers $headers -MaximumRedirection 5 -UseBasicParsing -TimeoutSec 12 -ErrorAction Stop
+      $code2 = [int]$resp2.StatusCode
+      if($code2 -lt 400){ return 'OK' }
+      if($code2 -in 401,403){ return 'AUTH' }
+      if($code2 -eq 404){ return 'HTTP404' }
+      return 'ERR'
+    } catch {
+      $msg = $_.Exception.Message
+      if($msg -match 'accounts\.google\.com|signin|ServiceLogin'){ return 'AUTH' }
+      return 'ERR'
+    }
+  }
+}
+
+function Test-RcloneAvailable { try{ & rclone version 2>$null | Out-Null; return ($LASTEXITCODE -eq 0) } catch { return $false } }
+
+# 0) Підготовка
+if(-not (Test-Path -LiteralPath $MapPath)){ Err "Не знайдено CSV: $MapPath"; exit 2 }
+if(-not (Test-Path -LiteralPath $OutDir)){ New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
+
+# 1) Завантаження CSV (стабільно)
+Info "Зчитую карту: $MapPath"
+$rows = Seq (Import-Csv -LiteralPath $MapPath -ErrorAction Stop)
+$rowsCount = CountOf $rows
+if($rowsCount -eq 0){ Err "CSV порожній: $MapPath"; exit 3 }
+
+$required = @('Папка','Призначення','ID (URL)','Категорія','Автоматизація','Статус')
+$first = Seq $rows | Select-Object -First 1
+$hdr   = $first.PsObject.Properties.Name
+if( (CountOf ($required | Where-Object { $_ -notin $hdr })) -gt 0 ){
+  # спробуємо ';'
+  $rows = Seq (Import-Csv -LiteralPath $MapPath -Delimiter ';' -ErrorAction Stop)
+  $first = Seq $rows | Select-Object -First 1
+  $hdr   = $first.PsObject.Properties.Name
+  if( (CountOf ($required | Where-Object { $_ -notin $hdr })) -gt 0 ){
+    Err "У CSV відсутні потрібні колонки. Є: $($hdr -join ', ')"; exit 4
+  }
+}
+
+# 2) rclone
+$rcloneAvailable = $false
+if($RcloneRemote){ $rcloneAvailable = Test-RcloneAvailable; if(-not $rcloneAvailable){ Warn "rclone не в PATH — rclone-перевірки пропущено" } }
+
+# 3) Збагачення
+$enriched = @()
+foreach($r in $rows){
+  $url = [string]$r.'ID (URL)'
+  $id  = Get-DriveIdFromUrl $url
+  $webStatus = $null
+  if($CheckWeb){ $webStatus = Test-DriveUrlStatus $url }
+
+  $rcloneOk = $null
+  if($RcloneRemote -and $rcloneAvailable){
+    $remotePath = "${RcloneRemote}:/$($r.'Папка')"
+    try{ $ls = & rclone lsf $remotePath 2>$null; $rcloneOk = -not [string]::IsNullOrWhiteSpace($ls) } catch { $rcloneOk = $false }
+  }
+
+  $enriched += [pscustomobject]@{
+    Папка          = $r.'Папка'
+    Призначення    = $r.'Призначення'
+    Url            = $url
+    DriveId        = $id
+    Категорія      = $r.'Категорія'
+    Автоматизація  = $r.'Автоматизація'
+    Статус         = $r.'Статус'
+    WebStatus      = $webStatus   # NEW
+    RcloneOk       = $rcloneOk
+  }
+}
+
+# 4) Метрики
+$enriched = Seq $enriched
+$total    = CountOf $enriched
+$active   = CountOf ( $enriched | Where-Object { $_.Статус -match 'Актив' } )
+$partial  = CountOf ( $enriched | Where-Object { $_.Статус -match 'частк|частково|У розробці|Налаш' } )
+$noId     = CountOf ( $enriched | Where-Object { -not $_.DriveId } )
+
+$okWeb    = CountOf ( $enriched | Where-Object { $_.WebStatus -eq 'OK' } )
+$authWeb  = CountOf ( $enriched | Where-Object { $_.WebStatus -eq 'AUTH' } )
+$notfound = CountOf ( $enriched | Where-Object { $_.WebStatus -eq 'HTTP404' } )
+$errWeb   = CountOf ( $enriched | Where-Object { $_.WebStatus -eq 'ERR' } )
+$naWeb    = CountOf ( $enriched | Where-Object { $_.WebStatus -eq 'NA' } )
+$warnUrl  = $authWeb + $notfound + $errWeb
+$rcloneKo = CountOf ( $enriched | Where-Object { $null -ne $_.RcloneOk -and $_.RcloneOk -eq $false } )
+
+# 5) Markdown
+$today = Get-DateStamp
+$outMd = Join-Path $OutDir ("{0}_{1}.md" -f $ReportName, $today)
+Info "Генерую звіт: $outMd"
+
+$md = New-Object System.Collections.Generic.List[string]
+$md.Add("# 🧭 DAO-GOGS · Google Drive Audit Report")
+$md.Add("")
+$md.Add("**Дата:** $today  ")
+$md.Add("**Відповідальний:** С.Ч.  ")
+$md.Add("**Очікуваний власник інфраструктури:** $OwnerEmail  ")
+$md.Add("")
+$md.Add("---")
+$md.Add("")
+$md.Add("## 1) Підсумок")
+$md.Add("")
+$md.Add("| Всього | Активні | Частково | Без ID | Web OK | Web AUTH | 404 | ERR | rclone NOK |")
+$md.Add("|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+$md.Add(("| {0} | {1} | {2} | {3} | {4} | {5} | {6} | {7} | {8} |" -f `
+  $total,$active,$partial,$noId,$okWeb,$authWeb,$notfound,$errWeb,$rcloneKo))
+$md.Add("")
+$md.Add("---")
+$md.Add("")
+$md.Add("## 2) Деталі по папках")
+$md.Add("")
+$md.Add("| Папка | Категорія | Призначення | Статус | Автоматизація | Drive ID | URL | Web | rclone |")
+$md.Add("|---|---|---|---|---|---|---|---:|---:|")
+
+foreach($e in $enriched){
+  $webTxt = if($CheckWeb){
+    switch($e.WebStatus){
+      'OK'      { '✅' }
+      'AUTH'    { '🔐' }
+      'HTTP404' { '❌404' }
+      'ERR'     { '⚠️' }
+      default   { '—' }
+    }
+  } else { '—' }
+  $rcloneTxt = if($null -eq $e.RcloneOk){ "—" } elseif($e.RcloneOk){ "✅" } else { "⚠️" }
+  $did = if($e.DriveId){ $e.DriveId } else { "—" }
+  $url = if($e.Url){ $e.Url } else { "—" }
+  $md.Add(("| {0} | {1} | {2} | {3} | {4} | `{5}` | {6} | {7} | {8} |" -f `
+    $e.Папка, $e.Категорія, $e.Призначення, $e.Статус, $e.Автоматизація, $did, $url, $webTxt, $rcloneTxt))
+}
+
+$md.Add("")
+$md.Add("---")
+$md.Add("")
+$md.Add("## 3) Дії на 7 днів")
+$md.Add("- Якщо більшість лінків '🔐 AUTH' — це нормальна приватність. Виносимо в **норму**.")
+$md.Add("- Реальні помилки — **❌404** та **⚠️ ERR**: перевірити URL або мережу.")
+$md.Add("- rclone NOK → перевірити remote mapping та права.")
+$md.Add("")
+$md.Add("_CheCha Core · DAO-GOGS_")
+
+$md | Set-Content -LiteralPath $outMd -Encoding UTF8
+
+# 6) SHA256
+$sha = Get-FileHash -Algorithm SHA256 -LiteralPath $outMd | Select-Object -ExpandProperty Hash
+Info "SHA256: $sha"
+Info "Звіт створено: $outMd"
+Write-Host "[INFO] Готово (rc=0)" -ForegroundColor Cyan
+exit 0

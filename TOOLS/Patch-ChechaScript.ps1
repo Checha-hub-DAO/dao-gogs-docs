@@ -12,7 +12,8 @@ $patched = for ($i = 0; $i -lt $lines.Count; $i++) {
     $line = $lines[$i]
     if ($line -match '\bтут:') {
         "# PATCHED: $line"
-    } else {
+    }
+    else {
         $line
     }
 }
@@ -26,3 +27,4 @@ Write-Host "[PATCH] Backup saved -> $backup"
 $utf8 = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllLines($Path, $patched, $utf8)
 Write-Host "[PATCH] Finished. All 'тут:' рядки закоментовані."
+

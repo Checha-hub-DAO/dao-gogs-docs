@@ -1,0 +1,253 @@
+# INBOX-Run.ps1
+$ErrorActionPreference = 'Stop'
+. "D:\CHECHA_CORE\INBOX\INBOX-Config.ps1"
+$ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+$day = Get-Date -Format 'yyyyMMdd'
+
+# 0) ДО верху вставлений Telemetry helpers (як ми робили)
+# === Telemetry helpers ===
+$__swTotal = [System.Diagnostics.Stopwatch]::StartNew()
+$Telemetry = [ordered]@{}
+function Measure-Step {
+  param([Parameter(Mandatory)][string]$Name,[Parameter(Mandatory)][scriptblock]$Script)
+  $sw = [System.Diagnostics.Stopwatch]::StartNew()
+  try {
+    $r = & $Script
+    $sw.Stop()
+    $Telemetry[$Name] = @{ ms = [int][Math]::Round($sw.Elapsed.TotalMilliseconds); ok = $true }
+    return $r
+  } catch {
+    $sw.Stop()
+    $Telemetry[$Name] = @{ ms = [int][Math]::Round($sw.Elapsed.TotalMilliseconds); ok = $false; error = $_.Exception.Message }
+    throw
+  }
+}
+# === /Telemetry helpers ===
+
+
+# 1) Згенерувати артефакти (викликає ваш існуючий генератор)
+#    Додайте тут ваші параметри (-WithChart тощо), якщо потрібно.
+# INBOX-Run.ps1
+$ErrorActionPreference = 'Stop'
+. "D:\CHECHA_CORE\INBOX\INBOX-Config.ps1"
+$ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+$day = Get-Date -Format 'yyyyMMdd'
+
+# 0) ДО верху вставлений Telemetry helpers (як ми робили)
+# === Telemetry helpers ===
+$__swTotal = [System.Diagnostics.Stopwatch]::StartNew()
+$Telemetry = [ordered]@{}
+function Measure-Step {
+  param([Parameter(Mandatory)][string]$Name,[Parameter(Mandatory)][scriptblock]$Script)
+  $sw = [System.Diagnostics.Stopwatch]::StartNew()
+  try {
+    $r = & $Script
+    $sw.Stop()
+    $Telemetry[$Name] = @{ ms = [int][Math]::Round($sw.Elapsed.TotalMilliseconds); ok = $true }
+    return $r
+  } catch {
+    $sw.Stop()
+    $Telemetry[$Name] = @{ ms = [int][Math]::Round($sw.Elapsed.TotalMilliseconds); ok = $false; error = $_.Exception.Message }
+    throw
+  }
+}
+# === /Telemetry helpers ===
+
+
+# 1) Згенерувати артефакти (викликає ваш існуючий генератор)
+#    Додайте тут ваші параметри (-WithChart тощо), якщо потрібно.
+pwsh -NoProfile -ExecutionPolicy Bypass `
+  -File "D:\CHECHA_CORE\INBOX\Generate-PublicArtifacts.ps1" | Out-Null
+
+# 2) Self-check (стопимо оновлення панелі, якщо CRITICAL)
+& "D:\CHECHA_CORE\INBOX\INBOX-SelfCheck.ps1" -Quiet
+$exitCode = $LASTEXITCODE
+
+# 3) Оновити STATUS.json
+$status = [ordered]@{
+  timestamp = $ts
+  artifacts = @{
+    health      = Test-Path $INBOX.HealthPath
+    manifest    = Test-Path $INBOX.ManifestPath
+    public_flow = Test-Path $INBOX.PublicFlowPath
+  }
+  selfcheck = @{
+    exit_code = $exitCode
+    short_md  = $INBOX.SelfCheckShort
+  }
+}
+$status | ConvertTo-Json -Depth 5 | Out-File -FilePath $INBOX.StatusJson -Encoding UTF8
+
+# 4) Якщо self-check OK — зібрати коротку панель; інакше попередження
+if ($exitCode -eq 0) {
+  $health  = (Get-Content $INBOX.HealthPath    -ErrorAction SilentlyContinue) -join "`n"
+  $flow    = (Get-Content $INBOX.PublicFlowPath -ErrorAction SilentlyContinue) -join "`n"
+
+  $panel = @()
+  $panel += "# INBOX Panel — $ts"
+  $panel += ""
+  $panel += "### Короткий стан (з Health)"
+  $panel += ($health | Select-String -Pattern '^\- ' -SimpleMatch | Select-Object -First 10 | ForEach-Object { $_.ToString() })
+  $panel += ""
+  $panel += "### Потік (перші кроки)"
+  $panel += ($flow | Select-Object -First 20)
+  $panel += ""
+  $panel += "_Повні версії: `health.md`, `public_flow.md`, `manifest.csv` у `C12_KNOWLEDGE\\MD_INBOX`._"
+
+  . "D:\CHECHA_CORE\INBOX\INBOX-PanelLinks.ps1"
+$panel = Add-InboxQuickLinks -Panel $panel
+$panel -join "`r`n" | Out-File -FilePath $INBOX.PanelPath -Encoding UTF8
+} else {
+  $warn = @()
+  $warn += "# INBOX Panel — $ts"
+  $warn += "❌ Панель не оновлена: критичні артефакти відсутні."
+  $warn += ""
+  $warn += (Get-Content $INBOX.SelfCheckShort)
+  $warn -join "`r`n" | Out-File -FilePath $INBOX.PanelPath -Encoding UTF8
+}
+
+# 5) Додати запис у LOG
+Add-Content -Path $INBOX.LogPath -Value ("- [{0}] Run complete (selfcheck={1})" -f $ts, $exitCode)
+Write-Host "INBOX: done (selfcheck=$exitCode)"
+
+$__swGen.Restart()
+pwsh -NoProfile -ExecutionPolicy Bypass `
+  -File "D:\CHECHA_CORE\INBOX\Generate-PublicArtifacts.ps1" | Out-Null
+# INBOX-Run.ps1
+$ErrorActionPreference = 'Stop'
+. "D:\CHECHA_CORE\INBOX\INBOX-Config.ps1"
+$ts = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+$day = Get-Date -Format 'yyyyMMdd'
+
+# 0) ДО верху вставлений Telemetry helpers (як ми робили)
+# === Telemetry helpers ===
+$__swTotal = [System.Diagnostics.Stopwatch]::StartNew()
+$Telemetry = [ordered]@{}
+function Measure-Step {
+  param([Parameter(Mandatory)][string]$Name,[Parameter(Mandatory)][scriptblock]$Script)
+  $sw = [System.Diagnostics.Stopwatch]::StartNew()
+  try {
+    $r = & $Script
+    $sw.Stop()
+    $Telemetry[$Name] = @{ ms = [int][Math]::Round($sw.Elapsed.TotalMilliseconds); ok = $true }
+    return $r
+  } catch {
+    $sw.Stop()
+    $Telemetry[$Name] = @{ ms = [int][Math]::Round($sw.Elapsed.TotalMilliseconds); ok = $false; error = $_.Exception.Message }
+    throw
+  }
+}
+# === /Telemetry helpers ===
+
+
+# 1) Згенерувати артефакти (викликає ваш існуючий генератор)
+#    Додайте тут ваші параметри (-WithChart тощо), якщо потрібно.
+pwsh -NoProfile -ExecutionPolicy Bypass `
+  -File "D:\CHECHA_CORE\INBOX\Generate-PublicArtifacts.ps1" | Out-Null
+
+# 2) Self-check (стопимо оновлення панелі, якщо CRITICAL)
+& "D:\CHECHA_CORE\INBOX\INBOX-SelfCheck.ps1" -Quiet
+$exitCode = $LASTEXITCODE
+
+# 3) Оновити STATUS.json
+$status = [ordered]@{
+  timestamp = $ts
+  artifacts = @{
+    health      = Test-Path $INBOX.HealthPath
+    manifest    = Test-Path $INBOX.ManifestPath
+    public_flow = Test-Path $INBOX.PublicFlowPath
+  }
+  selfcheck = @{
+    exit_code = $exitCode
+    short_md  = $INBOX.SelfCheckShort
+  }
+}
+$status | ConvertTo-Json -Depth 5 | Out-File -FilePath $INBOX.StatusJson -Encoding UTF8
+
+# 4) Якщо self-check OK — зібрати коротку панель; інакше попередження
+if ($exitCode -eq 0) {
+  $health  = (Get-Content $INBOX.HealthPath    -ErrorAction SilentlyContinue) -join "`n"
+  $flow    = (Get-Content $INBOX.PublicFlowPath -ErrorAction SilentlyContinue) -join "`n"
+
+  $panel = @()
+  $panel += "# INBOX Panel — $ts"
+  $panel += ""
+  $panel += "### Короткий стан (з Health)"
+  $panel += ($health | Select-String -Pattern '^\- ' -SimpleMatch | Select-Object -First 10 | ForEach-Object { $_.ToString() })
+  $panel += ""
+  $panel += "### Потік (перші кроки)"
+  $panel += ($flow | Select-Object -First 20)
+  $panel += ""
+  $panel += "_Повні версії: `health.md`, `public_flow.md`, `manifest.csv` у `C12_KNOWLEDGE\\MD_INBOX`._"
+
+  . "D:\CHECHA_CORE\INBOX\INBOX-PanelLinks.ps1"
+$panel = Add-InboxQuickLinks -Panel $panel
+$panel -join "`r`n" | Out-File -FilePath $INBOX.PanelPath -Encoding UTF8
+} else {
+  $warn = @()
+  $warn += "# INBOX Panel — $ts"
+  $warn += "❌ Панель не оновлена: критичні артефакти відсутні."
+  $warn += ""
+  $warn += (Get-Content $INBOX.SelfCheckShort)
+  $warn -join "`r`n" | Out-File -FilePath $INBOX.PanelPath -Encoding UTF8
+}
+
+# 5) Додати запис у LOG
+Add-Content -Path $INBOX.LogPath -Value ("- [{0}] Run complete (selfcheck={1})" -f $ts, $exitCode)
+Write-Host "INBOX: done (selfcheck=$exitCode)"
+
+$__swGen.Stop()
+
+# 2) Self-check (стопимо оновлення панелі, якщо CRITICAL)
+& "D:\CHECHA_CORE\INBOX\INBOX-SelfCheck.ps1" -Quiet
+$exitCode = $LASTEXITCODE
+
+# 3) Оновити STATUS.json
+$status = [ordered]@{
+  timestamp = $ts
+  artifacts = @{
+    health      = Test-Path $INBOX.HealthPath
+    manifest    = Test-Path $INBOX.ManifestPath
+    public_flow = Test-Path $INBOX.PublicFlowPath
+  }
+  selfcheck = @{
+    exit_code = $exitCode
+    short_md  = $INBOX.SelfCheckShort
+  }
+}
+$status | ConvertTo-Json -Depth 5 | Out-File -FilePath $INBOX.StatusJson -Encoding UTF8
+
+# 4) Якщо self-check OK — зібрати коротку панель; інакше попередження
+if ($exitCode -eq 0) {
+  $health  = (Get-Content $INBOX.HealthPath    -ErrorAction SilentlyContinue) -join "`n"
+  $flow    = (Get-Content $INBOX.PublicFlowPath -ErrorAction SilentlyContinue) -join "`n"
+
+  $panel = @()
+  $panel += "# INBOX Panel — $ts"
+  $panel += ""
+  $panel += "### Короткий стан (з Health)"
+  $panel += ($health | Select-String -Pattern '^\- ' -SimpleMatch | Select-Object -First 10 | ForEach-Object { $_.ToString() })
+  $panel += ""
+  $panel += "### Потік (перші кроки)"
+  $panel += ($flow | Select-Object -First 20)
+  $panel += ""
+  $panel += "_Повні версії: `health.md`, `public_flow.md`, `manifest.csv` у `C12_KNOWLEDGE\\MD_INBOX`._"
+
+  . "D:\CHECHA_CORE\INBOX\INBOX-PanelLinks.ps1"
+$panel = Add-InboxQuickLinks -Panel $panel
+$panel -join "`r`n" | Out-File -FilePath $INBOX.PanelPath -Encoding UTF8
+} else {
+  $warn = @()
+  $warn += "# INBOX Panel — $ts"
+  $warn += "❌ Панель не оновлена: критичні артефакти відсутні."
+  $warn += ""
+  $warn += (Get-Content $INBOX.SelfCheckShort)
+  $warn -join "`r`n" | Out-File -FilePath $INBOX.PanelPath -Encoding UTF8
+}
+
+# 5) Додати запис у LOG
+Add-Content -Path $INBOX.LogPath -Value ("- [{0}] Run complete (selfcheck={1})" -f $ts, $exitCode)
+Write-Host "INBOX: done (selfcheck=$exitCode)"
+
+
+

@@ -1,0 +1,314 @@
+<#
+  Build-C13-WeeklyDigest.ps1  (v1.1a, fixed)
+  - Генерує тижневий дайджест; -Archive створює ZIP+CHECKSUMS+.sha256+VERSION+MANIFEST
+#>
+[CmdletBinding()]
+param(
+  [string]  $Root      = "D:\CHECHA_CORE\C13_LEARNING",
+  [string]  $MatrixRel = "MATRIX\Learning_Feedback_Matrix.csv",
+  [string]  $OutDir    = "D:\CHECHA_CORE\C03_LOG\digests",
+  [datetime]$WeekRef   = (Get-Date),
+  [switch]  $Archive
+)
+
+$Utf8Bom = New-Object System.Text.UTF8Encoding($true)
+
+function IsoWeekStart([datetime]$dt){
+  $d=[int]$dt.DayOfWeek; if($d -eq 0){$d=7}; $dt.Date.AddDays(1-$d)
+}
+function IsoWeekNum([datetime]$dt){
+  [System.Globalization.CultureInfo]::InvariantCulture.Calendar.GetWeekOfYear(
+    $dt,[System.Globalization.CalendarWeekRule]::FirstFourDayWeek,[DayOfWeek]::Monday)
+}
+
+$csvPath = Join-Path $Root $MatrixRel
+if(!(Test-Path $csvPath)){
+  Write-Host "[ERR ] Not found: $csvPath" -ForegroundColor Red; exit 1
+}
+
+$weekStart = IsoWeekStart $WeekRef
+$weekEnd   = $weekStart.AddDays(6)
+$isoYear   = $weekStart.Year
+$isoWeek   = IsoWeekNum $weekStart
+
+$rows   = Import-Csv $csvPath
+$inWeek = $rows | Where-Object {
+  $d=[datetime]::ParseExact($_.Date,'yyyy-MM-dd',$null)
+  $d -ge $weekStart -and $d -le $weekEnd
+}
+
+$sessionCount   = $inWeek.Count
+$avgL = if($sessionCount){ [Math]::Round( ($inWeek | Measure-Object -Property InsightLevel -Average).Average, 2) } else { 0 }
+$distinctTopics = ($inWeek | ForEach-Object Topic | Sort-Object -Unique).Count
+
+# Теги
+$tagItems = foreach($r in $inWeek){
+  if([string]::IsNullOrWhiteSpace($r.Tags)){ continue }
+  foreach($t in ($r.Tags -split ';')){
+    if(-not [string]::IsNullOrWhiteSpace($t)){
+      [pscustomobject]@{ Tag=$t.Trim().ToLower(); L=[int]$r.InsightLevel }
+    }
+  }
+}
+$topTags = @()
+if($tagItems){
+  $topTags = $tagItems |
+    Group-Object Tag |
+    ForEach-Object {
+      [pscustomobject]@{
+        Tag   = $_.Name
+        Count = $_.Count
+        AvgL  = [Math]::Round( ($_.Group | Measure-Object L -Average).Average, 2)
+      }
+    } |
+    Sort-Object @{Expression='Count';Descending=$true}, @{Expression='AvgL';Descending=$true} |
+    Select-Object -First 12
+}
+
+# Топ-інсайти
+$topInsights = $inWeek |
+  Where-Object { [int]$_.InsightLevel -ge 3 } |
+  Sort-Object Date, Time |
+  Select-Object Date,Time,Topic,ReflectionNote,ActionNext,Tags -First 12
+
+# Вихідні файли
+if(!(Test-Path $OutDir)){ New-Item -ItemType Directory -Path $OutDir -Force | Out-Null }
+$outMd = Join-Path $OutDir ("C13_Weekly_Digest_{0}-W{1:00}.md" -f $isoYear,$isoWeek)
+
+# Рендер
+$sb = New-Object System.Text.StringBuilder
+$null=$sb.AppendLine("# C13 — Weekly Learning Digest")
+$null=$sb.AppendLine()
+$null=$sb.AppendLine(("> Період: **{0} – {1}** (ISO {2}-W{3:00})" -f `
+  $weekStart.ToString('yyyy-MM-dd'), $weekEnd.ToString('yyyy-MM-dd'), $isoYear, $isoWeek))
+$null=$sb.AppendLine()
+$null=$sb.AppendLine("## KPI")
+$null=$sb.AppendLine()
+$null=$sb.AppendLine(("- Сесій: **{0}**" -f $sessionCount))
+$null=$sb.AppendLine(("- Середній рівень L: **{0}**" -f $avgL))
+$null=$sb.AppendLine(("- Унікальних тем: **{0}**" -f $distinctTopics))
+
+$null=$sb.AppendLine()
+$null=$sb.AppendLine("## Топ теґи")
+$null=$sb.AppendLine()
+if($topTags.Count -gt 0){
+  $null=$sb.AppendLine("| Теґ | К-сть | Середній L |")
+  $null=$sb.AppendLine("|---|---:|---:|")
+  foreach($t in $topTags){
+    $null=$sb.AppendLine(("| {0} | {1} | {2} |" -f $t.Tag, $t.Count, $t.AvgL))
+  }
+} else {
+  $null=$sb.AppendLine("_Немає_")
+}
+
+$null=$sb.AppendLine()
+$null=$sb.AppendLine("## ТОП інсайтів (L=3)")
+$null=$sb.AppendLine()
+if($topInsights.Count -gt 0){
+  foreach($r in $topInsights){
+    $tags = if($r.Tags){ " ["+($r.Tags -replace ';', ', ')+"]"} else {""}
+    $null=$sb.AppendLine(("- **{0} {1}** — {2}{3}" -f $r.Date, $r.Time, $r.Topic, $tags))
+    if($r.ReflectionNote){ $null=$sb.AppendLine(("  - _Інсайт:_ {0}" -f $r.ReflectionNote)) }
+    if($r.ActionNext){    $null=$sb.AppendLine(("  - _Дія:_ {0}" -f $r.ActionNext)) }
+  }
+} else {
+  $null=$sb.AppendLine("_Немає записів з L=3_")
+}
+
+# --- Scheduler (C13) ---------------------------------------------------------
+try{
+  $tasks = "C13-Daily-2130","C13-Daily-2359","C13-WeeklyDigest-2140","C13-PruneDigests-Monthly"
+
+  $rows = foreach($n in $tasks){
+    try{
+      $t = Get-ScheduledTaskInfo -TaskPath "\CHECHA\" -TaskName $n
+      [pscustomobject]@{
+        Task = $n
+        LastRunTime = if($t.LastRunTime -lt [datetime]"2000-01-01"){ $null } else { $t.LastRunTime }
+        NextRunTime = $t.NextRunTime
+        Result      = $t.LastTaskResult
+      }
+    } catch {
+      [pscustomobject]@{ Task=$n; LastRunTime=$null; NextRunTime=$null; Result=$null }
+    }
+  }
+
+  $null=$sb.AppendLine()
+  $null=$sb.AppendLine("## Scheduler")
+  $null=$sb.AppendLine()
+  $null=$sb.AppendLine("| Task | LastRunTime | NextRunTime | Result |")
+  $null=$sb.AppendLine("|------|--------------|-------------|--------|")
+
+  foreach($r in $rows){
+    $lr  = if($r.LastRunTime){ $r.LastRunTime.ToString("yyyy-MM-dd HH:mm") } else { "—" }
+    $nr  = if($r.NextRunTime){ $r.NextRunTime.ToString("yyyy-MM-dd HH:mm") } else { "—" }
+    $res = if($r.Result -eq 0){"✅ OK"} elseif($r.Result){ "⚠️ $($r.Result)" } else { "—" }
+    $null=$sb.AppendLine(("| {0} | {1} | {2} | {3} |" -f $r.Task,$lr,$nr,$res))
+  }
+} catch {}
+# ---------------------------------------------------------------------------
+[System.IO.File]::WriteAllText($outMd, $sb.ToString(), $Utf8Bom)
+Write-Host ("[OK ] Digest MD: {0}" -f $outMd) -ForegroundColor Green
+
+# Архівація
+if($Archive){
+  $pkgName = "C13_Weekly_Digest_{0}-W{1:00}" -f $isoYear,$isoWeek
+  $pkgZip  = Join-Path $OutDir ($pkgName + ".zip")
+
+  $sliceCsv = Join-Path $OutDir ($pkgName + "_slice.csv")
+  $inWeek | Export-Csv -NoTypeInformation -Encoding UTF8 -Path $sliceCsv
+
+  $verTxt = Join-Path $OutDir ("VERSION_{0}-W{1:00}.txt" -f $isoYear,$isoWeek)
+  [System.IO.File]::WriteAllText($verTxt, ("C13 Weekly Digest :: {0}-W{1:00}`r`nGenerated: {2}" -f $isoYear,$isoWeek,(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')), $Utf8Bom)
+
+  $manMd = Join-Path $OutDir ("MANIFEST_{0}-W{1:00}.md" -f $isoYear,$isoWeek)
+  [System.IO.File]::WriteAllText($manMd, ("# MANIFEST — {0}`n- Digest: {1}`n- Slice:  {2}`n- Source: {3}`n- VERSION: {4}`n" -f `
+    $pkgName, (Split-Path $outMd -Leaf), (Split-Path $sliceCsv -Leaf), (Split-Path $csvPath -Leaf), (Split-Path $verTxt -Leaf)), $Utf8Bom)
+
+  if(Test-Path $pkgZip){ Remove-Item $pkgZip -Force }
+  Compress-Archive -LiteralPath @($outMd,$sliceCsv,$verTxt,$manMd) -DestinationPath $pkgZip
+
+  $checks=@()
+  foreach($f in @($pkgZip,$outMd,$sliceCsv,$verTxt,$manMd)){
+    $h=(Get-FileHash $f -Algorithm SHA256).Hash.ToLower()
+    $checks+=("{0}  {1}" -f $h, (Split-Path $f -Leaf))
+  }
+  $checksTxt=Join-Path $OutDir ($pkgName + "_CHECKSUMS.txt")
+  [System.IO.File]::WriteAllText($checksTxt, ($checks -join [Environment]::NewLine)+[Environment]::NewLine, $Utf8Bom)
+  [System.IO.File]::WriteAllText($pkgZip + ".sha256", (Get-FileHash $pkgZip -Algorithm SHA256).Hash.ToLower(), $Utf8Bom)
+
+  Remove-Item $sliceCsv -Force
+}
+
+# D:\CHECHA_CORE\C13_LEARNING\Export-MdToPdf.ps1
+[CmdletBinding()]
+param(
+  [Parameter(Mandatory=$true)][string]$InputMd,
+  [string]$OutputPdf,
+  [string]$Title = "C13 Weekly Digest",
+  [string]$CssPath = "D:\CHECHA_CORE\C13_LEARNING\C13-PDF.css",
+  [string]$LogoPath = "D:\CHECHA_CORE\C13_LEARNING\assets\logo.png",
+  [int]$IsoYear = 0,
+  [int]$IsoWeek = 0
+)
+
+function Ok($m){ Write-Host "[ OK ] $m" -ForegroundColor Green }
+function Warn($m){ Write-Host "[WARN] $m" -ForegroundColor Yellow }
+function Err($m){ Write-Host "[ERR ] $m" -ForegroundColor Red }
+
+if(!(Test-Path $InputMd)){ Err "MD not found: $InputMd"; exit 1 }
+$wk = Get-Command wkhtmltopdf -ErrorAction SilentlyContinue
+if(!$wk){ Err "wkhtmltopdf not found in PATH"; exit 1 }
+if([string]::IsNullOrWhiteSpace($OutputPdf)){ $OutputPdf = [IO.Path]::ChangeExtension($InputMd, ".pdf") }
+
+# Визначимо ISO-рік/тиждень, якщо не задані
+if($IsoYear -le 0 -or $IsoWeek -le 0){
+  $today = Get-Date
+  $ci = [System.Globalization.CultureInfo]::InvariantCulture
+  $cal = $ci.Calendar
+  $IsoWeek = $cal.GetWeekOfYear($today, [System.Globalization.CalendarWeekRule]::FirstFourDayWeek, [DayOfWeek]::Monday)
+  # ISO-рік може відрізнятись, обчислюємо за алгоритмом ISO:
+  $thursday = $today.AddDays( ( ( [int][DayOfWeek]::Thursday - [int]$today.DayOfWeek + 7 ) % 7 ) )
+  $IsoYear = $thursday.Year
+}
+
+# 1) Markdown -> HTML (тіло)
+try{
+  $md = Get-Content -LiteralPath $InputMd -Raw -Encoding UTF8
+  $htmlBody = (ConvertFrom-Markdown -InputObject $md -AsHtml).Html
+} catch {
+  Err "ConvertFrom-Markdown failed: $($_.Exception.Message)"; exit 1
+}
+
+# 2) Стилі
+$defaultCss = 'html,body{font-family:Segoe UI,Arial,Helvetica,sans-serif;font-size:12pt;line-height:1.35}'
+$css = if($CssPath -and (Test-Path $CssPath)){ Get-Content $CssPath -Raw } else { $defaultCss }
+
+# 3) Основний тимчасовий HTML
+$tmpHtml = [IO.Path]::GetTempFileName() -replace '\.tmp$', '.html'
+@"
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>$([System.Web.HttpUtility]::HtmlEncode($Title))</title>
+<style>$css</style>
+</head>
+<body>
+$htmlBody
+</body>
+</html>
+"@ | Set-Content -LiteralPath $tmpHtml -Encoding UTF8
+
+# 4) Header/Footer HTML з підстановкою плейсхолдерів
+$assetsDir = "D:\CHECHA_CORE\C13_LEARNING\assets"
+$hdrTpl = Join-Path $assetsDir "header.html"
+$ftrTpl = Join-Path $assetsDir "footer.html"
+if(!(Test-Path $hdrTpl) -or !(Test-Path $ftrTpl)){
+  Warn "Header/Footer templates not found, falling back to text header/footer"
+  $useHtmlHeaderFooter = $false
+} else {
+  $useHtmlHeaderFooter = $true
+}
+
+# Підставляємо значення
+$genTs = (Get-Date).ToString("yyyy-MM-dd HH:mm")
+$tmpHeader = $null; $tmpFooter = $null
+
+if($useHtmlHeaderFooter){
+  $h = Get-Content $hdrTpl -Raw
+  $f = Get-Content $ftrTpl -Raw
+
+  # джерело логотипу
+  if(Test-Path $LogoPath){
+    $logoSrc = $LogoPath -replace '\\','/'
+    # Для wkhtmltopdf потрібен file:/// … (локальний доступ)
+    if($logoSrc -notmatch '^file:///'){ $logoSrc = "file:///$logoSrc" }
+    $h = $h.Replace("__LOGO_SRC__",$logoSrc)
+  } else {
+    # При відсутності — прибираємо тег <img> повністю (просте маскування)
+    $h = $h -replace '<img[^>]+class="logo"[^>]*>', ''
+  }
+
+  $h = $h.Replace("__TITLE__", $Title).Replace("__ISOYEAR__", "$IsoYear").Replace("__ISOWEEK__", ("{0:00}" -f $IsoWeek)).Replace("__GEN_TS__", $genTs)
+  $f = $f.Replace("__ISOYEAR__", "$IsoYear").Replace("__ISOWEEK__", ("{0:00}" -f $IsoWeek))
+
+  $tmpHeader = [IO.Path]::GetTempFileName() -replace '\.tmp$', '.html'
+  $tmpFooter = [IO.Path]::GetTempFileName() -replace '\.tmp$', '.html'
+  Set-Content $tmpHeader $h -Encoding UTF8
+  Set-Content $tmpFooter $f -Encoding UTF8
+}
+
+# 5) Аргументи wkhtmltopdf
+$wkArgs = @(
+  "--enable-local-file-access",
+  "--print-media-type",
+  "--margin-top","22mm","--margin-right","12mm","--margin-bottom","18mm","--margin-left","12mm"
+)
+
+if($useHtmlHeaderFooter){
+  $wkArgs += @("--header-html", $tmpHeader, "--header-spacing","6")
+  $wkArgs += @("--footer-html", $tmpFooter, "--footer-spacing","6")
+} else {
+  # Fallback: текстові хедер/футер
+  $wkArgs += @("--header-center", $Title, "--header-font-size","9","--header-line","--header-spacing","6")
+  $wkArgs += @("--footer-left", $genTs, "--footer-right","[page]/[toPage]","--footer-font-size","9","--footer-line","--footer-spacing","6")
+}
+
+$wkArgs += @($tmpHtml, $OutputPdf)
+
+# 6) Генеруємо PDF
+try{
+  & wkhtmltopdf @wkArgs | Out-Null
+  if($LASTEXITCODE -ne 0){ throw "wkhtmltopdf exit=$LASTEXITCODE" }
+  Ok ("PDF: {0}" -f $OutputPdf)
+} catch {
+  Err ("wkhtmltopdf failed: {0}" -f $_.Exception.Message)
+  exit 1
+} finally {
+  Remove-Item $tmpHtml -ErrorAction SilentlyContinue
+  if($tmpHeader){ Remove-Item $tmpHeader -ErrorAction SilentlyContinue }
+  if($tmpFooter){ Remove-Item $tmpFooter -ErrorAction SilentlyContinue }
+}
+exit 0
+

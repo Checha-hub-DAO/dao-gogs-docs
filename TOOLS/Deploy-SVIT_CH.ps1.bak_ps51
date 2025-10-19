@@ -1,0 +1,129 @@
+<# 
+Deploy-SVIT_CH.ps1
+Однокнопкове розгортання пакета «Світ Ч — FULL v1.0» у GitBook (DAO-ETNO/G31)
+Автор: С.Ч.
+
+Вимоги:
+- PowerShell 7+
+- Дійсні змінні середовища: $env:GITBOOK_TOKEN, $env:GITBOOK_SPACE_ID
+- Доступний інструмент: Push-GitBook.ps1
+#>
+
+[CmdletBinding()]
+param(
+    [string]$BaseDir   = "D:\CHECHA_CORE\PUBLISH\SVIT_CH_FULL_v1.0",
+    [string]$ToolsPath = "D:\CHECHA_CORE\DAO-GOGS-MAIN\C11\tools\Push-GitBook.ps1",
+    [string]$PagePath  = "dao-etno/svit-ch/readme",
+    [switch]$CreateSubpages,
+    [switch]$VerboseLog
+)
+
+function Fail($msg) { Write-Error $msg; exit 1 }
+
+Write-Host "=== DEPLOY: Світ Ч — FULL v1.0 ===" -ForegroundColor Cyan
+Write-Host "BaseDir : $BaseDir"
+Write-Host "Tools   : $ToolsPath"
+Write-Host "Page    : $PagePath"
+
+# 0) Перевірки середовища
+if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
+    Fail "Не знайдено PowerShell 7+ (pwsh). Встанови та повтори."
+}
+
+if (-not (Test-Path $ToolsPath)) {
+    Fail "Не знайдено Push-GitBook.ps1 за шляхом: $ToolsPath"
+}
+
+if (-not (Test-Path $BaseDir)) {
+    Fail "Не знайдено папку з пакетами: $BaseDir"
+}
+
+if ([string]::IsNullOrWhiteSpace($env:GITBOOK_TOKEN)) {
+    Fail "Змінна середовища GITBOOK_TOKEN порожня. Задай: `$env:GITBOOK_TOKEN"
+}
+if ([string]::IsNullOrWhiteSpace($env:GITBOOK_SPACE_ID)) {
+    Fail "Змінна середовища GITBOOK_SPACE_ID порожня. Задай: `$env:GITBOOK_SPACE_ID"
+}
+
+# 1) Підготовка логів
+$logDir = Join-Path $BaseDir "logs"
+New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+$logFile = Join-Path $logDir ("deploy_{0:yyyyMMdd_HHmmss}.log" -f (Get-Date))
+Start-Transcript -Path $logFile -Force | Out-Null
+
+try {
+    # 2) Публікація головної сторінки
+    $PageMd = Join-Path $BaseDir "SVIT_CH_GITBOOK_PAGE.md"
+    if (-not (Test-Path $PageMd)) { Fail "Не знайдено файл сторінки: $PageMd" }
+
+    Write-Host "[1/3] Публікація сторінки → $PagePath" -ForegroundColor Yellow
+    & pwsh -NoProfile -ExecutionPolicy Bypass -File $ToolsPath `
+        -Mode PageImport `
+        -File $PageMd `
+        -PagePath $PagePath
+
+    if ($LASTEXITCODE -ne 0) { Fail "Помилка PageImport (див. лог $logFile)" }
+
+    # 3) Завантаження артефактів
+    $assetNames = @(
+        "SVIT_CH_CARDS_v1.2.pdf",
+        "SVIT_CH_CARDS_Booklet.png",
+        "SVIT_CH_Matrix.png",
+        "SVIT_CH_Matrix.svg",
+        "SVIT_CH_Matrix_Stylized.png",
+        "SVIT_CH_Matrix_Stylized.svg",
+        "SVIT_CH_Legend.png",
+        "SVIT_CH_Legend.svg",
+        "SVIT_CH_Legend_Plain.png",
+        "SVIT_CH_Legend_Plain.svg",
+        "SVIT_CH_CHANGELOG.md",
+        "SVIT_CH_FULL_README.md",
+        "SVIT_CH_SITE_MAP.md",
+        "DEPLOY_PLAN_SVIT_CH.md"
+    )
+
+    Write-Host "[2/3] Завантаження вкладень..." -ForegroundColor Yellow
+    foreach ($name in $assetNames) {
+        $file = Join-Path $BaseDir $name
+        if (-not (Test-Path $file)) {
+            Write-Warning "Пропущено (не знайдено): $name"
+            continue
+        }
+        & pwsh -NoProfile -ExecutionPolicy Bypass -File $ToolsPath `
+            -Mode AssetUpload `
+            -File $file `
+            -PagePath $PagePath
+        if ($LASTEXITCODE -ne 0) { Fail "Помилка AssetUpload: $name (див. лог $logFile)" }
+        if ($VerboseLog) { Write-Host "OK → $name" -ForegroundColor Green }
+    }
+
+    # 4) Опціональне створення підсторінок
+    if ($CreateSubpages.IsPresent) {
+        Write-Host "[3/3] Створення підсторінок..." -ForegroundColor Yellow
+        $subpages = @(
+            @{ Path = "dao-etno/svit-ch/cards/readme";   File = "SVIT_CH_FULL_README.md" },
+            @{ Path = "dao-etno/svit-ch/matrix/readme";  File = "SVIT_CH_FULL_README.md" },
+            @{ Path = "dao-etno/svit-ch/legend/readme";  File = "SVIT_CH_FULL_README.md" },
+            @{ Path = "dao-etno/svit-ch/docs/readme";    File = "SVIT_CH_FULL_README.md" }
+        )
+        foreach ($sp in $subpages) {
+            $f = Join-Path $BaseDir $sp.File
+            if (-not (Test-Path $f)) { Write-Warning "Пропущено підсторінку (нема файлу): $($sp.File)"; continue }
+            & pwsh -NoProfile -ExecutionPolicy Bypass -File $ToolsPath `
+                -Mode PageImport `
+                -File $f `
+                -PagePath $sp.Path
+            if ($LASTEXITCODE -ne 0) { Fail "Помилка створення підсторінки: $($sp.Path)" }
+            if ($VerboseLog) { Write-Host "OK → $($sp.Path)" -ForegroundColor Green }
+        }
+    }
+
+    Write-Host "✅ Готово. Перевір сторінку: $PagePath" -ForegroundColor Cyan
+}
+catch {
+    Write-Error "❌ Виняток: $($_.Exception.Message)"
+}
+finally {
+    Stop-Transcript | Out-Null
+    Write-Host "Лог: $logFile"
+}

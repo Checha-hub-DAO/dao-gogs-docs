@@ -5,21 +5,22 @@
 # ---- TZ: Europe/Kyiv ----
 function Get-KyivDate {
     param([datetime]$Base = (Get-Date))
-    $ids = @('FLE Standard Time','Europe/Kyiv')   # Windows / cross-plat fallback
-    foreach($id in $ids){
+    $ids = @('FLE Standard Time', 'Europe/Kyiv')   # Windows / cross-plat fallback
+    foreach ($id in $ids) {
         try {
             $tz = [System.TimeZoneInfo]::FindSystemTimeZoneById($id)
             return [System.TimeZoneInfo]::ConvertTime($Base, $tz)
-        } catch {}
+        }
+        catch {}
     }
     return $Base
 }
 
 # ---- Логери (єдині на всі скрипти) ----
-function Info([string]$m){ Write-Host "[INFO] $m" -ForegroundColor Cyan }
-function Warn([string]$m){ Write-Host "[WARN] $m" -ForegroundColor Yellow }
-function Err ([string]$m){ Write-Host "[ERR]  $m" -ForegroundColor Red }
-function Die ([string]$m){ Err $m; throw $m }
+function Info([string]$m) { Write-Host "[INFO] $m" -ForegroundColor Cyan }
+function Warn([string]$m) { Write-Host "[WARN] $m" -ForegroundColor Yellow }
+function Err ([string]$m) { Write-Host "[ERR]  $m" -ForegroundColor Red }
+function Die ([string]$m) { Err $m; throw $m }
 # (Необов'язково) аліаси під модульні імена
 Set-Alias _Info Info -ErrorAction SilentlyContinue
 Set-Alias _Warn Warn -ErrorAction SilentlyContinue
@@ -27,16 +28,16 @@ Set-Alias _Err  Err  -ErrorAction SilentlyContinue
 Set-Alias _Die  Die  -ErrorAction SilentlyContinue
 
 # ---- Таймінги кроків ----
-function Start-Op([string]$Name){
-    $t = [pscustomobject]@{ Name=$Name; Start=Get-KyivDate(); }
+function Start-Op([string]$Name) {
+    $t = [pscustomobject]@{ Name = $Name; Start = Get-KyivDate(); }
     Info ("start: {0} @ {1}" -f $t.Name, $t.Start.ToString('HH:mm:ss'))
     return $t
 }
-function Stop-Op($Op){
+function Stop-Op($Op) {
     $end = Get-KyivDate()
-    $dur = [timespan]::FromSeconds([math]::Round(($end - $Op.Start).TotalSeconds,2))
+    $dur = [timespan]::FromSeconds([math]::Round(($end - $Op.Start).TotalSeconds, 2))
     Info ("done : {0} (+{1})" -f $Op.Name, $dur)
-    [pscustomobject]@{ Name=$Op.Name; Start=$Op.Start; End=$end; Duration=$dur }
+    [pscustomobject]@{ Name = $Op.Name; Start = $Op.Start; End = $end; Duration = $dur }
 }
 
 # ---- Аудит/логи у файл ----
@@ -67,7 +68,7 @@ function Get-RepoSlug {
     if ($url -notmatch 'github\.com[:/](?<o>[^/]+)/(?<r>[^/\.]+)(?:\.git)?') {
         Die "remote 'origin' не github.com: $url"
     }
-    "{0}/{1}" -f $Matches['o'],$Matches['r']
+    "{0}/{1}" -f $Matches['o'], $Matches['r']
 }
 
 # ---- gh: вимкнути пейджер (Windows без less) ----
@@ -97,7 +98,7 @@ function Compute-WeekBlock {
     $WeekEnd = (Get-KyivDate -Base $WeekEnd).Date
     $startDay = [math]::Floor(($WeekEnd.Day - 1) / 7) * 7 + 1
     $WeekStart = Get-Date -Year $WeekEnd.Year -Month $WeekEnd.Month -Day $startDay
-    $WeekEnd   = $WeekStart.AddDays(6)
+    $WeekEnd = $WeekStart.AddDays(6)
     $eom = (Get-Date -Year $WeekStart.Year -Month $WeekStart.Month -Day 1).AddMonths(1).AddDays(-1)
     if ($WeekEnd -gt $eom) { $WeekEnd = $eom }
     [pscustomobject]@{
@@ -107,3 +108,4 @@ function Compute-WeekBlock {
         Name  = 'WeeklyChecklist_{0}_to_{1}.md' -f $WeekStart.ToString('yyyy-MM-dd'), $WeekEnd.ToString('yyyy-MM-dd')
     }
 }
+

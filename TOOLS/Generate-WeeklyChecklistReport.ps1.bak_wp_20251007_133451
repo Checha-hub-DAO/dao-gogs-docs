@@ -1,0 +1,115 @@
+﻿param(
+  [datetime]$WeekEnd = (Get-Date),
+  [string]$RestoreLogPath = "D:\CHECHA_CORE\C06_FOCUS\FOCUS_RestoreLog.md",
+  [string]$ReportsRoot   = "D:\CHECHA_CORE\REPORTS",
+  [switch]$Open
+)
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
+function Info { param([string]$m) Write-Host "[INFO] $m" }
+function Fail { param([string]$m) throw $m }
+
+try {
+  # Перевірки
+  if (-not (Test-Path -LiteralPath $RestoreLogPath)) { Fail "No RestoreLog: $RestoreLogPath" }
+  if (-not (Test-Path -LiteralPath $ReportsRoot))    { New-Item -ItemType Directory -Path $ReportsRoot -Force | Out-Null }
+
+  # Межі тижня
+  $WeekEnd   = [datetime]::SpecifyKind($WeekEnd.Date.AddHours(23).AddMinutes(59).AddSeconds(59), [System.DateTimeKind]::Local)
+  $WeekStart = $WeekEnd.AddDays(-6).Date
+  Info ("Week: {0} .. {1}" -f $WeekStart.ToString('yyyy-MM-dd'), $WeekEnd.ToString('yyyy-MM-dd'))
+
+  # Парсинг логу
+  $raw = Get-Content -LiteralPath $RestoreLogPath -Raw -ErrorAction Stop
+  $rx  = '^\-\s*\[(?<ts>\d{4}\-\d{2}\-\d{2}\s+\d{2}\:\d{2}\:\d{2})\]\s*(?<msg>.+)$'
+  $m   = [regex]::Matches($raw, $rx, 'Multiline')
+
+  $items = foreach ($x in $m) {
+    $ts = [datetime]::ParseExact($x.Groups['ts'].Value, 'yyyy-MM-dd HH:mm:ss', $null)
+    [pscustomobject]@{ Timestamp=$ts; Date=$ts.Date; Message=$x.Groups['msg'].Value.Trim() }
+  }
+
+  $week = $items | Where-Object { $_.Timestamp -ge $WeekStart -and $_.Timestamp -le $WeekEnd } | Sort-Object Timestamp
+
+  # Агрегації
+  $byDay = @()
+  if ($week.Count -gt 0) {
+    $byDay = $week |
+      Group-Object -Property Date -NoElement |
+      Sort-Object Name |
+      ForEach-Object {
+        $d = Get-Date $_.Name
+        $dayItems = $week | Where-Object { $_.Date -eq $d.Date }
+        [pscustomobject]@{
+          Date   = $d.ToString('yyyy-MM-dd')
+          Count  = $_.Count
+          Status = ($dayItems.Message | Where-Object { $_ -match 'Updated status' }).Count
+          Checks = ($dayItems.Message | Where-Object { $_ -match 'Checksums verified OK' }).Count
+          Warn   = ($dayItems.Message | Where-Object { $_ -match '\bwarn(=|:|\b)|warning' }).Count
+          Err    = ($dayItems.Message | Where-Object { $_ -match '\berr(=|:|\b)|error|failed' }).Count
+        }
+      }
+  }
+
+  $totalAll  = $week.Count
+  $totalDays = $byDay.Count
+  $totalUpd  = ($week.Message | Where-Object { $_ -match 'Updated status' }).Count
+  $totalCsum = ($week.Message | Where-Object { $_ -match 'Checksums verified OK' }).Count
+  $totalWarn = ($week.Message | Where-Object { $_ -match '\bwarn(=|:|\b)|warning' }).Count
+  $totalErr  = ($week.Message | Where-Object { $_ -match '\berr(=|:|\b)|error|failed' }).Count
+
+  # Вихідні шляхи
+  $tag = "{0}_to_{1}" -f $WeekStart.ToString('yyyy-MM-dd'), $WeekEnd.ToString('yyyy-MM-dd')
+  $out = Join-Path $ReportsRoot ("WeeklyChecklist_{0}.md" -f $tag)
+
+  # Формування звіту
+  $sb = New-Object System.Text.StringBuilder
+  [void]$sb.AppendLine("# Weekly checklist ($($WeekStart.ToString('yyyy-MM-dd')) → $($WeekEnd.ToString('yyyy-MM-dd')))")
+  [void]$sb.AppendLine()
+  [void]$sb.AppendLine("**Source:** `$RestoreLogPath`  ")
+  [void]$sb.AppendLine("**Generated:** $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')  ")
+  [void]$sb.AppendLine()
+  [void]$sb.AppendLine("## Summary")
+  [void]$sb.AppendLine("| Metric | Value |")
+  [void]$sb.AppendLine("|---|---:|")
+  [void]$sb.AppendLine("| Days | $totalDays |")
+  [void]$sb.AppendLine("| Records | $totalAll |")
+  [void]$sb.AppendLine("| Updated status | $totalUpd |")
+  [void]$sb.AppendLine("| Checksums OK | $totalCsum |")
+  [void]$sb.AppendLine("| Warnings | $totalWarn |")
+  [void]$sb.AppendLine("| Errors | $totalErr |")
+  [void]$sb.AppendLine()
+  [void]$sb.AppendLine("## By day")
+  [void]$sb.AppendLine("| Date | Count | Status | Checks | Warn | Err |")
+  [void]$sb.AppendLine("|---|---:|---:|---:|---:|---:|")
+  foreach($d in $byDay){
+    [void]$sb.AppendLine("| {0} | {1} | {2} | {3} | {4} | {5} |" -f $d.Date,$d.Count,$d.Status,$d.Checks,$d.Warn,$d.Err)
+  }
+  [void]$sb.AppendLine()
+  [void]$sb.AppendLine("## Last 15 of the week")
+  $last = $week | Sort-Object Timestamp -Descending | Select-Object -First 15 | Sort-Object Timestamp
+  foreach($it in $last){
+    [void]$sb.AppendLine("- [{0}] {1}" -f $it.Timestamp.ToString('yyyy-MM-dd HH:mm:ss'), $it.Message)
+  }
+
+  # Запис файлу
+  $utf8 = New-Object System.Text.UTF8Encoding($false)
+  [IO.File]::WriteAllText($out, $sb.ToString(), $utf8)
+  Info "Saved: $out"
+
+  # Checksum
+  $hash = (Get-FileHash -LiteralPath $out -Algorithm SHA256).Hash.ToUpperInvariant()
+  $checks = Join-Path $ReportsRoot "CHECKSUMS.txt"
+  Add-Content -LiteralPath $checks -Value ("{0}  {1}" -f $hash, (Split-Path $out -Leaf)) -Encoding UTF8
+  Add-Content -LiteralPath $out -Value "`n---`n**SHA-256:** $hash`n" -Encoding UTF8
+  Info "Checksum: $checks"
+
+  if ($Open) { Invoke-Item -LiteralPath $out }
+
+} catch {
+  Write-Error ($_.Exception | Out-String)
+  if ($_.InvocationInfo){ Write-Error ("At {0}:{1}" -f $_.InvocationInfo.ScriptName, $_.InvocationInfo.ScriptLineNumber) }
+  exit 1
+}

@@ -1,6 +1,6 @@
 param(
-  [string]$Root = 'D:\CHECHA_CORE',
-  [switch]$DryRun
+    [string]$Root = 'D:\CHECHA_CORE',
+    [switch]$DryRun
 )
 
 #!/bin/sh
@@ -17,43 +17,43 @@ echo "blocked=$blocked" >> "$log"
 
 # Whitelist: release/*, hotfix/*, infra/*, dev/*
 is_whitelisted() {
-  ref="$1"
-  case "$ref" in
-    refs/heads/release/*|refs/heads/hotfix/*|refs/heads/infra/*|refs/heads/dev/*) return 0 ;;
-    *) return 1 ;;
-  esac
+    ref="$1"
+    case "$ref" in
+    refs/heads/release/* | refs/heads/hotfix/* | refs/heads/infra/* | refs/heads/dev/*) return 0 ; ;
+* ) return 1 ; ;
+esac
 }
 
 # Read stdin: <local_ref> <local_sha> <remote_ref> <remote_sha>
 while read local_ref local_sha remote_ref remote_sha
 do
-  echo "line: local_ref=$local_ref local_sha=$local_sha remote_ref=$remote_ref remote_sha=$remote_sha" >> "$log"
+echo "line: local_ref=$local_ref local_sha=$local_sha remote_ref=$remote_ref remote_sha=$remote_sha" >> "$log"
 
-  # allow tags always
-  case "$local_ref" in refs/tags/*) echo " -> allow: local tag"  >> "$log"; continue ;; esac
-  case "$remote_ref" in refs/tags/*) echo " -> allow: remote tag" >> "$log"; continue ;; esac
+# allow tags always
+case "$local_ref" in refs/tags/*) echo " -> allow: local tag"  >> "$log"; continue ; ; esac
+case "$remote_ref" in refs/tags/*) echo " -> allow: remote tag" >> "$log"; continue ; ; esac
 
-  # prefer remote_ref when present
-  ref_to_check="$remote_ref"
-  if [ -z "$ref_to_check" ]; then
-    ref_to_check="$local_ref"
-  fi
-  echo " ref_to_check=$ref_to_check" >> "$log"
+# prefer remote_ref when present
+ref_to_check="$remote_ref"
+if [ -z "$ref_to_check" ]; then
+ref_to_check="$local_ref"
+fi
+echo " ref_to_check=$ref_to_check" >> "$log"
 
-  # whitelist passes
-  if is_whitelisted "$ref_to_check" || is_whitelisted "$local_ref"; then
-    echo " -> allow: whitelisted ($ref_to_check / $local_ref)" >> "$log"
-    continue
-  fi
+# whitelist passes
+if is_whitelisted "$ref_to_check" || is_whitelisted "$local_ref"; then
+echo " -> allow: whitelisted ($ref_to_check / $local_ref)" >> "$log"
+continue
+fi
 
-  # block main updates
-  if [ "$ref_to_check" = "$blocked" ] || [ "$local_ref" = "$blocked" ]; then
-    echo " -> BLOCK: main update detected (ref_to_check=$ref_to_check local_ref=$local_ref)" >> "$log"
-    echo "[BLOCK] Direct push to 'main' is disallowed. Create a feature branch & PR."
-    exit 1
-  fi
+# block main updates
+if [ "$ref_to_check" = "$blocked" ] || [ "$local_ref" = "$blocked" ]; then
+echo " -> BLOCK: main update detected (ref_to_check=$ref_to_check local_ref=$local_ref)" >> "$log"
+echo "[BLOCK] Direct push to 'main' is disallowed. Create a feature branch & PR."
+exit 1
+fi
 
-  echo " -> allow: not-main ref" >> "$log"
+echo " -> allow: not-main ref" >> "$log"
 done
 
 echo "OK: no main updates in this push" >> "$log"
@@ -182,33 +182,34 @@ echo "[OK] pre-commit passed" >> "$LOG"
 exit 0
 '@
 
-($pc -replace "`r`n","`n") | Set-Content -Path $hook -Encoding Ascii
+($pc -replace "`r`n", "`n") | Set-Content -Path $hook -Encoding Ascii
 
 # ---------- install to all repos ----------
 $repos = Get-ChildItem -Path $Root -Recurse -Directory -ErrorAction SilentlyContinue |
-  Where-Object { Test-Path (Join-Path $_.FullName '.git') }
+    Where-Object { Test-Path (Join-Path $_.FullName '.git') }
 
 if (-not $repos) { Write-Host "Репозиторії не знайдено в $Root" -ForegroundColor Yellow; exit 0 }
 
-foreach($r in $repos){
-  $repo = $r.FullName
-  Write-Host "`n=== $repo ===" -ForegroundColor Green
-  if ($DryRun) {
-    Write-Host "• DRY-RUN: set core.hooksPath=.githooks; install pre-commit & pre-push"
-    continue
-  }
-  $githooks = Join-Path $repo '.githooks'
-  New-Item -ItemType Directory -Force $githooks | Out-Null
+foreach ($r in $repos) {
+    $repo = $r.FullName
+    Write-Host "`n=== $repo ===" -ForegroundColor Green
+    if ($DryRun) {
+        Write-Host "• DRY-RUN: set core.hooksPath=.githooks; install pre-commit & pre-push"
+        continue
+    }
+    $githooks = Join-Path $repo '.githooks'
+    New-Item -ItemType Directory -Force $githooks | Out-Null
 
-  # write hooks as ASCII/LF
-  [System.IO.File]::WriteAllText((Join-Path $githooks 'pre-push'),   $prePush,   [System.Text.Encoding]::ASCII)
-  [System.IO.File]::WriteAllText((Join-Path $githooks 'pre-commit'), $preCommit, [System.Text.Encoding]::ASCII)
+    # write hooks as ASCII/LF
+    [System.IO.File]::WriteAllText((Join-Path $githooks 'pre-push'), $prePush, [System.Text.Encoding]::ASCII)
+    [System.IO.File]::WriteAllText((Join-Path $githooks 'pre-commit'), $preCommit, [System.Text.Encoding]::ASCII)
 
-  Push-Location $repo
-  git config core.hooksPath .githooks
-  Pop-Location
+    Push-Location $repo
+    git config core.hooksPath .githooks
+    Pop-Location
 
-  Write-Host "• hooksPath -> .githooks"
-  Write-Host "• installed: pre-commit, pre-push"
+    Write-Host "• hooksPath -> .githooks"
+    Write-Host "• installed: pre-commit, pre-push"
 }
 Write-Host "`nDone." -ForegroundColor Cyan
+

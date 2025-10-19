@@ -1,0 +1,26 @@
+@{
+    RootModule        = 'Checha.Reports.psm1'
+    ModuleVersion     = '1.0.0'
+    GUID              = 'b7b9a1be-8b77-4a22-b86a-3c0c2d5c4a17'
+    Author            = 'С.Ч.'
+    CompanyName       = 'DAO-GOGS'
+    Copyright         = '(c) С.Ч.'
+    PowerShellVersion = '5.1'
+    Description       = 'CHECHA_CORE: генерація тижневих звітів, теги та релізи'
+    FunctionsToExport = @(
+        'New-WeeklyReport',
+        'Publish-WeeklyTag',
+        'New-WeeklyRelease',
+        'Publish-WeeklyAll',
+        'Show-WeeklyReleaseAssets',
+        'Show-WeeklyRelease',
+        'Remove-WeeklyReleaseAsset'
+    )
+    CmdletsToExport   = @()
+    AliasesToExport   = @()
+    PrivateData       = @{
+        PSData = @{
+            Tags = @('CHECHA','Weekly','Reports')
+        }
+    }
+}

@@ -102,3 +102,12 @@ __pycache__/
 *_202*.bak
 
 # === End of .gitignore ===
+# artifacts
+C03_LOG/reports/*.zip
+C03_LOG/reports/*.zip.sha256.txt
+C03_LOG/reports/*.log
+C03_LOG/reports/*.zip.json
+
+# local tooling backups
+TOOLS/*.bak_*
+TOOLS/*/*.bak_*

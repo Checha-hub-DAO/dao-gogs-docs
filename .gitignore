@@ -111,3 +111,7 @@ C03_LOG/reports/*.zip.json
 # local tooling backups
 TOOLS/*.bak_*
 TOOLS/*/*.bak_*
+C03_LOG/reports/*.zip
+C03_LOG/reports/*.zip.sha256.txt
+C03_LOG/reports/*.zip.json
+C03_LOG/reports/*.log

@@ -51,6 +51,7 @@
 ---
 
 ## 🧩 CI / Release Status · Стан інтеграції
+[![Daily DevOps Report](https://github.com/Checha-hub-DAO/dao-gogs-docs/actions/workflows/daily-devops-report.yml/badge.svg)](https://github.com/Checha-hub-DAO/dao-gogs-docs/actions/workflows/daily-devops-report.yml)
 
 [![Verify Release](https://github.com/Checha-hub-DAO/dao-gogs-docs/actions/workflows/release-verify.yml/badge.svg)](https://github.com/Checha-hub-DAO/dao-gogs-docs/actions/workflows/release-verify.yml)
 [![Release → Status Page](https://github.com/Checha-hub-DAO/dao-gogs-docs/actions/workflows/release-status-to-docs.yml/badge.svg)](https://github.com/Checha-hub-DAO/dao-gogs-docs/actions/workflows/release-status-to-docs.yml)
@@ -70,4 +71,5 @@
 ---
 
 _Signed by CheCha DevOps System · v1.1 · 2025-10-22_
+
 

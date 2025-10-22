@@ -47,3 +47,25 @@
 3. Натисніть **Run workflow**
 4. У полі `cover` введіть:
 >>>>>>> origin/main
+
+---
+
+## 🧩 CI / Release Status · Стан інтеграції
+
+[![Verify Release](https://github.com/Checha-hub-DAO/dao-gogs-docs/actions/workflows/release-verify.yml/badge.svg)](https://github.com/Checha-hub-DAO/dao-gogs-docs/actions/workflows/release-verify.yml)
+[![Latest Release](https://img.shields.io/github/v/release/Checha-hub-DAO/dao-gogs-docs?label=Latest%20Release)](https://github.com/Checha-hub-DAO/dao-gogs-docs/releases/latest)
+
+### 🔍 Опис
+
+Цей репозиторій має автоматичну систему перевірки цілісності релізів:
+- **SHA256** кожного архіву та маніфесту
+- **GPG-підпис** для гарантії походження та автентичності
+- Автозапуск перевірки на події elease:published
+- Статус воркфлоу видно на сторінці (бейдж вище)
+
+🟢 Зелений бейдж — реліз перевірено успішно.  
+🔴 Червоний — знайдено невідповідність SHA/GPG.
+
+---
+
+_Signed by CheCha DevOps System · v1.1 · 2025-10-22_

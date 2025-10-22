@@ -115,3 +115,9 @@ C03_LOG/reports/*.zip
 C03_LOG/reports/*.zip.sha256.txt
 C03_LOG/reports/*.zip.json
 C03_LOG/reports/*.log
+
+# allow DevOps release artifacts in reports
+!C03_LOG/reports/MANIFEST_*.txt
+!C03_LOG/reports/MANIFEST_*.txt.sha256.txt
+!C03_LOG/reports/README_DevOps_v*.zip.sig
+!C03_LOG/reports/GPG_RELEASE_PUBKEY_*.asc

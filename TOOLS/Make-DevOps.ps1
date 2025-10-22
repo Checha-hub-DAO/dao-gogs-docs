@@ -112,4 +112,14 @@ try {
   if ($latest) { Log ("Останній звіт: {0}" -f $latest.FullName) }
 } catch {}
 
+# 6) Експорт метрик у CSV
+$exp = "D:\CHECHA_CORE\TOOLS\Export-DevOpsMetrics.ps1"
+if (Test-Path $exp) {
+  Log "Експорт метрик у CSV…"
+  & pwsh -NoProfile -ExecutionPolicy Bypass -File $exp
+  Log "Експорт метрик завершено."
+} else {
+  Log "Export-DevOpsMetrics.ps1 не знайдено — пропускаю."
+}
+
 Log "=== Make-DevOps done ==="

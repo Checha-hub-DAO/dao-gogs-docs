@@ -1,3 +1,6 @@
+---
+data_sovereignty: true
+---
 # Quick Guide: Create-DailyFocus.ps1
 
 ## 🎯 Призначення
@@ -70,3 +73,4 @@ pwsh -NoProfile -ExecutionPolicy Bypass -File "D:\CHECHA_CORE\C06_FOCUS\Create-D
 
 📌 Автор: С.Ч.  
 Версія: Quick Guide v1.0  
+

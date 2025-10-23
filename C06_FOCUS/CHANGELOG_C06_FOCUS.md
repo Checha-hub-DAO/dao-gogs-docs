@@ -1,3 +1,6 @@
+---
+data_sovereignty: true
+---
 # C06_FOCUS — CHANGELOG
 
 ## v1.0 — 07.10.2025
@@ -13,3 +16,4 @@
 - Статус: **active**  
 
 ✍️ С.Ч.
+

@@ -1,3 +1,6 @@
+---
+data_sovereignty: true
+---
 # Restore Log (2025-10-07)
 
 - [2025-10-07 10:40:35] Updated status for 2025-10-07
@@ -30,3 +33,4 @@
 - [2025-10-07 13:36:59] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:40:14] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
 - [2025-10-07 13:40:28] Weekly index rebuilt with KPI + 4-week digest: WEEKLY_INDEX.md
+

@@ -1,3 +1,6 @@
+---
+data_sovereignty: true
+---
 \# 🎯 FOCUS ANALYSIS — CHECHA FLIGHT 4.10  
 
 \*\*Дата:\*\* 2025-10-09  
@@ -169,6 +172,7 @@
 \*\*С.Ч.\*\*  
 
 \_CHECHA CORE • DAO-GOGS • Flight Control 2025\_
+
 
 
 

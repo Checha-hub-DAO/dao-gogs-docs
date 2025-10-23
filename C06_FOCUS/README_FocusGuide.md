@@ -1,3 +1,6 @@
+---
+data_sovereignty: true
+---
 # Daily Focus System (v1.2)
 
 Цей пакет містить:
@@ -22,3 +25,4 @@ pwsh -File "Create-DailyFocus.ps1" -Root "D:\CHECHA_CORE\C06_FOCUS" -VerifyCheck
 ```
 
 ✍️ С.Ч.
+

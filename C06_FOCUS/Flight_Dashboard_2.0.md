@@ -1,3 +1,6 @@
+---
+data_sovereignty: true
+---
 <!-- FLIGHT\_DASHBOARD\_HEADER -->
 
 \# 🛰️ Flight Dashboard 2.0
@@ -19,6 +22,7 @@
 \_Тут з’явиться таблиця здоров’я задач.\_
 
 <!-- /FLIGHT\_DASHBOARD\_TABLE -->
+
 
 
 

@@ -1,3 +1,6 @@
+---
+data_sovereignty: true
+---
 # 📊 CheCha-Dashboard — 07.10.2025
 
 ### 🎯 Top-3 Фокуси

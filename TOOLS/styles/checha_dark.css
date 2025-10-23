@@ -1,0 +1,7 @@
+body { background:#0b1a2b; color:#ffffff; font-family:'DejaVu Sans', Arial, sans-serif; line-height:1.6; }
+h1,h2,h3 { border-bottom:1px solid #2a3b55; padding-bottom:4px; }
+code, pre { background:#081524; color:#e6f1ff; padding:2px 4px; }
+table { border-collapse:collapse; }
+table, th, td { border:1px solid #2a3b55; padding:6px; }
+a { color:#9fd1ff; }
+blockquote { border-left:3px solid #2a3b55; margin:0; padding:6px 10px; color:#d9e6ff; }

@@ -1,3 +1,6 @@
+---
+data_sovereignty: true
+---
 ## Daily Update — 2025-10-07
 - Автооновлення: виконано цикл (2025-10-07).
 - Файли створені/оновлені: Dashboard, Timeline, RestoreLog.
@@ -75,3 +78,4 @@
 - Статус: active
 
 ✍️ С.Ч.
+

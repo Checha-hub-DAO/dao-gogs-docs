@@ -1,0 +1,10 @@
+ethics:
+  data_sovereignty_compliance:
+    id: C02.4
+    status: active
+    require_frontmatter_key: "data_sovereignty: true"
+    scan_paths:
+      - "D:/CHECHA_CORE/C06_FOCUS/**/*.md"
+    on_fail:
+      severity: "warning"
+      action: "log_and_report"   # лог у C03_LOG + короткий звіт

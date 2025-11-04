@@ -28,3 +28,4 @@
 *.pfx  binary
 *.crt  binary
 *.key  binary
+*.sha256.txt text eol=lf

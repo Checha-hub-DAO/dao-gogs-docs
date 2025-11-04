@@ -23,9 +23,3 @@ tags: ["DAO-G43","ITETA","CheChaTone","DeepFormat","Evolution","Philosophy"]
 🜂 DAO‑GOGS · G43 ITETA
 
 **Підпис SHA‑256 (вміст сторінки):** `BE5C54DA8F894B59A697B617A4097A03818B99AA0BF2879E0C7699EE77E10E0B`
-
-
----
-
-**Підпис SHA-256 (вміст сторінки):** $hash
-

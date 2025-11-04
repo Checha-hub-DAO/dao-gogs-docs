@@ -122,3 +122,13 @@ C03_LOG/reports/*.log
 !C03_LOG/reports/README_DevOps_v*.zip.sig
 !C03_LOG/reports/GPG_RELEASE_PUBKEY_*.asc
 TOOLS/Publish-ITETA_Signal.ps1.bak*
+# Артефакти/тимчасові
+C05_ARCHIVE/
+C07_ANALYTICS/ITETA/*.png
+
+# Локальні тулінг-бекапи/запуски
+TOOLS/Publish-ITETA_Signal.ps1.bak*
+TOOLS/Publish-ITETA_Signal.launch.ps1
+
+# Якщо REPO не має бути сабмодулем у цьому репо
+REPO/

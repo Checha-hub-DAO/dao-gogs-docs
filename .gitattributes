@@ -29,3 +29,8 @@
 *.crt  binary
 *.key  binary
 *.sha256.txt text eol=lf
+*               text=auto
+*.ps1           text eol=crlf
+*.md            text eol=lf
+*.sha256.txt    text eol=lf
+*.png           binary

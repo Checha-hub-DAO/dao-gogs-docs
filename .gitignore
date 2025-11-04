@@ -121,3 +121,4 @@ C03_LOG/reports/*.log
 !C03_LOG/reports/MANIFEST_*.txt.sha256.txt
 !C03_LOG/reports/README_DevOps_v*.zip.sig
 !C03_LOG/reports/GPG_RELEASE_PUBKEY_*.asc
+TOOLS/Publish-ITETA_Signal.ps1.bak*

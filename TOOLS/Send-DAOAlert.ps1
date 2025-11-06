@@ -63,7 +63,7 @@ if (-not $TokenOk -or -not $ChatOk) {
   Write-Host "`nНекоректний токен або chat_id."
   if (-not $TokenOk) { Write-Host "Очікуваний формат токена: 1234567890:AA..." }
   if (-not $ChatOk)  { Write-Host "Очікуваний формат chat_id: -100XXXXXXXXXX" }
-  exit 1
+  throw "DAO-G13 validation failed"   # <— тепер кидаємо помилку, щоб викликальник міг зловити
 }
 
 # --- Повідомлення ---

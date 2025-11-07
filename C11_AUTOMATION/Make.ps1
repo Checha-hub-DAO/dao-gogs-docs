@@ -22,6 +22,40 @@
   pwsh -NoProfile -File .\C11_AUTOMATION\Make.ps1 release-notes -Audit -Tag vNEXT
 #>
 
+
+## =========================
+## UTF-8 Hardening (global)
+## =========================
+try {
+    [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+    [Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+} catch {}
+
+$Global:OutputEncoding = [System.Text.UTF8Encoding]::new($false)  # UTF-8 (no BOM)
+
+$PSDefaultParameterValues['*:Encoding']           = 'utf8'
+$PSDefaultParameterValues['Out-File:Encoding']    = 'utf8'
+$PSDefaultParameterValues['Set-Content:Encoding'] = 'utf8'
+$PSDefaultParameterValues['Add-Content:Encoding'] = 'utf8'
+$PSDefaultParameterValues['Export-Csv:Encoding']  = 'utf8'
+$PSDefaultParameterValues['ConvertTo-Json:Depth'] = 10
+
+function Write-Utf8 {
+    param(
+        [Parameter(Mandatory)][string]$Path,
+        [Parameter(Mandatory)][string]$Content
+    )
+
+$ArgList = @()
+if ($Args) {
+    $ArgList = @($Args | ForEach-Object {
+        if ($_ -is [array]) { ($_.ForEach({ $_.ToString() })) -join ' ' }
+        else { $_.ToString() }
+    })
+}
+    $bytes = [System.Text.UTF8Encoding]::new($false).GetBytes($Content)
+    [System.IO.File]::WriteAllBytes($Path, $bytes)
+}
 [CmdletBinding()]
 param(
   [Parameter(Position=0, Mandatory=$true)]
@@ -456,5 +490,38 @@ switch ($Target) {
                   }
   'manifest'      { Target-Manifest -Root $Root }
   'release-notes' { Target-ReleaseNotes -FromTag $FromTag -ToTag $ToTag }
+    'iteta:register' {
+        Write-Host "[STEP] iteta:register — старт" -ForegroundColor Cyan
+
+        $script = Join-Path $env:CHECHA_ROOT 'TOOLS\Build-ITETA_UkraineMatrix.ps1'
+        if (-not (Test-Path -LiteralPath $script)) {
+            throw "Не знайдено скрипт: $script"
+        }
+
+        $RegisterArgs = @()
+        if ($ArgList.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace($ArgList[0])) {
+            $inputPath = $ArgList[0].Trim('"').Trim()
+            $RegisterArgs += @('-RegisterPath', $inputPath)
+        } else {
+            $RegisterArgs += @('-Register')
+        }
+
+        $psi = @{
+            FilePath        = 'pwsh'
+            ArgumentList    = @('-NoProfile','-ExecutionPolicy','Bypass','-File', $script) + $RegisterArgs
+            WorkingDirectory= (Get-Location)
+            NoNewWindow     = $true
+            Wait            = $true
+        }
+
+        Write-Host "[INFO] Виклик: pwsh $($psi.ArgumentList -join ' ')" -ForegroundColor DarkGray
+        $proc = Start-Process @psi -PassThru
+        if ($proc.ExitCode -ne 0) {
+            throw "iteta:register завершився з кодом $($proc.ExitCode)"
+        }
+        Write-Host "[OK] iteta:register — завершено" -ForegroundColor Green
+        break
+    }
+
   default         { Show-Help }
 }

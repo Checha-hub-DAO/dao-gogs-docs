@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.ps1 eol=crlf
+*.bat eol=crlf
+*.png binary
+*.zip binary
+*.asc text eol=lf
+*.sha256 text eol=lf
+*.json text eol=lf
+*.md   text eol=lf

@@ -22,4 +22,4 @@
 Get-FileHash -Algorithm SHA256 .\README_DevOps_v1.1_GitBook.zip
 gpg --import .\GPG_RELEASE_PUBKEY_<FPR>.asc
 gpg --verify .\README_DevOps_v1.1_GitBook.zip.sig .\README_DevOps_v1.1_GitBook.zip
-\\\
+\\\

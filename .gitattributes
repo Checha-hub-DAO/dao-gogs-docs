@@ -1,8 +1,41 @@
+# ──────────────── CHECHA CORE / DAO-GOGS ────────────────
+# Нормалізація закінчень рядків і типів файлів
+
+# Загальні правила
 * text=auto eol=lf
-*.ps1 eol=crlf
-*.bat eol=crlf
-*.png binary
-*.zip binary
-*.asc text eol=lf
-*.sha256 text eol=lf
-*.json text eol=lf
+
+# PowerShell / Batch scripts
+*.ps1 text eol=crlf diff
+*.psm1 text eol=crlf diff
+*.bat text eol=crlf
+
+# Markdown, YAML, JSON, TXT → LF
+*.md     text eol=lf
+*.yaml   text eol=lf
+*.yml    text eol=lf
+*.json   text eol=lf
+*.csv    text eol=lf
+*.txt    text eol=lf
+*.ini    text eol=lf
+
+# Артефакти релізів (бінарні)
+*.zip  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.pdf  binary
+
+# Криптографічні файли
+*.asc     text eol=lf
+*.sha256  text eol=lf
+*.sig     text eol=lf
+*.key     text eol=lf
+
+# Внутрішні системні каталоги
+C03_LOG/**       text eol=lf
+C06_FOCUS/**     text eol=lf
+C07_ANALYTICS/** text eol=lf
+C11_AUTOMATION/** text eol=crlf
+
+# ────────────────────────────────────────────────────────

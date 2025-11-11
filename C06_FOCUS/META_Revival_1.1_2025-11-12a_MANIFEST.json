@@ -1,0 +1,23 @@
+{
+  "sha256": "601957E9A1B5BC85F3FC206D41915899C247E3582FCF7A02AE2E32141D50455C",
+  "system": "CHECHA CORE / DAO-GOGS",
+  "notes": "META package (md, csv, png) + manifest + sha256 + optional gpg asc",
+  "name": "META_Revival",
+  "version": "1.1",
+  "date": "2025-11-12T00:15:00",
+  "files": [
+    "META_SYMBOLS.csv",
+    "META.md",
+    "META_SYMBOLS\\S1.png",
+    "META_SYMBOLS\\S2.png",
+    "META_SYMBOLS\\S3.png",
+    "META_SYMBOLS\\S4.png",
+    "META_SYMBOLS\\S5.png",
+    "META_SYMBOLS\\S6.png",
+    "META_SYMBOLS\\S7.png",
+    "META_SYMBOLS\\S8.png"
+  ],
+  "zip": "META_Revival_1.1_2025-11-12a.zip",
+  "stamp": "2025-11-12a",
+  "author": "С.Ч."
+}

@@ -1,0 +1,24 @@
+DigitalSignature: 601957E9A1B5BC85F3FC206D41915899C247E3582FCF7A02AE2E32141D50455C
+# ================================================================
+# META PACKAGE MANIFEST
+# System: CHECHA CORE / DAO-GOGS
+# Author: С.Ч.
+# Date: 2025-11-12 00:15:00
+# Name: META_Revival  Version: 1.1  Stamp: 2025-11-12a
+# ================================================================
+
+[FILES]
+META_SYMBOLS.csv
+META.md
+META_SYMBOLS\S1.png
+META_SYMBOLS\S2.png
+META_SYMBOLS\S3.png
+META_SYMBOLS\S4.png
+META_SYMBOLS\S5.png
+META_SYMBOLS\S6.png
+META_SYMBOLS\S7.png
+META_SYMBOLS\S8.png
+
+[NOTES]
+Package of META-Revival artifacts (md + csv + png) with MANIFEST and SHA256.
+Signature will be filled after ZIP build.

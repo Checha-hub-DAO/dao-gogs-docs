@@ -1,134 +1,33 @@
-# === CHECHA_CORE .gitignore (2025) ===
-# General
-.DS_Store
-Thumbs.db
-desktop.ini
+# ──────────────── CHECHA CORE / DAO-GOGS ────────────────
+# Ігнорування тимчасових і локальних файлів
 
-# Logs and temporary data
-logs/
+# Тимчасові, стаджинг, кеші
+TMP/
+_staging/
+_sync/
+_recovery/
 *.log
-*.tmp
 *.bak
-*.swp
-*.old
-*.orig
-*.rej
-*.lock
+*.tmp
 
-# Build outputs and generated files
-/out/
-/_out/
-/build/
-/dist/
-/publish/
-/reports/
-/artifacts/
-/coverage/
-/node_modules/
-/__pycache__/
-/*.egg-info/
-
-# PowerShell local runs
-*.ps1.format_*.bak
-*.ps1.fix_*.bak
-*.ps1.zone*_*.bak
-*.ps1.final*.bak
-
-# VS Code & IDE
-.vscode/
-.history/
-.idea/
-*.code-workspace~
-
-# Python / virtual environments
-.env/
-.venv/
-venv/
-env/
-
-# Archives
-*.zip
-*.7z
-*.tar
-*.gz
-*.tgz
-*.rar
-
-# Data files (large or generated)
-*.csv
-*.xlsx
-*.xlsm
-*.ods
-*.jsonl
-
-# Reports / artifacts from CHECHA system
-C03_LOG/digests/
+# Системні каталоги
+C07_ANALYTICS/
+C11_AUTOMATION/
 C03_LOG/reports/
-C05_ARCHIVE/tmp/
-C07_ANALYTICS/tmp/
-_tmp/
-_out/
-_outpdf/
 
-# GPG, security
-*.sig
+# IDE та системні файли
+*.ps1~
+*.lnk
+Thumbs.db
+Desktop.ini
+
+# Автоматично генеровані артефакти
+*.zip
 *.asc
-*.key
-*.pfx
-*.crt
-*.pem
+*.sha256
+*.json
+*.yaml
+*.txt
+ReleaseNotes_*.md
 
-# Windows executables or utilities
-*.exe
-*.dll
-*.bat
-*.msi
-*.cmd
-
-# Cache
-.cache/
-__pycache__/
-.tmp/
-*.pid
-
-# Git backup
-*.orig
-*.merge
-*.BACKUP.*
-
-# Local backups
-*_backup_*.zip
-*_restore_*.zip
-*_202*.bak
-
-# === End of .gitignore ===
-# artifacts
-C03_LOG/reports/*.zip
-C03_LOG/reports/*.zip.sha256.txt
-C03_LOG/reports/*.log
-C03_LOG/reports/*.zip.json
-
-# local tooling backups
-TOOLS/*.bak_*
-TOOLS/*/*.bak_*
-C03_LOG/reports/*.zip
-C03_LOG/reports/*.zip.sha256.txt
-C03_LOG/reports/*.zip.json
-C03_LOG/reports/*.log
-
-# allow DevOps release artifacts in reports
-!C03_LOG/reports/MANIFEST_*.txt
-!C03_LOG/reports/MANIFEST_*.txt.sha256.txt
-!C03_LOG/reports/README_DevOps_v*.zip.sig
-!C03_LOG/reports/GPG_RELEASE_PUBKEY_*.asc
-TOOLS/Publish-ITETA_Signal.ps1.bak*
-# Артефакти/тимчасові
-C05_ARCHIVE/
-C07_ANALYTICS/ITETA/*.png
-
-# Локальні тулінг-бекапи/запуски
-TOOLS/Publish-ITETA_Signal.ps1.bak*
-TOOLS/Publish-ITETA_Signal.launch.ps1
-
-# Якщо REPO не має бути сабмодулем у цьому репо
-REPO/
+# ─────────────────────────────────────────────────────────
